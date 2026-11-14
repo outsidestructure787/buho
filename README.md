@@ -72,7 +72,9 @@ Cada registro es una fila de la pestaña `eventos`, con fecha, hora, tipo y deta
 Haz un *fork* de este repositorio y activa *Settings → Pages → Deploy from a branch → main / (root)*. Son archivos estáticos, sin compilación ni dependencias: `index.html`, `sw.js`, `manifest.webmanifest` e `icons/`.
 
 ### Sobre el proyecto
-Búho lo ha hecho un padre primerizo que no es programador, con la ayuda de una IA ([Claude](https://claude.ai)), para apuntar las tomas y los sueños de su bebé sin depender de la cobertura. Si algo no funciona o tienes ideas, abre un [issue](../../issues). Las sugerencias y las mejoras son bienvenidas.
+Voy a ser padre en breve y buscaba una app para apuntar las tomas, los sueños y los pañales que se ajustara a lo que necesitamos en casa: que funcione sin cobertura, que la podamos usar los dos desde móviles distintos y que los datos sean nuestros. Probé varias y ninguna me servía, así que decidí hacerme una a medida.
+
+No soy programador. Búho lo he hecho con ayuda de una IA ([Claude](https://claude.ai)), así que pido disculpas de antemano a los desarrolladores profesionales por meterme en su terreno. Si veis algo mal hecho o que se puede mejorar, abrid un [issue](../../issues). Os lo agradeceré, y seguro que aprendo algo.
 
 **Próximamente:** más idiomas en la app, gráfica de peso y recordatorios de toma.
 
@@ -111,7 +113,9 @@ Entries without coverage are queued and sent automatically when the connection c
 Fork this repository and enable *Settings → Pages → Deploy from a branch → main / (root)*. Plain static files: no build step, no dependencies.
 
 ### About
-Búho was built by a first-time dad who is not a developer, with the help of an AI ([Claude](https://claude.ai)), to log his baby's feeds and sleep without depending on mobile coverage. Bug reports and ideas are welcome in [issues](../../issues).
+I'm about to become a dad and I was looking for a baby log that fit what we need at home: it has to work without mobile coverage, we both need to use it from different phones, and the data has to stay ours. None of the apps I tried did that, so I decided to build my own.
+
+I'm not a developer. I built Búho with the help of an AI ([Claude](https://claude.ai)), so apologies in advance to professional developers for stepping onto your turf. If you spot something done wrong or something that could be better, please open an [issue](../../issues). I'll be grateful, and I'll probably learn something.
 
 ---
 
@@ -129,6 +133,8 @@ Búho was built by a first-time dad who is not a developer, with the help of an 
 
 La interfície, de moment, només està en castellà.
 
+La fa un futur pare que no és programador, amb ajuda d'una IA, perquè cap de les aplicacions que va provar no li servia. Disculpeu-ne les errades; els suggeriments són benvinguts als [issues](../../issues).
+
 ---
 
 ## Français
@@ -144,6 +150,8 @@ La interfície, de moment, només està en castellà.
 **Synchroniser :** créez une feuille sur [sheets.new](https://sheets.new) → *Extensions → Apps Script* → collez [`apps-script/Code.gs`](apps-script/Code.gs) → changez la clé → *Déployer → Application web* (*Exécuter en tant que : Moi*, *Accès : Tout le monde*) → copiez l'adresse `/exec` et collez-la avec la clé dans *Ajustes* de l'app. Les étapes détaillées sont dans la section [English](#english).
 
 L'interface n'est disponible qu'en espagnol pour l'instant.
+
+Elle est faite par un futur papa qui n'est pas développeur, avec l'aide d'une IA, parce qu'aucune des applications qu'il a essayées ne lui convenait. Pardon d'avance aux développeurs professionnels ; vos remarques sont les bienvenues dans les [issues](../../issues).
 
 ---
 
@@ -161,6 +169,8 @@ L'interface n'est disponible qu'en espagnol pour l'instant.
 
 Por agora, a interface só está em espanhol.
 
+Foi feita por um futuro pai que não é programador, com a ajuda de uma IA, porque nenhuma das apps que experimentou lhe servia. Desculpem desde já os programadores profissionais; sugestões são bem-vindas nos [issues](../../issues).
+
 ---
 
 ## Italiano
@@ -176,6 +186,8 @@ Por agora, a interface só está em espanhol.
 **Sincronizzare:** crea un foglio su [sheets.new](https://sheets.new) → *Estensioni → Apps Script* → incolla [`apps-script/Code.gs`](apps-script/Code.gs) → cambia la chiave → *Esegui il deployment → App web* (*Esegui come: Io*, *Accesso: Chiunque*) → copia l'indirizzo `/exec` e incollalo con la chiave in *Ajustes* nell'app. I passaggi dettagliati sono nella sezione [English](#english).
 
 Per ora l'interfaccia è solo in spagnolo.
+
+L'ha fatta un futuro papà che non è programmatore, con l'aiuto di un'IA, perché nessuna delle app che ha provato faceva al caso suo. Chiedo scusa in anticipo agli sviluppatori professionisti; i suggerimenti sono benvenuti negli [issues](../../issues).
 
 ---
 
@@ -193,6 +205,8 @@ Per ora l'interfaccia è solo in spagnolo.
 
 Die Oberfläche ist vorerst nur auf Spanisch verfügbar.
 
+Gebaut hat sie ein werdender Vater, der kein Entwickler ist, mit Hilfe einer KI, weil keine der getesteten Apps gepasst hat. Entschuldigung vorab an alle Profi-Entwickler; Hinweise sind in den [Issues](../../issues) willkommen.
+
 ---
 
-<p align="center"><sub>Licencia MIT · MIT License — ver / see <a href="LICENSE">LICENSE</a></sub></p>
+<p align="center"><sub>Licencia MIT · MIT License · ver / see <a href="LICENSE">LICENSE</a></sub></p>
