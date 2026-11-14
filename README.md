@@ -17,7 +17,7 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 <a href="#deutsch">Deutsch</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.2.0</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.2.1</p>
 
 ---
 
