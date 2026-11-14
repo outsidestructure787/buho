@@ -17,7 +17,7 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 <a href="#deutsch">Deutsch</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.1.1</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.2.0</p>
 
 ---
 
@@ -33,7 +33,7 @@ Búho es una web-app para apuntar con un toque lo que hace el bebé: cuándo se 
 - **Gratis y de código abierto.**
 
 ### Qué incluye
-- Botones de un toque: se duerme/despierta, pecho izquierdo o derecho (con cronómetro opcional), biberón, pis, caca, pis y caca, otros registros y anotar algo pasado.
+- Botones grandes: se duerme/se despierta, lactancia (pecho izquierdo o derecho, con cronómetro opcional), biberón (leche materna o fórmula), pañal (pis, caca o ambas) y anotaciones (notas, peso, temperatura, medicación y otros, y registrar algo que pasó antes).
 - De un vistazo: cronómetros en marcha, cuánto hace de la última toma, del último sueño y del último pañal, y qué pecho toca.
 - Resumen del día, gráfica de los últimos 7 días, registro con filtros, edición y borrado, deshacer y exportación a CSV para el pediatra.
 

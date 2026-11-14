@@ -47,7 +47,18 @@ h2{font-size:20px;margin:26px 0 10px;font-weight:800}
 .acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .act{border:0;border-radius:18px;background:var(--card);min-height:86px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--c);box-shadow:0 1px 0 var(--line),0 6px 16px -12px rgba(40,20,50,.35);transition:transform .12s}
 .act span{color:var(--ink);font-weight:700;font-size:14px;line-height:1.15;text-align:center}
-.act.big{grid-column:span 2;flex-direction:row;gap:10px}
+.act.big{grid-column:span 2;flex-direction:row;gap:10px;min-height:96px}
+.act.full{grid-column:span 4;flex-direction:row;gap:10px;min-height:64px}
+.act .sub{display:block;font-size:12px;font-weight:700;opacity:.8}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:4px 0 14px}
+.menu button{border:1px solid var(--line);background:var(--bg);border-radius:18px;min-height:96px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--c,var(--ink));font-weight:800}
+.menu button span{color:var(--ink);font-size:15px;line-height:1.2;text-align:center}
+.menu button.on{background:var(--c);border-color:var(--c);color:var(--on)}.menu button.on span{color:inherit}
+.menu.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.menu .wide2{grid-column:1/-1;min-height:60px;flex-direction:row}
+.list{display:flex;flex-direction:column;gap:6px;margin:4px 0 14px}
+.list button{display:flex;align-items:center;gap:12px;border:0;border-bottom:1px solid var(--line);background:none;min-height:54px;padding:6px 4px;text-align:left;font-weight:700;color:var(--c,var(--ink))}
+.list button span{color:var(--ink)}
 .act.on{background:var(--c);color:var(--on)}.act.on span{color:inherit}
 .act:active{transform:scale(.96)}
 .dbl{display:flex}.dbl svg{width:21px;height:21px}
@@ -136,7 +147,7 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
 <script>
 'use strict';
 {
-const VERSION='0.1.1';
+const VERSION='0.2.0';
 
 /* ================= Textos (i18n) =================
    Para traducir la app basta con añadir otro diccionario con las mismas claves.
@@ -155,7 +166,8 @@ const STR={es:{
   peeAndPoo:'Pis y caca',poo:'Caca',pee:'Pis',
   sleepingSince:'Durmiendo desde las {t}',wakes:'Despierta',since:'desde las {t}',finish:'Terminar',
   lastFeed:'Última toma',now:'Ahora',at:'a las {t}',next:'Toca: {s}',asleep:'Dormido',awake:'Despierto',lastDiaper:'Último pañal',
-  btnSleep:'Se duerme',btnWake:'Se despierta',btnL:'Pecho izq.',btnR:'Pecho der.',btnOther:'Peso, fiebre, medicina…',btnPast:'Anotar algo pasado',
+  btnSleep:'Se duerme',btnWake:'Se despierta',btnL:'Pecho izq.',btnR:'Pecho der.',btnFeed:'Lactancia',btnDiaper:'Pañal',btnNotes:'Anotaciones',btnPast:'Registrar algo pasado',
+  endL:'Terminar izq.',endR:'Terminar der.',inProgress:'{s} · en curso',pickMilk:'¿Qué leche?',pickDiaper:'¿Qué hay en el pañal?',pickFeed:'¿Qué pecho?',pickNote:'¿Qué quieres anotar?',both2:'Ambas',qtyBtn:'Cantidad',tBottleAt:'Biberón ({x}) a las {t}',eNote:'Escribe la nota.',
   feeds:'tomas',ofSleep:'de sueño',pees:'pis',poos:'cacas',longest:'Tramo de sueño más largo: {d}',bottleTotal:'Biberón: {n} ml en total',
   asleepLeg:'dormido',feedLeg:'toma',sleepCol:'sueño',
   fAll:'Todo',fSleep:'Sueño',fFeed:'Tomas',fDiaper:'Pañales',fOther:'Otros',
@@ -215,6 +227,7 @@ const I={
   heart:sv('<path d="M12 21s-8.5-5.4-8.5-11.2A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 8.5 2.6C20.5 15.6 12 21 12 21z"/>'),
   plus:sv('<path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/>'),
   clock:sv('<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4.6l3.4 2-1 1.7L11 12.7V7z"/>'),
+  pen:sv('<path d="M4 17.3V20h2.7l8-8-2.7-2.7-8 8zM18.7 8a1 1 0 0 0 0-1.4l-1.3-1.3a1 1 0 0 0-1.4 0l-1.2 1.2 2.7 2.7z"/>'),
   gear:sv('<path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>')};
 
 const SIDE=s=>({L:T('sideL'),R:T('sideR'),B:T('sideB')}[s]||'');
@@ -322,14 +335,10 @@ function renderNow(){
   h+=`<div class="tile" style="--c:var(${ld?colOf(ld):'--pe'})"><small>${T('lastDiaper')}</small>${ld?`<b data-ago="${ld.start}"></b><span>${ld.pee&&ld.poo?T('peeAndPoo'):ld.poo?T('poo'):T('pee')} · ${hm(ld.start)}</span>`:'<b>—</b>'}</div>`;
   h+='</div><div class="acts">';
   h+=`<button class="act big ${sl?'on':''}" style="--c:var(--sl)" data-a="sleep">${sl?I.sun:I.moon}<span>${sl?T('btnWake'):T('btnSleep')}</span></button>`;
-  h+=`<button class="act ${fd&&fd.side==='L'?'on':''}" style="--c:var(--fd)" data-a="L"><b class="lt">I</b><span>${T('btnL')}</span></button>`;
-  h+=`<button class="act ${fd&&fd.side==='R'?'on':''}" style="--c:var(--fd)" data-a="R"><b class="lt">D</b><span>${T('btnR')}</span></button>`;
-  h+=`<button class="act" style="--c:var(--fd)" data-a="bottle">${I.bottle}<span>${T('bottle')}</span></button>`;
-  h+=`<button class="act" style="--c:var(--pe)" data-a="pee">${I.drop}<span>${T('pee')}</span></button>`;
-  h+=`<button class="act" style="--c:var(--po)" data-a="poo">${I.poo}<span>${T('poo')}</span></button>`;
-  h+=`<button class="act" style="--c:var(--po)" data-a="both"><span class="dbl" style="color:var(--pe)">${I.drop}<i style="color:var(--po);display:flex">${I.poo}</i></span><span>${T('peeAndPoo')}</span></button>`;
-  h+=`<button class="act big" style="--c:var(--ot)" data-a="other">${I.plus}<span>${T('btnOther')}</span></button>`;
-  h+=`<button class="act big" style="--c:var(--mut)" data-a="past">${I.clock}<span>${T('btnPast')}</span></button>`;
+  h+=`<button class="act big ${fd?'on':''}" style="--c:var(--fd)" data-a="feedMenu">${I.heart}<span>${T('btnFeed')}${fd?`<i class="sub">${T('inProgress',{s:SIDE(fd.side)})}</i>`:''}</span></button>`;
+  h+=`<button class="act big" style="--c:var(--fd)" data-a="bottleMenu">${I.bottle}<span>${T('bottle')}</span></button>`;
+  h+=`<button class="act big" style="--c:var(--po)" data-a="diaperMenu"><span class="dbl" style="color:var(--pe)">${I.drop}<i style="color:var(--po);display:flex">${I.poo}</i></span><span>${T('btnDiaper')}</span></button>`;
+  h+=`<button class="act full" style="--c:var(--ot)" data-a="notesMenu">${I.pen}<span>${T('btnNotes')}</span></button>`;
   $('#now').innerHTML=h+'</div>'}
 function overlap(e,a,b,now){return Math.max(0,Math.min(e.end??now,b)-Math.max(e.start,a))}
 function renderSum(){
@@ -400,8 +409,14 @@ function act(a){
     const r=add({type:'diaper',pee:a!=='poo',poo:a!=='pee',start:now});
     const lbl={pee:T('pee'),poo:T('poo'),both:T('peeAndPoo')}[a];
     undoable(T('tAt',{x:lbl,t:hm(now)}),()=>delRef(r),a==='pee'?null:{l:T('color'),f:()=>{const e=EV[r.id];if(e&&!e.del)openForm(e,false)}})}
-  else if(a==='bottle')openForm({type:'feed',kind:'bottle',milk:'materna',start:now},true);
-  else if(a==='other')openForm({type:'other',sub:'weight',start:now},true);
+  else if(a==='feedMenu'){const on=x=>fd&&fd.kind==='breast'&&fd.side===x;
+    openMenu(T('pickFeed'),`<div class="menu">${['L','R'].map(x=>`<button data-m="${x}" class="${on(x)?'on':''}" style="--c:var(--fd)"><b class="lt">${x==='L'?'I':'D'}</b><span>${on(x)?T(x==='L'?'endL':'endR'):T(x==='L'?'btnL':'btnR')}</span></button>`).join('')}</div>`)}
+  else if(a==='bottleMenu')openMenu(T('pickMilk'),`<div class="menu"><button data-m="bMat" style="--c:var(--fd)">${I.bottle}<span>${T('mMat')}</span></button><button data-m="bForm" style="--c:var(--fd)">${I.bottle}<span>${T('mForm')}</span></button></div>`);
+  else if(a==='diaperMenu')openMenu(T('pickDiaper'),`<div class="menu three"><button data-m="pee" style="--c:var(--pe)">${I.drop}<span>${T('pee')}</span></button><button data-m="poo" style="--c:var(--po)">${I.poo}<span>${T('poo')}</span></button><button data-m="both" style="--c:var(--po)"><span class="dbl" style="color:var(--pe)">${I.drop}<i style="color:var(--po);display:flex">${I.poo}</i></span><span>${T('both2')}</span></button></div>`);
+  else if(a==='notesMenu')openMenu(T('pickNote'),`<div class="list">${['note','weight','temp','med','height','head','spit','bath','cry'].map(k=>`<button data-m="sub:${k}" style="--c:var(--ot)">${k==='note'?I.pen:I.plus}<span>${T(SUBK[k][0])}</span></button>`).join('')}<button data-m="past" style="--c:var(--mut)">${I.clock}<span>${T('btnPast')}</span></button></div>`);
+  else if(a==='bMat'||a==='bForm'){const milk=a==='bMat'?'materna':'formula';const r=add({type:'feed',kind:'bottle',milk,start:now});
+    undoable(T('tBottleAt',{x:milk==='formula'?T('formula'):T('breastMilk'),t:hm(now)}),()=>delRef(r),{l:T('qtyBtn'),f:()=>{const e=EV[r.id];if(e&&!e.del)openForm(e,false)}})}
+  else if(a.startsWith('sub:'))openForm({type:'other',sub:a.slice(4),start:now},true);
   else if(a==='past')openForm({type:'feed',kind:'breast',side:'L',start:now-36e5,end:now-36e5+15*6e4},true);
   else if(a==='settings')openSettings();
   else if(a==='export')exportCsv();
@@ -419,6 +434,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 /* ================= Formulario ================= */
 let draft=null,orig=null,isNew=false,confirmDel=false,mode='';
 function openForm(e,neu){mode='form';draft={...e};orig=neu?null:e;isNew=neu;confirmDel=false;drawForm();$('#ov').classList.add('open')}
+function openMenu(title,body){mode='menu';$('#sheet').innerHTML=`<h2>${title}</h2>${body}<div class="btns"><button data-s="cancel" style="flex:1">${T('cancel')}</button></div>`;$('#ov').classList.add('open')}
 function closeSheet(){$('#ov').classList.remove('open');draft=null;mode=''}
 function seg(k,opts,cur){return`<div class="seg">${opts.map(([v,l])=>`<button type="button" data-s="${k}" data-v="${v}" class="${String(cur)===v?'sel':''}">${l}</button>`).join('')}</div>`}
 function drawForm(){const d=draft,tm=timed(d);let h=`<h2>${isNew?T('newRec'):T('editRec')}</h2>`;
@@ -439,7 +455,7 @@ function drawForm(){const d=draft,tm=timed(d);let h=`<h2>${isNew?T('newRec'):T('
   $('#sheet').innerHTML=h}
 function validate(d){if(!d.start||isNaN(d.start))return T('eTime');if(d.start>Date.now()+6e4)return T('eFuture');
   if(timed(d)&&d.end!=null&&d.end<d.start)return T('eEnd');
-  if(d.type==='other'&&SUBK[d.sub]&&SUBK[d.sub][1]&&(d.value==null||isNaN(d.value)))return T('eValue');return''}
+  if(d.type==='other'&&SUBK[d.sub]&&SUBK[d.sub][1]&&(d.value==null||isNaN(d.value)))return T('eValue');if(d.type==='other'&&d.sub==='note'&&!String(d.note||'').trim())return T('eNote');return''}
 function shape(d){const o={type:d.type,start:d.start};if(d.note)o.note=String(d.note).slice(0,500);
   if(d.type==='sleep')o.end=d.end??null;
   if(d.type==='feed'){o.kind=d.kind||'breast';if(o.kind!=='bottle'){o.side=d.side||'L';o.end=d.end??null}if(o.kind!=='breast'&&d.ml!=null)o.ml=d.ml;if(o.kind==='bottle')o.milk=d.milk||'materna'}
@@ -449,7 +465,8 @@ function shape(d){const o={type:d.type,start:d.start};if(d.note)o.note=String(d.
 $('#sheet').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k||!draft)return;let v=e.target.value;
   if(k==='start'||k==='end')v=fromIn(v);else if(k==='ml')v=v===''?null:+v;else if(k==='value'&&draft.sub!=='med')v=v===''?null:+v;
   draft[k]=v;if(k==='sub'){draft.value=null;drawForm()}});
-$('#sheet').addEventListener('click',async e=>{const b=e.target.closest('[data-s]');if(!b)return;const s=b.dataset.s;
+$('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m]');if(m&&mode==='menu'){closeSheet();act(m.dataset.m);return}
+  const b=e.target.closest('[data-s]');if(!b)return;const s=b.dataset.s;
   if(s==='cancel')return closeSheet();
   if(mode==='settings')return settingsClick(s,b);
   if(!draft)return;
