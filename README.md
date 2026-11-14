@@ -54,10 +54,15 @@ Solo hay que hacerlo una vez, desde un ordenador. Se tarda unos 10 minutos.
    3. **Borra lo que trae.** El editor abre un archivo llamado `Código.gs` con unas líneas de ejemplo (`function myFunction() { }`). Haz clic dentro del código, selecciónalo todo (`Ctrl + A` / `Cmd + A`) y bórralo. El archivo tiene que quedar completamente vacío.
    4. **Pega el código** que copiaste (`Ctrl + V` / `Cmd + V`). La primera línea debe empezar por `/**` y la última ser una llave `}`.
    5. **Ponle nombre (opcional).** Arriba a la izquierda pone *Proyecto sin título*. Haz clic y escribe, por ejemplo, *Búho sincronización*. Así lo reconocerás después.
-   6. **Todavía no guardes:** antes cambia la clave, que es el paso siguiente.
+   6. **Guarda** con el icono del disquete o con `Ctrl + S` / `Cmd + S`.
 
    > Si en el menú *Extensiones* no aparece *Apps Script*, es probable que estés usando una cuenta de empresa o de centro educativo con esa opción bloqueada. Usa una cuenta personal de Gmail.
-3. **Pon tu clave.** Hacia la línea 18 verás `const CLAVE = 'CAMBIA-ESTA-CLAVE';`. Sustituye solo el texto `CAMBIA-ESTA-CLAVE` por una clave larga inventada por ti, por ejemplo cuatro palabras al azar como `jirafa-lunes-tostada-nube`. Deja las comillas y el punto y coma tal cual. Guarda con el icono del disquete o con `Ctrl + S` / `Cmd + S`.
+3. **Crea el archivo de configuración con tu clave.** La clave va en un archivo aparte, así no se pierde cuando actualices el script.
+   1. En la columna de la izquierda del editor, junto a *Archivos*, pulsa el **+** y elige *Secuencia de comandos*. Escribe `Config` como nombre y pulsa Intro. El editor le añade `.gs` solo.
+   2. Borra lo que traiga y pega el contenido de [`apps-script/Config.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Config.gs), que son solo unas líneas.
+   3. En la línea `const CLAVE = 'CAMBIA-ESTA-CLAVE';`, sustituye solo el texto `CAMBIA-ESTA-CLAVE` por una clave larga inventada por ti. Por ejemplo, cuatro palabras al azar como `jirafa-lunes-tostada-nube`. Deja las comillas y el punto y coma tal cual.
+   4. Si quieres que los registros vayan a una pestaña con otro nombre, cámbialo en `const HOJA = 'eventos';`. La pestaña se crea sola.
+   5. Guarda (`Ctrl + S` / `Cmd + S`). Tienes que ver dos archivos: `Código.gs` y `Config.gs`.
 4. **Publícalo.** *Implementar → Nueva implementación* → engranaje → *Aplicación web*.
    - *Ejecutar como:* **Yo**
    - *Quién tiene acceso:* **Cualquier usuario**
@@ -68,7 +73,18 @@ Solo hay que hacerlo una vez, desde un ordenador. Se tarda unos 10 minutos.
    - En **Android**, basta con abrir el enlace.
    - En **iPhone**, primero hay que instalar la app (paso anterior). Después se pega el enlace en Ajustes, en el campo *…o pega aquí un enlace de configuración*. En iPhone, la app instalada y Safari no comparten datos.
 
-Cada registro es una fila de la pestaña `eventos`, con fecha, hora, tipo y detalle legibles. Las columnas grises las usa la app: no las edites a mano.
+Cada registro es una fila de la pestaña `eventos`, con fecha, hora de inicio y fin, duración (en sueños y tomas de pecho), tipo y detalle legibles. Las columnas grises las usa la app: no las edites a mano.
+
+### Actualizar el script de Google
+Cuando una versión nueva de Búho cambie el script (se indica en la [lista de cambios](../../commits/main)):
+
+1. En la hoja: *Extensiones → Apps Script*.
+2. Abre `Código.gs`, borra todo su contenido y pega el nuevo [`Code.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs). Guarda. No toques `Config.gs`.
+3. *Implementar → Gestionar implementaciones* → icono del lápiz → en *Versión*, elige **Nueva versión** → *Implementar*.
+
+La dirección `/exec` no cambia, así que no hay que tocar nada en los móviles. Si falta alguna columna nueva en la hoja, el script la añade solo la próxima vez que sincronice un móvil.
+
+> **Si montaste la sincronización con la versión 0.1.x** (un solo archivo con la clave dentro): antes de pegar el nuevo `Code.gs`, apunta tu clave y el nombre de la pestaña (`CLAVE` y `HOJA`). Después crea `Config.gs` como en el paso 3 de arriba, con esos mismos valores, y sigue con los pasos de esta sección.
 
 ### Preguntas frecuentes
 - **¿Qué pasa si no hay cobertura?** Apuntas igual. Los registros quedan pendientes (lo indica la cabecera) y se envían solos cuando vuelve la señal.
@@ -110,13 +126,15 @@ Búho ("owl" in Spanish) is a web app to log your baby's day with a single tap: 
 ### Sync phones with Google Sheets (free)
 1. Create a sheet at [sheets.new](https://sheets.new).
 2. Copy the code: open [the raw script](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs), select all (`Ctrl/Cmd + A`) and copy. Back in the sheet, open *Extensions → Apps Script*. A new tab opens with a file called `Code.gs` containing a sample `myFunction`. Select everything in it, delete it, and paste the copied code. The first line should start with `/**` and the last one should be `}`. If *Apps Script* is missing from the menu, you are probably on a work or school account that blocks it: use a personal Gmail account.
-3. Replace `CAMBIA-ESTA-CLAVE` with a long secret key of your own and save.
+3. Add a second file: click **+** next to *Files* → *Script*, name it `Config`, and paste [`apps-script/Config.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Config.gs). Replace `CAMBIA-ESTA-CLAVE` with a long secret key of your own and save. Keeping the key in its own file means it survives script updates.
 4. *Deploy → New deployment → Web app*. *Execute as:* **Me**; *Who has access:* **Anyone**. Authorize it. Google warns that the app is unverified: it is your own script, so choose *Advanced → Go to…*
 5. Copy the URL ending in `/exec`.
 6. In Búho: ⚙️ *Ajustes → Sincronización con Google Sheets*. Paste the URL and the key, then tap *Guardar y probar conexión*.
 7. Tap *Compartir configuración con otro móvil* to send a setup link to the other person. On iPhone, install the app first and paste the link into the settings field, because the installed app does not share storage with Safari.
 
 Entries without coverage are queued and sent automatically when the connection comes back. If two people edit the same entry, the latest edit wins.
+
+**Updating the script:** replace the contents of `Code.gs` with the new version (leave `Config.gs` alone), save, then *Deploy → Manage deployments* → pencil icon → *Version: New version* → *Deploy*. The `/exec` URL stays the same.
 
 ### Self-host
 Fork this repository and enable *Settings → Pages → Deploy from a branch → main / (root)*. Plain static files: no build step, no dependencies.
@@ -138,7 +156,7 @@ I'm not a developer. I built Búho with the help of an AI ([Claude](https://clau
 
 **Instal·lar-la:** obre https://outsidestructure787.github.io/buho/ i tria *Instal·lar l'aplicació* (Android) o *Compartir → Afegir a la pantalla d'inici* (iPhone).
 
-**Sincronitzar:** crea un full a [sheets.new](https://sheets.new) → *Extensions → Apps Script* → enganxa [`apps-script/Code.gs`](apps-script/Code.gs) → canvia la clau → *Implementa → Aplicació web* (*Executa com: Jo*, *Accés: Qualsevol usuari*) → copia l'adreça `/exec` i enganxa-la amb la clau a *Ajustes* de l'app. Les passes detallades són a la secció en [castellà](#español).
+**Sincronitzar:** crea un full a [sheets.new](https://sheets.new) → *Extensions → Apps Script* → enganxa [`Code.gs`](apps-script/Code.gs) i crea `Config.gs` amb [la teva clau](apps-script/Config.gs) → *Implementa → Aplicació web* (*Executa com: Jo*, *Accés: Qualsevol usuari*) → copia l'adreça `/exec` i enganxa-la amb la clau a *Ajustes* de l'app. Les passes detallades són a la secció en [castellà](#español).
 
 La interfície, de moment, només està en castellà.
 
@@ -156,7 +174,7 @@ La fa un futur pare que no és programador, amb ajuda d'una IA, perquè cap de l
 
 **Installer :** ouvrez https://outsidestructure787.github.io/buho/ puis choisissez *Installer l'application* (Android) ou *Partager → Sur l'écran d'accueil* (iPhone).
 
-**Synchroniser :** créez une feuille sur [sheets.new](https://sheets.new) → *Extensions → Apps Script* → collez [`apps-script/Code.gs`](apps-script/Code.gs) → changez la clé → *Déployer → Application web* (*Exécuter en tant que : Moi*, *Accès : Tout le monde*) → copiez l'adresse `/exec` et collez-la avec la clé dans *Ajustes* de l'app. Les étapes détaillées sont dans la section [English](#english).
+**Synchroniser :** créez une feuille sur [sheets.new](https://sheets.new) → *Extensions → Apps Script* → collez [`Code.gs`](apps-script/Code.gs) et créez `Config.gs` avec [votre clé](apps-script/Config.gs) → *Déployer → Application web* (*Exécuter en tant que : Moi*, *Accès : Tout le monde*) → copiez l'adresse `/exec` et collez-la avec la clé dans *Ajustes* de l'app. Les étapes détaillées sont dans la section [English](#english).
 
 L'interface n'est disponible qu'en espagnol pour l'instant.
 
@@ -174,7 +192,7 @@ Elle est faite par un futur papa qui n'est pas développeur, avec l'aide d'une I
 
 **Instalar:** abra https://outsidestructure787.github.io/buho/ e escolha *Instalar aplicação* (Android) ou *Partilhar → Adicionar ao ecrã principal* (iPhone).
 
-**Sincronizar:** crie uma folha em [sheets.new](https://sheets.new) → *Extensões → Apps Script* → cole [`apps-script/Code.gs`](apps-script/Code.gs) → altere a chave → *Implementar → Aplicação Web* (*Executar como: Eu*, *Acesso: Qualquer pessoa*) → copie o endereço `/exec` e cole-o com a chave em *Ajustes* na app. Os passos detalhados estão na secção [English](#english).
+**Sincronizar:** crie uma folha em [sheets.new](https://sheets.new) → *Extensões → Apps Script* → cole [`Code.gs`](apps-script/Code.gs) e crie `Config.gs` com [a sua chave](apps-script/Config.gs) → *Implementar → Aplicação Web* (*Executar como: Eu*, *Acesso: Qualquer pessoa*) → copie o endereço `/exec` e cole-o com a chave em *Ajustes* na app. Os passos detalhados estão na secção [English](#english).
 
 Por agora, a interface só está em espanhol.
 
@@ -192,7 +210,7 @@ Foi feita por um futuro pai que não é programador, com a ajuda de uma IA, porq
 
 **Installare:** apri https://outsidestructure787.github.io/buho/ e scegli *Installa app* (Android) oppure *Condividi → Aggiungi alla schermata Home* (iPhone).
 
-**Sincronizzare:** crea un foglio su [sheets.new](https://sheets.new) → *Estensioni → Apps Script* → incolla [`apps-script/Code.gs`](apps-script/Code.gs) → cambia la chiave → *Esegui il deployment → App web* (*Esegui come: Io*, *Accesso: Chiunque*) → copia l'indirizzo `/exec` e incollalo con la chiave in *Ajustes* nell'app. I passaggi dettagliati sono nella sezione [English](#english).
+**Sincronizzare:** crea un foglio su [sheets.new](https://sheets.new) → *Estensioni → Apps Script* → incolla [`Code.gs`](apps-script/Code.gs) e crea `Config.gs` con [la tua chiave](apps-script/Config.gs) → *Esegui il deployment → App web* (*Esegui come: Io*, *Accesso: Chiunque*) → copia l'indirizzo `/exec` e incollalo con la chiave in *Ajustes* nell'app. I passaggi dettagliati sono nella sezione [English](#english).
 
 Per ora l'interfaccia è solo in spagnolo.
 
@@ -210,7 +228,7 @@ L'ha fatta un futuro papà che non è programmatore, con l'aiuto di un'IA, perch
 
 **Installieren:** https://outsidestructure787.github.io/buho/ öffnen und *App installieren* (Android) bzw. *Teilen → Zum Home-Bildschirm* (iPhone) wählen.
 
-**Synchronisieren:** Tabelle unter [sheets.new](https://sheets.new) anlegen → *Erweiterungen → Apps Script* → [`apps-script/Code.gs`](apps-script/Code.gs) einfügen → Schlüssel ändern → *Bereitstellen → Web-App* (*Ausführen als: Ich*, *Zugriff: Jeder*) → die `/exec`-Adresse kopieren und mit dem Schlüssel in der App unter *Ajustes* einfügen. Die ausführlichen Schritte stehen im Abschnitt [English](#english).
+**Synchronisieren:** Tabelle unter [sheets.new](https://sheets.new) anlegen → *Erweiterungen → Apps Script* → [`Code.gs`](apps-script/Code.gs) einfügen und `Config.gs` mit [eigenem Schlüssel](apps-script/Config.gs) anlegen → *Bereitstellen → Web-App* (*Ausführen als: Ich*, *Zugriff: Jeder*) → die `/exec`-Adresse kopieren und mit dem Schlüssel in der App unter *Ajustes* einfügen. Die ausführlichen Schritte stehen im Abschnitt [English](#english).
 
 Die Oberfläche ist vorerst nur auf Spanisch verfügbar.
 
