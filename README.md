@@ -47,8 +47,17 @@ Búho es una web-app para apuntar con un toque lo que hace el bebé: cuándo se 
 Solo hay que hacerlo una vez, desde un ordenador. Se tarda unos 10 minutos.
 
 1. **Crea la hoja.** Entra en [sheets.new](https://sheets.new) con tu cuenta de Google y ponle un nombre, por ejemplo *Búho*.
-2. **Pega el script.** En la hoja: *Extensiones → Apps Script*. Borra lo que haya y pega el contenido de [`apps-script/Code.gs`](apps-script/Code.gs).
-3. **Pon tu clave.** En la línea `const CLAVE = 'CAMBIA-ESTA-CLAVE';` escribe una clave larga, inventada por ti (por ejemplo, cuatro palabras al azar). Guarda (icono del disquete).
+2. **Pega el script.**
+   1. **Copia el código.** Abre [el script en formato texto](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs). Verás una página con solo código. Selecciónalo todo (`Ctrl + A`, o `Cmd + A` en Mac) y cópialo (`Ctrl + C` / `Cmd + C`).
+      También puedes abrir [`apps-script/Code.gs`](apps-script/Code.gs) aquí en GitHub y pulsar el botón *Copy raw file*, el de los dos cuadraditos arriba a la derecha del código.
+   2. **Abre el editor de scripts.** Vuelve a tu hoja de Google. En el menú de arriba, pulsa *Extensiones* (está entre *Herramientas* y *Ayuda*) y después *Apps Script*. Se abre una pestaña nueva con un editor.
+   3. **Borra lo que trae.** El editor abre un archivo llamado `Código.gs` con unas líneas de ejemplo (`function myFunction() { }`). Haz clic dentro del código, selecciónalo todo (`Ctrl + A` / `Cmd + A`) y bórralo. El archivo tiene que quedar completamente vacío.
+   4. **Pega el código** que copiaste (`Ctrl + V` / `Cmd + V`). La primera línea debe empezar por `/**` y la última ser una llave `}`.
+   5. **Ponle nombre (opcional).** Arriba a la izquierda pone *Proyecto sin título*. Haz clic y escribe, por ejemplo, *Búho sincronización*. Así lo reconocerás después.
+   6. **Todavía no guardes:** antes cambia la clave, que es el paso siguiente.
+
+   > Si en el menú *Extensiones* no aparece *Apps Script*, es probable que estés usando una cuenta de empresa o de centro educativo con esa opción bloqueada. Usa una cuenta personal de Gmail.
+3. **Pon tu clave.** Hacia la línea 18 verás `const CLAVE = 'CAMBIA-ESTA-CLAVE';`. Sustituye solo el texto `CAMBIA-ESTA-CLAVE` por una clave larga inventada por ti, por ejemplo cuatro palabras al azar como `jirafa-lunes-tostada-nube`. Deja las comillas y el punto y coma tal cual. Guarda con el icono del disquete o con `Ctrl + S` / `Cmd + S`.
 4. **Publícalo.** *Implementar → Nueva implementación* → engranaje → *Aplicación web*.
    - *Ejecutar como:* **Yo**
    - *Quién tiene acceso:* **Cualquier usuario**
@@ -100,7 +109,7 @@ Búho ("owl" in Spanish) is a web app to log your baby's day with a single tap: 
 
 ### Sync phones with Google Sheets (free)
 1. Create a sheet at [sheets.new](https://sheets.new).
-2. *Extensions → Apps Script*, delete everything and paste [`apps-script/Code.gs`](apps-script/Code.gs).
+2. Copy the code: open [the raw script](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs), select all (`Ctrl/Cmd + A`) and copy. Back in the sheet, open *Extensions → Apps Script*. A new tab opens with a file called `Code.gs` containing a sample `myFunction`. Select everything in it, delete it, and paste the copied code. The first line should start with `/**` and the last one should be `}`. If *Apps Script* is missing from the menu, you are probably on a work or school account that blocks it: use a personal Gmail account.
 3. Replace `CAMBIA-ESTA-CLAVE` with a long secret key of your own and save.
 4. *Deploy → New deployment → Web app*. *Execute as:* **Me**; *Who has access:* **Anyone**. Authorize it. Google warns that the app is unverified: it is your own script, so choose *Advanced → Go to…*
 5. Copy the URL ending in `/exec`.
