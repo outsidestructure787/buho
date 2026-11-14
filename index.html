@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Búho</title>
+<meta name="description" content="Registro de sueño, tomas y pañales del bebé. Funciona sin conexión.">
+<meta name="theme-color" content="#fbf6f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16141b" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Búho">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<style>
+/* Búho · registro del bebé pensado para usarse medio dormido a las 3 de la mañana.
+   Sin dependencias externas: todo funciona sin conexión. */
+:root{color-scheme:light dark;
+--bg:light-dark(#fbf6f0,#16141b);--card:light-dark(#fff,#221f29);--ink:light-dark(#2a2233,#efe9f3);--mut:light-dark(#7a7084,#a79fb0);--line:light-dark(#ece4da,#34303c);--on:light-dark(#fff,#16141b);
+--sl:light-dark(#6c63d9,#a29cf2);--fd:light-dark(#d4583f,#f08a74);--pe:light-dark(#b88a06,#f0c445);--po:light-dark(#8a5a33,#c99466);--ot:light-dark(#1f8a88,#4cc0bd);--warn:light-dark(#b8560f,#f0a050)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
+main{max-width:720px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) max(4vw,14px) calc(96px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--sl);outline-offset:2px}
+svg.i{width:26px;height:26px;fill:currentColor;flex:none}
+header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+h1{font-size:32px;line-height:1.05;margin:0;font-weight:800}
+.age{color:var(--mut);font-size:14px;margin-top:2px}
+.sync{margin-left:auto;font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px;text-align:right;background:none;border:0;padding:6px 4px;border-radius:10px;line-height:1.25}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mut);flex:none}.dot.on{background:var(--ot)}.dot.warn{background:var(--warn)}.dot.err{background:var(--fd)}
+.ib{background:none;border:0;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--mut);flex:none}
+.ib:hover{background:var(--line)}
+h2{font-size:20px;margin:26px 0 10px;font-weight:800}
+.run{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;color:var(--on);margin-bottom:10px}
+.run.sleep{background:var(--sl)}.run.feed{background:var(--fd)}
+.run small{display:block;font-size:14px;opacity:.9}
+.run b{font-size:clamp(28px,8vw,40px);font-variant-numeric:tabular-nums;line-height:1.05;display:block;font-weight:800}
+.run .stop{margin-left:auto;background:color-mix(in srgb,var(--on) 22%,transparent);border:0;border-radius:14px;padding:12px 16px;font-weight:800;color:inherit;min-height:52px;flex:none}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 14px}
+.tile{background:var(--card);border-radius:16px;padding:10px 12px 12px;border-top:4px solid var(--c)}
+.tile small{display:block;color:var(--mut);font-size:13px;font-weight:700}
+.tile b{display:block;font-size:clamp(19px,5.4vw,24px);line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800}
+.tile span{display:block;font-size:13px;color:var(--mut);line-height:1.3;margin-top:2px}
+.acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.act{border:0;border-radius:18px;background:var(--card);min-height:86px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--c);box-shadow:0 1px 0 var(--line),0 6px 16px -12px rgba(40,20,50,.35);transition:transform .12s}
+.act span{color:var(--ink);font-weight:700;font-size:14px;line-height:1.15;text-align:center}
+.act.big{grid-column:span 2;flex-direction:row;gap:10px}
+.act.on{background:var(--c);color:var(--on)}.act.on span{color:inherit}
+.act:active{transform:scale(.96)}
+.dbl{display:flex}.dbl svg{width:21px;height:21px}
+.lt{font-size:20px;width:30px;height:30px;border-radius:50%;border:2.5px solid currentColor;display:grid;place-items:center;line-height:1;font-weight:800}
+.sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sum div{background:var(--card);border-radius:14px;padding:10px 12px}
+.sum b{display:block;font-size:26px;line-height:1.1;color:var(--c);font-weight:800;white-space:nowrap}
+.sum small{color:var(--mut);font-size:13px;font-weight:700}
+.note{color:var(--mut);font-size:14px;margin:8px 2px 0}
+.row{display:grid;grid-template-columns:50px minmax(0,1fr) 52px;gap:8px;align-items:center;margin-bottom:6px}
+.dl{font-size:13px;font-weight:700;color:var(--mut);white-space:nowrap}
+.st{font-size:13px;color:var(--mut);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bar{position:relative;height:34px;background:var(--card);border-radius:8px;overflow:hidden;background-image:linear-gradient(90deg,transparent calc(25% - 1px),var(--line) calc(25% - 1px) 25%,transparent 25% calc(50% - 1px),var(--line) calc(50% - 1px) 50%,transparent 50% calc(75% - 1px),var(--line) calc(75% - 1px) 75%,transparent 75%)}
+.bar i{position:absolute;display:block}
+.sg{top:0;bottom:0;background:var(--sl);opacity:.8}
+.mk.f{top:3px;height:14px;width:3px;margin-left:-1.5px;border-radius:2px;background:var(--fd)}
+.mk.d{bottom:4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--c)}
+.nowl{top:0;bottom:0;width:2px;background:var(--ink);opacity:.5}
+.axl{display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--mut);margin-top:6px}
+.leg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:5px;vertical-align:-1px}
+.leg span.s::before{border-radius:2px;width:16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.chips button{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 14px;min-height:40px;font-weight:700;font-size:14px}
+.chips button.sel{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+h3{font-size:15px;margin:18px 0 2px;font-weight:800}h3 small{color:var(--mut);font-weight:600;margin-left:6px}
+.li{display:grid;grid-template-columns:10px 116px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 4px;min-height:50px}
+.li:hover{background:var(--card)}
+.cd{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.tm{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+.ds{line-height:1.3}.ds small{display:block;color:var(--mut);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.du{color:var(--mut);font-size:14px;white-space:nowrap;text-align:right}
+.du em{font-style:normal;margin-left:6px;background:var(--line);border-radius:10px;padding:1px 7px;font-size:12px;color:var(--ink)}
+.du .pd{margin-left:6px;color:var(--warn)}
+.empty{color:var(--mut);background:var(--card);border-radius:14px;padding:18px;text-align:center}
+.more{display:block;width:100%;margin-top:12px;border:1px dashed var(--line);background:none;border-radius:14px;min-height:46px;font-weight:700;color:var(--mut)}
+.ov{position:fixed;inset:0;background:rgba(20,12,28,.5);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.ov.open{display:flex}
+.sheet{background:var(--card);width:100%;max-width:560px;border-radius:24px 24px 0 0;padding:6px 20px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
+.sheet h2{margin-top:16px}
+.f{display:block;margin-bottom:14px;font-size:14px;color:var(--mut);font-weight:700}
+.f small{font-weight:600}
+input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:46px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.seg button{flex:1 1 0;border:1px solid var(--line);background:var(--bg);border-radius:12px;min-height:46px;font-weight:700;color:var(--ink);padding:6px 8px}
+.seg button.sel{background:var(--sl);border-color:var(--sl);color:var(--on)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btns button,.wide{border:1px solid var(--line);background:var(--bg);border-radius:14px;min-height:50px;padding:0 18px;font-weight:800}
+.btns .pri{background:var(--sl);border-color:var(--sl);color:var(--on);flex:1}
+.btns .dan{color:var(--fd);margin-left:auto}
+.wide{width:100%;margin-bottom:8px}
+.err{color:var(--fd);font-weight:700;min-height:1px;margin:0 0 6px}
+.ok{color:var(--ot);font-weight:700}
+.chk{display:flex;align-items:center;gap:10px;font-weight:700;min-height:46px}
+.chk input{width:22px;height:22px;min-height:0;margin:0;flex:none}
+.hint{color:var(--mut);font-size:14px;margin:0 0 14px}
+.box{background:var(--bg);border-radius:14px;padding:12px 14px;margin:6px 0 16px;font-size:14px}
+.box p{margin:4px 0 0;color:var(--mut)}
+.ver{color:var(--mut);font-size:13px;text-align:center;margin:18px 0 0}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translate(-50%,160%);background:var(--ink);color:var(--bg);border-radius:16px;padding:8px 8px 8px 16px;display:flex;align-items:center;gap:6px;max-width:calc(100% - 24px);width:max-content;transition:transform .25s;z-index:20;font-weight:700;font-size:15px}
+#toast.show{transform:translate(-50%,0)}
+#toast button{background:color-mix(in srgb,var(--bg) 18%,transparent);border:0;color:inherit;border-radius:10px;min-height:42px;padding:0 12px;font-weight:800;flex:none}
+#toast span{padding-right:6px}
+@media(max-width:420px){.li{grid-template-columns:10px 106px minmax(0,1fr) auto;gap:8px}.tm{font-size:15px}.act span{font-size:13px}.sum b{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.act,#toast{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1 id="nm">Búho</h1><div class="age" id="age"></div></div>
+    <button class="sync" id="sync" data-a="syncnow"></button>
+    <button class="ib" data-a="settings" id="gear"></button>
+  </header>
+  <section id="now"></section>
+  <h2 id="h-today"></h2>
+  <section id="sum"></section>
+  <h2 id="h-week"></h2>
+  <section id="tl"></section>
+  <h2 id="h-log"></h2>
+  <section id="log"></section>
+</main>
+<div class="ov" id="ov"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div id="toast" role="status"></div>
+<script>
+'use strict';
+{
+const VERSION='0.1.1';
+
+/* ================= Textos (i18n) =================
+   Para traducir la app basta con añadir otro diccionario con las mismas claves.
+   {x} se sustituye por el valor correspondiente. */
+const STR={es:{
+  appName:'Búho',babyLog:'Registro del bebé',bornToday:'Nacido hoy',day:'día',days:'días',weeks:'semanas',
+  today:'Hoy',yesterday:'Ayer',last7:'Últimos 7 días',log:'Registro',
+  months:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+  dow:['dom','lun','mar','mié','jue','vie','sáb'],dayOf:'{d} de {m}',
+  min:'min',h:'h',
+  sideL:'izquierdo',sideR:'derecho',sideB:'ambos',
+  subWeight:'Peso',subHeight:'Talla',subHead:'Perímetro de la cabeza',subTemp:'Temperatura',subMed:'Medicación o vitamina',subSpit:'Regurgitación o vómito',subBath:'Baño',subCry:'Llanto o cólico',subNote:'Nota',
+  colors:['Amarilla','Verdosa','Marrón','Negra (meconio)','Con moco','Otra'],
+  tSleep:'Sueño',tFeed:'Toma',tDiaper:'Pañal',tOther:'Otro',tConfig:'Ajustes',
+  sleeping:'Durmiendo',sleep:'Sueño',bottle:'Biberón',formula:'fórmula',breastMilk:'materna',pump:'Sacaleches',breast:'Pecho',
+  peeAndPoo:'Pis y caca',poo:'Caca',pee:'Pis',
+  sleepingSince:'Durmiendo desde las {t}',wakes:'Despierta',since:'desde las {t}',finish:'Terminar',
+  lastFeed:'Última toma',now:'Ahora',at:'a las {t}',next:'Toca: {s}',asleep:'Dormido',awake:'Despierto',lastDiaper:'Último pañal',
+  btnSleep:'Se duerme',btnWake:'Se despierta',btnL:'Pecho izq.',btnR:'Pecho der.',btnOther:'Peso, fiebre, medicina…',btnPast:'Anotar algo pasado',
+  feeds:'tomas',ofSleep:'de sueño',pees:'pis',poos:'cacas',longest:'Tramo de sueño más largo: {d}',bottleTotal:'Biberón: {n} ml en total',
+  asleepLeg:'dormido',feedLeg:'toma',sleepCol:'sueño',
+  fAll:'Todo',fSleep:'Sueño',fFeed:'Tomas',fDiaper:'Pañales',fOther:'Otros',
+  emptyType:'No hay registros de este tipo.',emptyAll:'Aún no hay nada anotado. Pulsa un botón de arriba cuando pase algo.',
+  moreRows:'Ver más registros',exportBtn:'Exportar CSV para el pediatra',
+  ongoing:'en curso',toNow:' – ahora',you:'tú',pendingMark:'pendiente de enviar',
+  undo:'Deshacer',color:'Color',update:'Actualizar',
+  tWoke:'Despierto · durmió {d}',tSlept:'Dormido a las {t}',tFeedAt:'Toma ({s}) a las {t}',tFeedDone:'Toma terminada · {d}',tBreastFrom:'Pecho {s} desde las {t}',tAt:'{x} a las {t}',
+  tSaved:'Guardado',tDeleted:'Registro eliminado',tSettings:'Ajustes guardados',tCsvCopied:'CSV copiado al portapapeles',tNoExport:'Este navegador no permite exportar desde aquí',tNewVersion:'Hay una versión nueva',
+  tStorage:'No se pudo guardar en el móvil: el almacenamiento está lleno.',
+  newRec:'Nuevo registro',editRec:'Editar registro',type:'Tipo',feedKind:'Toma',side:'Lado',left:'Izquierdo',right:'Derecho',both:'Ambos',
+  qty:'Cantidad (ml)',milk:'Leche',mMat:'Materna',mForm:'Fórmula',content:'Contenido',colorLook:'Color o aspecto',noColor:'Sin indicar',
+  what:'Qué',value:'Valor ({u})',whichDose:'Cuál y dosis',start:'Inicio',time:'Hora',end:'Fin',endHint:'(vacío = sigue en curso)',note:'Nota',optional:'Opcional',
+  save:'Guardar',cancel:'Cancelar',del:'Eliminar',sure:'¿Seguro? Pulsa otra vez',
+  eTime:'Indica la hora.',eFuture:'La hora no puede estar en el futuro.',eEnd:'El fin es anterior al inicio.',eValue:'Escribe el valor.',
+  settings:'Ajustes',babyName:'Nombre del bebé',birth:'Fecha de nacimiento',timeFeeds:'Cronometrar las tomas de pecho',timeFeedsHint:'Si lo desactivas, al pulsar Pecho izq. o der. solo se anota la hora de la toma.',
+  meName:'¿Quién usa este móvil?',meHint:'Aparece junto a lo que anotes, para saber quién lo apuntó. Por ejemplo: Mamá, Papá, Abuela.',
+  syncTitle:'Sincronización con Google Sheets',syncHelp:'Sin configurar, los datos se guardan solo en este móvil. Con una hoja de Google compartida, los móviles se sincronizan cuando hay cobertura. Las instrucciones están en el README del proyecto.',
+  syncUrl:'Dirección de la aplicación web (termina en /exec)',syncKey:'Clave de acceso',pasteLink:'…o pega aquí un enlace de configuración',
+  testSync:'Guardar y probar conexión',shareCfg:'Compartir configuración con otro móvil',fullSync:'Volver a descargar todo',
+  shareText:'Abre este enlace en tu móvil para conectar Búho a nuestra hoja. En iPhone: instala primero la app y pega el enlace en Ajustes.',
+  cfgCopied:'Enlace copiado: envíalo a la otra persona',cfgApplied:'Sincronización configurada',cfgBad:'El enlace de configuración no es válido',
+  testing:'Probando…',testOk:'Conexión correcta',
+  exportTitle:'Exportar',exportCsv:'Descargar CSV',
+  sNone:'Solo en este móvil',sOff:'Sin conexión',sPend:'{n} sin enviar',sSyncing:'Sincronizando…',sOk:'Sincronizado',sErr:'Error al sincronizar',
+  errKey:'La clave no coincide con la de la hoja.',errNet:'No se pudo conectar. Revisa la dirección y la cobertura.',errSrv:'La hoja devolvió un error: {e}',
+  version:'Búho v{v}',
+  csvHead:['Fecha','Inicio','Fin','Duración (min)','Tipo','Detalle','Nota','Quién']
+}};
+let LANG='es';
+const T=(k,v)=>{let s=(STR[LANG]&&STR[LANG][k])??STR.es[k]??k;if(v&&typeof s==='string')s=s.replace(/\{(\w+)\}/g,(m,x)=>v[x]??m);return s};
+
+/* ================= Utilidades ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const hm=ms=>{const d=new Date(ms);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const toIn=ms=>{if(ms==null)return'';const d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+hm(ms)};
+const fromIn=v=>v?new Date(v).getTime():null;
+const sod=ms=>{const d=new Date(ms);d.setHours(0,0,0,0);return d.getTime()};
+const addDays=(t,n)=>{const d=new Date(t);d.setDate(d.getDate()+n);return d.getTime()};
+function dur(ms,short){ms=Math.max(0,ms);const m=Math.floor(ms/6e4),h=Math.floor(m/60),d=Math.floor(h/24);
+  if(d>=2)return d+(short?'d':' '+T('days'));
+  if(h)return short?h+'h '+pad(m%60)+'m':h+' '+T('h')+' '+pad(m%60)+' '+T('min');
+  return m+(short?'m':' '+T('min'))}
+const clock=ms=>{const s=Math.floor(Math.max(0,ms)/1e3);return Math.floor(s/3600)+':'+pad(Math.floor(s/60)%60)+':'+pad(s%60)};
+function dayLabel(t){const t0=sod(Date.now());if(t===t0)return T('today');if(t===addDays(t0,-1))return T('yesterday');const d=new Date(t);return T('dow')[d.getDay()]+' '+d.getDate()}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+
+const sv=p=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+const I={
+  moon:sv('<path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/>'),
+  sun:sv('<circle cx="12" cy="12" r="4.5"/><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>'),
+  drop:sv('<path d="M12 2.5s-6.5 7-6.5 12a6.5 6.5 0 0 0 13 0c0-5-6.5-12-6.5-12z"/>'),
+  poo:sv('<path d="M6.5 21h11a3.5 3.5 0 0 0 1-6.85A3 3 0 0 0 15.5 10h-.3A3 3 0 0 0 12 6c0-1 .5-2 1.5-3-3 0-5 1.8-5 4.2A3 3 0 0 0 7 12.3 3.4 3.4 0 0 0 6.5 21z"/>'),
+  bottle:sv('<path d="M10 2h4v2.2l1.6 2.3c.3.4.4.9.4 1.4V20a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V7.9c0-.5.1-1 .4-1.4L10 4.2z"/>'),
+  heart:sv('<path d="M12 21s-8.5-5.4-8.5-11.2A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 8.5 2.6C20.5 15.6 12 21 12 21z"/>'),
+  plus:sv('<path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/>'),
+  clock:sv('<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4.6l3.4 2-1 1.7L11 12.7V7z"/>'),
+  gear:sv('<path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>')};
+
+const SIDE=s=>({L:T('sideL'),R:T('sideR'),B:T('sideB')}[s]||'');
+const SUBK={weight:['subWeight','kg'],height:['subHeight','cm'],head:['subHead','cm'],temp:['subTemp','°C'],med:['subMed',''],spit:['subSpit',''],bath:['subBath',''],cry:['subCry',''],note:['subNote','']};
+const TYPE=t=>({sleep:T('tSleep'),feed:T('tFeed'),diaper:T('tDiaper'),other:T('tOther'),config:T('tConfig')}[t]||t);
+const timed=e=>e.type==='sleep'||(e.type==='feed'&&e.kind!=='bottle');
+
+function desc(e){
+  if(e.type==='sleep')return e.end==null?T('sleeping'):T('sleep');
+  if(e.type==='feed'){
+    if(e.kind==='bottle')return T('bottle')+(e.ml?' '+e.ml+' ml':'')+' · '+(e.milk==='formula'?T('formula'):T('breastMilk'));
+    if(e.kind==='pump')return T('pump')+' '+SIDE(e.side)+(e.ml?' · '+e.ml+' ml':'');
+    return T('breast')+' '+SIDE(e.side)}
+  if(e.type==='diaper')return(e.pee&&e.poo?T('peeAndPoo'):e.poo?T('poo'):T('pee'))+(e.poo&&e.color?' · '+e.color.toLowerCase():'');
+  if(e.type==='config')return[e.name,e.birth].filter(Boolean).join(' · ');
+  const s=SUBK[e.sub]||SUBK.note;return T(s[0])+(e.value!=null&&e.value!==''?': '+e.value+(s[1]?' '+s[1]:''):'')}
+const colOf=e=>e.type==='sleep'?'--sl':e.type==='feed'?'--fd':e.type==='diaper'?(e.poo?'--po':'--pe'):'--ot';
+
+/* ================= Datos locales =================
+   Todo se guarda primero en el móvil (localStorage). Cada cambio queda
+   "pendiente" hasta que la hoja de Google confirma que lo ha recibido. */
+const K={ev:'buho.events',pend:'buho.pending',since:'buho.since',loc:'buho.local'};
+let EV={},PEND=new Set(),SINCE=0,LOC={me:'',url:'',key:''};
+let cfg={name:'',birth:'',timeFeeds:true};
+let cache=null;
+function readLS(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function loadLocal(){EV=readLS(K.ev,{})||{};PEND=new Set(readLS(K.pend,[]));SINCE=readLS(K.since,0)||0;LOC={...LOC,...readLS(K.loc,{})};applyCfg()}
+function persist(){try{localStorage.setItem(K.ev,JSON.stringify(EV));localStorage.setItem(K.pend,JSON.stringify([...PEND]));localStorage.setItem(K.since,JSON.stringify(SINCE));localStorage.setItem(K.loc,JSON.stringify(LOC));return true}
+  catch(e){toast(T('tStorage'));return false}}
+function applyCfg(){const c=EV.cfg;cfg={name:'',birth:'',timeFeeds:true,...(c&&!c.del?{name:c.name||'',birth:c.birth||'',timeFeeds:c.timeFeeds!==false}:{})}}
+const all=()=>cache||(cache=Object.values(EV).filter(e=>!e.del&&e.type!=='config'&&typeof e.start==='number').sort((a,b)=>b.start-a.start));
+function changed(id){cache=null;PEND.add(id);persist();if(id==='cfg')applyCfg();render();schedule(800)}
+function clean(o){const r={};for(const k in o){if(o[k]===undefined||k.startsWith('_'))continue;r[k]=o[k]}return r}
+function add(ev){const id=uid(),now=Date.now();EV[id]=clean({...ev,id,c:now,u:now,by:LOC.me||''});changed(id);return{id}}
+function upd(e,patch,replace){const n=replace?{...patch,id:e.id,c:e.c,by:e.by}:{...e,...patch};n.u=Math.max(Date.now(),(e.u||0)+1);EV[e.id]=clean(n);changed(e.id)}
+function del(e){if(!e||!EV[e.id])return;EV[e.id]={id:e.id,type:e.type,start:e.start,del:true,u:Math.max(Date.now(),(e.u||0)+1),by:LOC.me||''};changed(e.id)}
+function restore(snap){EV[snap.id]={...snap,u:Math.max(Date.now(),(EV[snap.id]?.u||0)+1)};changed(snap.id)}
+
+/* ================= Sincronización con Google Sheets =================
+   Protocolo (ver apps-script/Code.gs): POST {key, since, events[]} →
+   {ok, now, events[]}. Gana la versión con la marca "u" más reciente. */
+let syncing=false,again=false,lastErr='',lastOk=0,timer=null;
+function schedule(ms){clearTimeout(timer);timer=setTimeout(()=>sync(),ms)}
+async function post(body){
+  const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),25000);
+  try{const r=await fetch(LOC.url,{method:'POST',body:JSON.stringify(body),headers:{'Content-Type':'text/plain;charset=utf-8'},redirect:'follow',signal:ctl.signal});
+    const txt=await r.text();let j;try{j=JSON.parse(txt)}catch(e){throw new Error('net')}return j}
+  catch(e){throw e.message==='net'?e:new Error('net')}
+  finally{clearTimeout(to)}}
+async function sync(full){
+  if(!LOC.url||!LOC.key){setSync();return false}
+  if(syncing){again=true;return false}
+  if(!navigator.onLine){setSync();return false}
+  syncing=true;setSync();let ok=false;
+  try{
+    const ids=[...PEND].slice(0,400),sent={};
+    const events=ids.map(id=>EV[id]).filter(Boolean).map(e=>{sent[e.id]=e.u;return{...e,_tipo:TYPE(e.type),_txt:e.del?'':desc(e)}});
+    ids.forEach(id=>{if(!EV[id])PEND.delete(id)});
+    const r=await post({key:LOC.key,since:full?0:SINCE,events,v:VERSION});
+    if(!r||!r.ok)throw new Error(r&&r.error==='bad_key'?'key':'srv:'+((r&&r.error)||'?'));
+    ids.forEach(id=>{if(EV[id]&&EV[id].u===sent[id])PEND.delete(id)});
+    for(const re of r.events||[]){if(!re||!re.id)continue;const l=EV[re.id];
+      if(l&&PEND.has(re.id)&&(l.u||0)>(re.u||0))continue;
+      if(!l||(re.u||0)>=(l.u||0)){delete re.srv;EV[re.id]=re}}
+    SINCE=r.now||SINCE;lastErr='';lastOk=Date.now();ok=true;cache=null;applyCfg();persist();render();
+    if(PEND.size)again=true;
+  }catch(e){const m=e.message||'';lastErr=m==='key'?T('errKey'):m.startsWith('srv:')?T('errSrv',{e:m.slice(4)}):T('errNet')}
+  finally{syncing=false;setSync();if(again&&ok){again=false;schedule(300)}else again=false}
+  return ok}
+function setSync(){
+  let cls='',txt;const n=PEND.size;
+  if(!LOC.url||!LOC.key){txt=T('sNone')}
+  else if(syncing){txt=T('sSyncing')}
+  else if(!navigator.onLine){cls='warn';txt=T('sOff')+(n?' · '+T('sPend',{n}):'')}
+  else if(lastErr){cls='err';txt=T('sErr')+(n?' · '+T('sPend',{n}):'')}
+  else if(n){cls='warn';txt=T('sPend',{n})}
+  else{cls=lastOk?'on':'';txt=lastOk?T('sOk'):T('sSyncing')}
+  const el=$('#sync');el.innerHTML=`<i class="dot ${cls}"></i><span>${esc(txt)}</span>`;el.title=lastErr||''}
+
+/* Enlace de configuración: #cfg=… con la dirección y la clave (no se envía a ningún servidor). */
+const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+function dec(s){try{const o=JSON.parse(decodeURIComponent(escape(atob(s))));return o&&o.url&&o.key?o:null}catch(e){return null}}
+function cfgLink(){return location.origin+location.pathname+'#cfg='+enc({url:LOC.url,key:LOC.key})}
+function parseCfg(text){const m=String(text||'').match(/cfg=([A-Za-z0-9+/=_-]+)/);return m?dec(m[1]):null}
+
+/* ================= Pintar ================= */
+function render(){renderHead();renderNow();renderSum();renderTl();renderLog();tick();setSync()}
+function renderHead(){
+  $('#nm').textContent=cfg.name||T('appName');document.title=cfg.name?cfg.name+' · '+T('appName'):T('appName');
+  let a=T('babyLog');
+  if(cfg.birth){const[y,m,d]=cfg.birth.split('-').map(Number);const days=Math.round((sod(Date.now())-new Date(y,m-1,d).getTime())/864e5);
+    if(days>=0)a=days<1?T('bornToday'):days<60?days+' '+(days===1?T('day'):T('days')):Math.floor(days/7)+' '+T('weeks')}
+  $('#age').textContent=a}
+function renderNow(){
+  const ev=all();
+  const sl=ev.find(e=>e.type==='sleep'&&e.end==null),fd=ev.find(e=>e.type==='feed'&&e.kind!=='bottle'&&e.end==null);
+  const lf=ev.find(e=>e.type==='feed'),lb=ev.find(e=>e.type==='feed'&&e.kind==='breast'&&e.side!=='B'),ls=ev.find(e=>e.type==='sleep'&&e.end!=null),ld=ev.find(e=>e.type==='diaper');
+  let h='';
+  if(sl)h+=`<div class="run sleep">${I.moon}<div><small>${T('sleepingSince',{t:hm(sl.start)})}</small><b data-run="${sl.start}"></b></div><button class="stop" data-a="wake">${T('wakes')}</button></div>`;
+  if(fd)h+=`<div class="run feed">${I.heart}<div><small>${fd.kind==='pump'?T('pump'):T('breast')} ${SIDE(fd.side)} · ${T('since',{t:hm(fd.start)})}</small><b data-run="${fd.start}"></b></div><button class="stop" data-a="feedstop">${T('finish')}</button></div>`;
+  const next=lb?(lb.side==='L'?T('sideR'):T('sideL')):'';
+  h+='<div class="tiles">';
+  h+=`<div class="tile" style="--c:var(--fd)"><small>${T('lastFeed')}</small>${fd?`<b>${T('now')}</b>`:lf?`<b data-ago="${lf.start}"></b><span>${T('at',{t:hm(lf.start)})}</span>`:'<b>—</b>'}${next?`<span>${T('next',{s:next})}</span>`:''}</div>`;
+  h+=`<div class="tile" style="--c:var(--sl)">${sl?`<small>${T('asleep')}</small><b data-ago="${sl.start}"></b><span>${T('since',{t:hm(sl.start)})}</span>`:ls?`<small>${T('awake')}</small><b data-ago="${ls.end}"></b><span>${T('since',{t:hm(ls.end)})}</span>`:`<small>${T('sleep')}</small><b>—</b>`}</div>`;
+  h+=`<div class="tile" style="--c:var(${ld?colOf(ld):'--pe'})"><small>${T('lastDiaper')}</small>${ld?`<b data-ago="${ld.start}"></b><span>${ld.pee&&ld.poo?T('peeAndPoo'):ld.poo?T('poo'):T('pee')} · ${hm(ld.start)}</span>`:'<b>—</b>'}</div>`;
+  h+='</div><div class="acts">';
+  h+=`<button class="act big ${sl?'on':''}" style="--c:var(--sl)" data-a="sleep">${sl?I.sun:I.moon}<span>${sl?T('btnWake'):T('btnSleep')}</span></button>`;
+  h+=`<button class="act ${fd&&fd.side==='L'?'on':''}" style="--c:var(--fd)" data-a="L"><b class="lt">I</b><span>${T('btnL')}</span></button>`;
+  h+=`<button class="act ${fd&&fd.side==='R'?'on':''}" style="--c:var(--fd)" data-a="R"><b class="lt">D</b><span>${T('btnR')}</span></button>`;
+  h+=`<button class="act" style="--c:var(--fd)" data-a="bottle">${I.bottle}<span>${T('bottle')}</span></button>`;
+  h+=`<button class="act" style="--c:var(--pe)" data-a="pee">${I.drop}<span>${T('pee')}</span></button>`;
+  h+=`<button class="act" style="--c:var(--po)" data-a="poo">${I.poo}<span>${T('poo')}</span></button>`;
+  h+=`<button class="act" style="--c:var(--po)" data-a="both"><span class="dbl" style="color:var(--pe)">${I.drop}<i style="color:var(--po);display:flex">${I.poo}</i></span><span>${T('peeAndPoo')}</span></button>`;
+  h+=`<button class="act big" style="--c:var(--ot)" data-a="other">${I.plus}<span>${T('btnOther')}</span></button>`;
+  h+=`<button class="act big" style="--c:var(--mut)" data-a="past">${I.clock}<span>${T('btnPast')}</span></button>`;
+  $('#now').innerHTML=h+'</div>'}
+function overlap(e,a,b,now){return Math.max(0,Math.min(e.end??now,b)-Math.max(e.start,a))}
+function renderSum(){
+  const ev=all(),now=Date.now(),a=sod(now),b=addDays(a,1),td=ev.filter(e=>e.start>=a&&e.start<b);
+  const sleeps=ev.filter(e=>e.type==='sleep'&&e.start<b&&(e.end??now)>a);
+  const st=sleeps.reduce((s,e)=>s+overlap(e,a,b,now),0);
+  const longest=sleeps.reduce((m,e)=>Math.max(m,(e.end??now)-e.start),0);
+  const feeds=td.filter(e=>e.type==='feed'),ml=feeds.reduce((s,e)=>s+(e.kind==='bottle'&&e.ml?+e.ml:0),0);
+  const pee=td.filter(e=>e.type==='diaper'&&e.pee).length,poo=td.filter(e=>e.type==='diaper'&&e.poo).length;
+  $('#sum').innerHTML=`<div class="sum"><div style="--c:var(--fd)"><b>${feeds.length}</b><small>${T('feeds')}</small></div><div style="--c:var(--sl)"><b>${st?dur(st,true):'0m'}</b><small>${T('ofSleep')}</small></div><div style="--c:var(--pe)"><b>${pee}</b><small>${T('pees')}</small></div><div style="--c:var(--po)"><b>${poo}</b><small>${T('poos')}</small></div></div>`+
+    (longest||ml?`<p class="note">${longest?T('longest',{d:dur(longest)}):''}${longest&&ml?' · ':''}${ml?T('bottleTotal',{n:ml}):''}</p>`:'')}
+function renderTl(){
+  const ev=all(),now=Date.now(),t0=sod(now);let h='';
+  for(let i=0;i<7;i++){const a=addDays(t0,-i),b=addDays(a,1),sp=b-a,pc=x=>((x-a)/sp*100).toFixed(2)+'%';
+    const sl=ev.filter(e=>e.type==='sleep'&&e.start<b&&(e.end??now)>a);
+    const segs=sl.map(e=>{const s=Math.max(e.start,a),en=Math.min(e.end??now,b);return`<i class="sg" style="left:${pc(s)};width:${Math.max(.4,(en-s)/sp*100).toFixed(2)}%"></i>`}).join('');
+    const mks=ev.filter(e=>(e.type==='feed'||e.type==='diaper')&&e.start>=a&&e.start<b).map(e=>`<i class="mk ${e.type==='feed'?'f':'d'}" style="left:${pc(e.start)};--c:var(${colOf(e)})"></i>`).join('');
+    const tot=sl.reduce((s,e)=>s+overlap(e,a,b,now),0);
+    h+=`<div class="row"><span class="dl">${dayLabel(a)}</span><div class="bar">${segs}${mks}${i===0?`<i class="nowl" style="left:${pc(now)}"></i>`:''}</div><span class="st">${tot?dur(tot,true):'—'}</span></div>`}
+  h+=`<div class="row"><span></span><div class="axl"><span>0h</span><span>6h</span><span>12h</span><span>18h</span><span>24h</span></div><span class="st">${T('sleepCol')}</span></div>`;
+  h+=`<div class="leg"><span class="s" style="--c:var(--sl)">${T('asleepLeg')}</span><span style="--c:var(--fd)">${T('feedLeg')}</span><span style="--c:var(--pe)">${T('pee').toLowerCase()}</span><span style="--c:var(--po)">${T('poo').toLowerCase()}</span></div>`;
+  $('#tl').innerHTML=h}
+const who=by=>by&&by===LOC.me?T('you'):by;
+let filter='all',showN=150;
+function renderLog(){
+  const every=all(),ev=every.filter(e=>filter==='all'||e.type===filter);
+  const multi=new Set(every.map(e=>e.by||'')).size>1;
+  let h='<div class="chips">'+[['all','fAll'],['sleep','fSleep'],['feed','fFeed'],['diaper','fDiaper'],['other','fOther']].map(([k,l])=>`<button data-f="${k}" class="${filter===k?'sel':''}">${T(l)}</button>`).join('')+'</div>';
+  let cur=null;const M=T('months');
+  ev.slice(0,showN).forEach(e=>{const d=sod(e.start);
+    if(d!==cur){cur=d;h+=`<h3>${dayLabel(d)}<small>${T('dayOf',{d:new Date(d).getDate(),m:M[new Date(d).getMonth()]})}</small></h3>`}
+    const fin=e.end!=null&&e.end>e.start,run=timed(e)&&e.end==null;
+    const t=hm(e.start)+(timed(e)?(run?T('toNow'):fin?' – '+hm(e.end):''):'');
+    const du=run?T('ongoing'):fin&&timed(e)?dur(e.end-e.start):'';
+    const pend=LOC.url&&PEND.has(e.id)?`<span class="pd" title="${T('pendingMark')}">●</span>`:'';
+    h+=`<button class="li" data-id="${esc(e.id)}" style="--c:var(${colOf(e)})"><i class="cd"></i><span class="tm">${t}</span><span class="ds">${esc(desc(e))}${e.note?`<small>${esc(e.note)}</small>`:''}</span><span class="du">${du}${multi&&e.by?`<em>${esc(who(e.by))}</em>`:''}${pend}</span></button>`});
+  if(!ev.length)h+=`<p class="empty">${every.length?T('emptyType'):T('emptyAll')}</p>`;
+  if(ev.length>showN)h+=`<button class="more" data-a="moreRows">${T('moreRows')}</button>`;
+  if(every.length)h+=`<button class="more" data-a="export">${T('exportBtn')}</button>`;
+  $('#log').innerHTML=h}
+function tick(){const n=Date.now();
+  document.querySelectorAll('[data-run]').forEach(el=>el.textContent=clock(n-+el.dataset.run));
+  document.querySelectorAll('[data-ago]').forEach(el=>el.textContent=dur(n-+el.dataset.ago,true))}
+
+/* ================= Avisos ================= */
+let toastT=null,toastBtns=[];
+function toast(msg,btns=[]){const t=$('#toast');toastBtns=btns;
+  t.innerHTML=`<span>${esc(msg)}</span>`+btns.map((b,i)=>`<button data-t="${i}">${esc(b.l)}</button>`).join('');
+  t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(hideToast,btns.length?7000:3500)}
+function hideToast(){$('#toast').classList.remove('show')}
+$('#toast').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;const f=toastBtns[+b.dataset.t];hideToast();if(f)f.f()});
+function undoable(msg,fn,extra){toast(msg,[{l:T('undo'),f:fn}].concat(extra?[extra]:[]))}
+const delRef=r=>del(EV[r.id]);
+
+/* ================= Acciones rápidas ================= */
+function act(a){
+  const ev=all(),now=Date.now();
+  const sl=ev.find(e=>e.type==='sleep'&&e.end==null),fd=ev.find(e=>e.type==='feed'&&e.kind!=='bottle'&&e.end==null);
+  if(a==='sleep'||a==='wake'){
+    if(sl){upd(sl,{end:now});undoable(T('tWoke',{d:dur(now-sl.start)}),()=>upd(EV[sl.id],{end:null}))}
+    else if(a==='sleep'){const r=add({type:'sleep',start:now,end:null});undoable(T('tSlept',{t:hm(now)}),()=>delRef(r))}}
+  else if(a==='L'||a==='R'){
+    if(!cfg.timeFeeds){const r=add({type:'feed',kind:'breast',side:a,start:now,end:now});undoable(T('tFeedAt',{s:SIDE(a),t:hm(now)}),()=>delRef(r));return}
+    if(fd){upd(fd,{end:now});if(fd.side===a&&fd.kind==='breast'){undoable(T('tFeedDone',{d:dur(now-fd.start)}),()=>upd(EV[fd.id],{end:null}));return}}
+    const r=add({type:'feed',kind:'breast',side:a,start:now,end:null});undoable(T('tBreastFrom',{s:SIDE(a),t:hm(now)}),()=>delRef(r))}
+  else if(a==='feedstop'){if(fd){upd(fd,{end:now});undoable(T('tFeedDone',{d:dur(now-fd.start)}),()=>upd(EV[fd.id],{end:null}))}}
+  else if(a==='pee'||a==='poo'||a==='both'){
+    const r=add({type:'diaper',pee:a!=='poo',poo:a!=='pee',start:now});
+    const lbl={pee:T('pee'),poo:T('poo'),both:T('peeAndPoo')}[a];
+    undoable(T('tAt',{x:lbl,t:hm(now)}),()=>delRef(r),a==='pee'?null:{l:T('color'),f:()=>{const e=EV[r.id];if(e&&!e.del)openForm(e,false)}})}
+  else if(a==='bottle')openForm({type:'feed',kind:'bottle',milk:'materna',start:now},true);
+  else if(a==='other')openForm({type:'other',sub:'weight',start:now},true);
+  else if(a==='past')openForm({type:'feed',kind:'breast',side:'L',start:now-36e5,end:now-36e5+15*6e4},true);
+  else if(a==='settings')openSettings();
+  else if(a==='export')exportCsv();
+  else if(a==='syncnow'){if(!LOC.url||!LOC.key)openSettings();else sync()}
+  else if(a==='moreRows'){showN+=150;renderLog()}}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#sheet,#toast'))return;
+  if(e.target===$('#ov')){closeSheet();return}
+  const b=e.target.closest('[data-a],[data-id],[data-f]');if(!b)return;
+  if(b.dataset.id){const x=EV[b.dataset.id];if(x&&!x.del)openForm(x,false);return}
+  if(b.dataset.f){filter=b.dataset.f;showN=150;renderLog();return}
+  act(b.dataset.a)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+
+/* ================= Formulario ================= */
+let draft=null,orig=null,isNew=false,confirmDel=false,mode='';
+function openForm(e,neu){mode='form';draft={...e};orig=neu?null:e;isNew=neu;confirmDel=false;drawForm();$('#ov').classList.add('open')}
+function closeSheet(){$('#ov').classList.remove('open');draft=null;mode=''}
+function seg(k,opts,cur){return`<div class="seg">${opts.map(([v,l])=>`<button type="button" data-s="${k}" data-v="${v}" class="${String(cur)===v?'sel':''}">${l}</button>`).join('')}</div>`}
+function drawForm(){const d=draft,tm=timed(d);let h=`<h2>${isNew?T('newRec'):T('editRec')}</h2>`;
+  if(isNew)h+=`<div class="f">${T('type')}${seg('type',[['sleep',T('tSleep')],['feed',T('tFeed')],['diaper',T('tDiaper')],['other',T('tOther')]],d.type)}</div>`;
+  if(d.type==='feed'){h+=`<div class="f">${T('feedKind')}${seg('kind',[['breast',T('breast')],['bottle',T('bottle')],['pump',T('pump')]],d.kind)}</div>`;
+    if(d.kind!=='bottle')h+=`<div class="f">${T('side')}${seg('side',[['L',T('left')],['R',T('right')],['B',T('both')]],d.side)}</div>`;
+    if(d.kind!=='breast')h+=`<label class="f">${T('qty')}<input type="number" inputmode="numeric" min="0" step="5" data-k="ml" value="${d.ml??''}"></label>`;
+    if(d.kind==='bottle')h+=`<div class="f">${T('milk')}${seg('milk',[['materna',T('mMat')],['formula',T('mForm')]],d.milk)}</div>`}
+  if(d.type==='diaper'){h+=`<div class="f">${T('content')}${seg('dp',[['pee',T('pee')],['poo',T('poo')],['both',T('both')]],d.pee&&d.poo?'both':d.poo?'poo':'pee')}</div>`;
+    if(d.poo)h+=`<label class="f">${T('colorLook')}<select data-k="color"><option value="">${T('noColor')}</option>${T('colors').map(c=>`<option ${d.color===c?'selected':''}>${c}</option>`).join('')}</select></label>`}
+  if(d.type==='other'){const s=SUBK[d.sub]||SUBK.note;
+    h+=`<label class="f">${T('what')}<select data-k="sub">${Object.entries(SUBK).map(([k,v])=>`<option value="${k}" ${d.sub===k?'selected':''}>${T(v[0])}</option>`).join('')}</select></label>`;
+    if(s[1])h+=`<label class="f">${T('value',{u:s[1]})}<input type="number" inputmode="decimal" step="any" data-k="value" value="${d.value??''}"></label>`;
+    else if(d.sub==='med')h+=`<label class="f">${T('whichDose')}<input data-k="value" maxlength="120" value="${esc(d.value??'')}"></label>`}
+  h+=`<div class="two"><label class="f">${tm?T('start'):T('time')}<input type="datetime-local" data-k="start" value="${toIn(d.start)}"></label>${tm?`<label class="f">${T('end')} <small>${T('endHint')}</small><input type="datetime-local" data-k="end" value="${toIn(d.end)}"></label>`:''}</div>`;
+  h+=`<label class="f">${T('note')}<textarea rows="2" maxlength="500" data-k="note" placeholder="${T('optional')}">${esc(d.note||'')}</textarea></label>`;
+  h+=`<p class="err" id="ferr"></p><div class="btns"><button class="pri" data-s="save">${T('save')}</button><button data-s="cancel">${T('cancel')}</button>${isNew?'':`<button class="dan" data-s="del">${confirmDel?T('sure'):T('del')}</button>`}</div>`;
+  $('#sheet').innerHTML=h}
+function validate(d){if(!d.start||isNaN(d.start))return T('eTime');if(d.start>Date.now()+6e4)return T('eFuture');
+  if(timed(d)&&d.end!=null&&d.end<d.start)return T('eEnd');
+  if(d.type==='other'&&SUBK[d.sub]&&SUBK[d.sub][1]&&(d.value==null||isNaN(d.value)))return T('eValue');return''}
+function shape(d){const o={type:d.type,start:d.start};if(d.note)o.note=String(d.note).slice(0,500);
+  if(d.type==='sleep')o.end=d.end??null;
+  if(d.type==='feed'){o.kind=d.kind||'breast';if(o.kind!=='bottle'){o.side=d.side||'L';o.end=d.end??null}if(o.kind!=='breast'&&d.ml!=null)o.ml=d.ml;if(o.kind==='bottle')o.milk=d.milk||'materna'}
+  if(d.type==='diaper'){o.pee=!!d.pee;o.poo=!!d.poo;if(o.poo&&d.color)o.color=d.color}
+  if(d.type==='other'){o.sub=d.sub||'note';if(d.value!=null&&d.value!=='')o.value=d.value}
+  return o}
+$('#sheet').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k||!draft)return;let v=e.target.value;
+  if(k==='start'||k==='end')v=fromIn(v);else if(k==='ml')v=v===''?null:+v;else if(k==='value'&&draft.sub!=='med')v=v===''?null:+v;
+  draft[k]=v;if(k==='sub'){draft.value=null;drawForm()}});
+$('#sheet').addEventListener('click',async e=>{const b=e.target.closest('[data-s]');if(!b)return;const s=b.dataset.s;
+  if(s==='cancel')return closeSheet();
+  if(mode==='settings')return settingsClick(s,b);
+  if(!draft)return;
+  if(b.dataset.v!==undefined){const v=b.dataset.v;
+    if(s==='dp'){draft.pee=v!=='poo';draft.poo=v!=='pee'}else draft[s]=v;
+    if(s==='type'){if(v==='diaper'&&!draft.pee&&!draft.poo)draft.pee=true;if(v==='feed'&&!draft.kind)draft.kind='breast';if(v==='other'&&!draft.sub)draft.sub='weight';if(v==='sleep'&&draft.end===undefined)draft.end=null}
+    if(s==='kind'&&!draft.side)draft.side='L';if(s==='kind'&&!draft.milk)draft.milk='materna';
+    drawForm();return}
+  if(s==='del'){if(!confirmDel){confirmDel=true;drawForm();return}const o=EV[orig.id];closeSheet();if(o){const snap={...o};del(o);toast(T('tDeleted'),[{l:T('undo'),f:()=>restore(snap)}])}return}
+  if(s==='save'){const err=validate(draft);if(err){$('#ferr').textContent=err;return}
+    const o=shape(draft),neu=isNew,old=orig;closeSheet();
+    if(neu)add(o);else upd(EV[old.id]||old,o,true);toast(T('tSaved'))}});
+
+/* ================= Ajustes ================= */
+function openSettings(){mode='settings';
+  $('#sheet').innerHTML=`<h2>${T('settings')}</h2>
+  <label class="f">${T('babyName')}<input data-c="name" maxlength="40" value="${esc(cfg.name)}"></label>
+  <label class="f">${T('birth')}<input type="date" data-c="birth" value="${esc(cfg.birth)}"></label>
+  <label class="chk"><input type="checkbox" data-c="timeFeeds" ${cfg.timeFeeds?'checked':''}>${T('timeFeeds')}</label>
+  <p class="hint">${T('timeFeedsHint')}</p>
+  <label class="f">${T('meName')}<input data-c="me" maxlength="24" value="${esc(LOC.me)}"></label>
+  <p class="hint">${T('meHint')}</p>
+  <div class="btns"><button class="pri" data-s="ssave">${T('save')}</button><button data-s="cancel">${T('cancel')}</button></div>
+  <h2>${T('syncTitle')}</h2>
+  <p class="hint">${T('syncHelp')}</p>
+  <label class="f">${T('syncUrl')}<input data-c="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(LOC.url)}"></label>
+  <label class="f">${T('syncKey')}<input data-c="key" autocomplete="off" spellcheck="false" value="${esc(LOC.key)}"></label>
+  <label class="f">${T('pasteLink')}<input data-c="link" autocomplete="off" spellcheck="false" placeholder="https://…#cfg=…"></label>
+  <p class="err" id="serr"></p>
+  <button class="wide" data-s="test">${T('testSync')}</button>
+  ${LOC.url&&LOC.key?`<button class="wide" data-s="share">${T('shareCfg')}</button><button class="wide" data-s="full">${T('fullSync')}</button>`:''}
+  <h2>${T('exportTitle')}</h2><button class="wide" data-s="export">${T('exportCsv')}</button>
+  <p class="ver">${T('version',{v:VERSION})}</p>`;
+  $('#ov').classList.add('open');
+  const lk=$('[data-c=link]');lk.addEventListener('input',()=>{const o=parseCfg(lk.value);if(o){$('[data-c=url]').value=o.url;$('[data-c=key]').value=o.key;lk.value=''}})}
+async function settingsClick(s,b){
+  if(s==='ssave'){
+    const n={name:$('[data-c=name]').value.trim().slice(0,40),birth:$('[data-c=birth]').value,timeFeeds:$('[data-c=timeFeeds]').checked};
+    LOC.me=$('[data-c=me]').value.trim().slice(0,24);
+    closeSheet();
+    const c=EV.cfg;if(!c||c.del||c.name!==n.name||c.birth!==n.birth||(c.timeFeeds!==false)!==n.timeFeeds){const now=Date.now();EV.cfg={id:'cfg',type:'config',...n,start:now,u:Math.max(now,(c?.u||0)+1)};changed('cfg')}else{persist();render()}
+    toast(T('tSettings'));return}
+  if(s==='test'){
+    const url=$('[data-c=url]').value.trim(),key=$('[data-c=key]').value.trim(),err=$('#serr');
+    const changedSrc=url!==LOC.url||key!==LOC.key;
+    LOC.url=url;LOC.key=key;if(changedSrc){SINCE=0;Object.keys(EV).forEach(id=>PEND.add(id))}persist();
+    if(!url||!key){err.className='err';err.textContent='';setSync();return}
+    err.className='ok';err.textContent=T('testing');b.disabled=true;
+    const ok=await sync(changedSrc);b.disabled=false;
+    err.className=ok?'ok':'err';err.textContent=ok?T('testOk'):lastErr;return}
+  if(s==='share'){const link=cfgLink();
+    try{if(navigator.share){await navigator.share({title:T('appName'),text:T('shareText'),url:link});return}}catch(e){if(e&&e.name==='AbortError')return}
+    try{await navigator.clipboard.writeText(link);toast(T('cfgCopied'))}catch(e){prompt(T('shareCfg'),link)}return}
+  if(s==='full'){closeSheet();SINCE=0;await sync(true);return}
+  if(s==='export')exportCsv()}
+
+/* ================= Exportar ================= */
+async function exportCsv(){
+  const rows=[T('csvHead')];
+  all().slice().reverse().forEach(e=>{const fin=timed(e)&&e.end!=null&&e.end>e.start;
+    rows.push([new Date(e.start).toLocaleDateString(LANG),hm(e.start),fin?hm(e.end):'',fin?Math.round((e.end-e.start)/6e4):'',TYPE(e.type),desc(e),e.note||'',e.by||''])});
+  const csv='﻿'+rows.map(r=>r.map(c=>{c=String(c);return/[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(';')).join('\r\n');
+  const name='buho-'+toIn(Date.now()).slice(0,10)+'.csv';
+  try{const file=new File([csv],name,{type:'text/csv'});if(navigator.canShare&&navigator.canShare({files:[file]})&&/iPhone|iPad|Android/i.test(navigator.userAgent)){await navigator.share({files:[file],title:name});return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);return}catch(e){}
+  try{await navigator.clipboard.writeText(csv);toast(T('tCsvCopied'))}catch(e){toast(T('tNoExport'))}}
+
+/* ================= Arranque ================= */
+$('#gear').innerHTML=I.gear;$('#gear').setAttribute('aria-label',T('settings'));
+$('#h-today').textContent=T('today');$('#h-week').textContent=T('last7');$('#h-log').textContent=T('log');
+loadLocal();
+function applyHash(){const hc=location.hash.match(/cfg=([^&]+)/);if(!hc)return;
+  const o=dec(hc[1]);history.replaceState(null,'',location.pathname+location.search);
+  if(o){const ch=o.url!==LOC.url||o.key!==LOC.key;LOC.url=o.url;LOC.key=o.key;if(ch){SINCE=0;Object.keys(EV).forEach(id=>PEND.add(id))}persist();setTimeout(()=>{toast(T('cfgApplied'));if(!LOC.me)openSettings()},300);sync(ch)}
+  else setTimeout(()=>toast(T('cfgBad')),300)}
+applyHash();addEventListener('hashchange',applyHash);
+render();
+setInterval(tick,1000);
+setInterval(()=>{if(!$('#ov').classList.contains('open'))render()},60000);
+setInterval(()=>{if(document.visibilityState==='visible')sync()},30000);
+addEventListener('online',()=>sync());addEventListener('offline',setSync);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){render();sync()}});
+addEventListener('storage',e=>{if(e.key===K.ev){loadLocal();cache=null;render()}});
+sync();
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+
+/* Service worker: guarda la app en el móvil para abrirla sin conexión. */
+if('serviceWorker' in navigator&&location.protocol!=='file:'){
+  let reloading=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload()});
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    const offer=w=>toast(T('tNewVersion'),[{l:T('update'),f:()=>w.postMessage('skip')}]);
+    if(reg.waiting&&navigator.serviceWorker.controller)offer(reg.waiting);
+    reg.addEventListener('updatefound',()=>{const w=reg.installing;if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)offer(w)})});
+    setInterval(()=>reg.update().catch(()=>{}),3600000);
+  }).catch(()=>{})}
+}
+</script>
+</body>
+</html>
