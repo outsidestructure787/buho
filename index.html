@@ -21,12 +21,20 @@
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 :root{
 --bg:light-dark(#fbf6f0,#16141b);--card:light-dark(#fff,#221f29);--ink:light-dark(#2a2233,#efe9f3);--mut:light-dark(#7a7084,#a79fb0);--line:light-dark(#ece4da,#34303c);--on:light-dark(#fff,#16141b);
---sl:light-dark(#6c63d9,#a29cf2);--fd:light-dark(#d4583f,#f08a74);--pe:light-dark(#b88a06,#f0c445);--po:light-dark(#8a5a33,#c99466);--ot:light-dark(#1f8a88,#4cc0bd);--warn:light-dark(#b8560f,#f0a050)}
+--sl:light-dark(#6c63d9,#a29cf2);--fd:light-dark(#d4583f,#f08a74);--pe:light-dark(#b88a06,#f0c445);--po:light-dark(#8a5a33,#c99466);--ot:light-dark(#1f8a88,#4cc0bd);--warn:light-dark(#b8560f,#f0a050);--acc:var(--sl)}
+/* Tema Noir: negros y grises */
+:root[data-style=noir]{--bg:light-dark(#f2f2f2,#0a0a0a);--card:light-dark(#fff,#181818);--ink:light-dark(#111,#ededed);--mut:light-dark(#6b6b6b,#9a9a9a);--line:light-dark(#e0e0e0,#2a2a2a);--on:light-dark(#fff,#0a0a0a);
+  --sl:light-dark(#4a4a4a,#c8c8c8);--fd:light-dark(#111,#f5f5f5);--pe:light-dark(#9a9a9a,#8c8c8c);--po:light-dark(#5e5e5e,#b0b0b0);--ot:light-dark(#787878,#a0a0a0);--warn:light-dark(#777,#aaa);--acc:light-dark(#111,#ededed)}
+/* Tema Catppuccin: Latte (claro) y Mocha (oscuro) */
+:root[data-style=catppuccin]{--bg:light-dark(#eff1f5,#1e1e2e);--card:light-dark(#e6e9ef,#181825);--ink:light-dark(#4c4f69,#cdd6f4);--mut:light-dark(#6c6f85,#a6adc8);--line:light-dark(#ccd0da,#313244);--on:light-dark(#eff1f5,#1e1e2e);
+  --sl:light-dark(#8839ef,#cba6f7);--fd:light-dark(#e64553,#eba0ac);--pe:light-dark(#df8e1d,#f9e2af);--po:light-dark(#fe640b,#fab387);--ot:light-dark(#179299,#94e2d5);--warn:light-dark(#fe640b,#fab387);--acc:light-dark(#ea76cb,#f5c2e7)}
+:root[data-style=catppuccin] .act,:root[data-style=catppuccin] .tile,:root[data-style=catppuccin] .sum div{box-shadow:none;border:1px solid var(--line)}
+:root[data-style=noir] .act{box-shadow:none;border:1px solid var(--line)}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
 main{max-width:720px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) max(4vw,14px) calc(96px + env(safe-area-inset-bottom))}
 button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--sl);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 svg.i{width:26px;height:26px;fill:currentColor;flex:none}
 header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 h1{font-size:32px;line-height:1.05;margin:0;font-weight:800}
@@ -36,6 +44,7 @@ h1{font-size:32px;line-height:1.05;margin:0;font-weight:800}
 .ib{background:none;border:0;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--mut);flex:none}
 .ib:hover{background:var(--line)}
 h2{font-size:20px;margin:26px 0 10px;font-weight:800}
+#h-today{margin-top:16px}
 .run{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;color:var(--on);margin-bottom:10px}
 .run.sleep{background:var(--sl)}.run.feed{background:var(--fd)}
 .run small{display:block;font-size:14px;opacity:.9}
@@ -46,7 +55,7 @@ h2{font-size:20px;margin:26px 0 10px;font-weight:800}
 .tile small{display:block;color:var(--mut);font-size:13px;font-weight:700}
 .tile b{display:block;font-size:clamp(19px,5.4vw,24px);line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:800}
 .tile span{display:block;font-size:13px;color:var(--mut);line-height:1.3;margin-top:2px}
-.acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.acts{margin-top:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .act{border:0;border-radius:18px;background:var(--card);min-height:86px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--c);box-shadow:0 1px 0 var(--line),0 6px 16px -12px rgba(40,20,50,.35);transition:transform .12s}
 .act span{color:var(--ink);font-weight:700;font-size:14px;line-height:1.15;text-align:center}
 .act.big{grid-column:span 2;flex-direction:row;gap:10px;min-height:96px}
@@ -67,7 +76,7 @@ h2{font-size:20px;margin:26px 0 10px;font-weight:800}
 .lt{font-size:20px;width:30px;height:30px;border-radius:50%;border:2.5px solid currentColor;display:grid;place-items:center;line-height:1;font-weight:800}
 .sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .sum div{background:var(--card);border-radius:14px;padding:10px 12px}
-.sum b{display:block;font-size:26px;line-height:1.1;color:var(--c);font-weight:800;white-space:nowrap}
+.sum b{display:block;font-size:clamp(18px,5.4vw,26px);line-height:1.1;color:var(--c);font-weight:800;white-space:nowrap}
 .sum small{color:var(--mut);font-size:13px;font-weight:700}
 .note{color:var(--mut);font-size:14px;margin:8px 2px 0}
 .row{display:grid;grid-template-columns:50px minmax(0,1fr) 52px;gap:8px;align-items:center;margin-bottom:6px}
@@ -109,7 +118,7 @@ details.acc>section{margin-top:10px}
 .sec>summary::-webkit-details-marker{display:none}
 .sec>summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2.5px solid var(--mut);border-bottom:2.5px solid var(--mut);transform:rotate(45deg);transition:transform .2s}
 .sec[open]>summary::after{transform:rotate(-135deg)}
-.sec>summary svg{color:var(--sl);width:22px;height:22px}
+.sec>summary svg{color:var(--acc);width:22px;height:22px}
 .sec>div{padding:2px 14px 14px}
 .sec input,.sec select,.sec textarea{background:var(--card)}
 .sec .seg button{background:var(--card)}
@@ -135,11 +144,11 @@ a.wide{display:flex;align-items:center;justify-content:center;text-decoration:no
 input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:46px}
 .seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
 .seg button{flex:1 1 0;border:1px solid var(--line);background:var(--bg);border-radius:12px;min-height:46px;font-weight:700;color:var(--ink);padding:6px 8px}
-.seg button.sel{background:var(--sl);border-color:var(--sl);color:var(--on)}
+.seg button.sel{background:var(--acc);border-color:var(--acc);color:var(--on)}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
 .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .btns button,.wide{border:1px solid var(--line);background:var(--bg);border-radius:14px;min-height:50px;padding:0 18px;font-weight:800}
-.btns .pri{background:var(--sl);border-color:var(--sl);color:var(--on);flex:1}
+.btns .pri{background:var(--acc);border-color:var(--acc);color:var(--on);flex:1}
 .btns .dan{color:var(--fd);margin-left:auto}
 .wide{width:100%;margin-bottom:8px}
 .err{color:var(--fd);font-weight:700;min-height:1px;margin:0 0 6px}
@@ -154,7 +163,7 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
 #toast.show{transform:translate(-50%,0)}
 #toast button{background:color-mix(in srgb,var(--bg) 18%,transparent);border:0;color:inherit;border-radius:10px;min-height:42px;padding:0 12px;font-weight:800;flex:none}
 #toast span{padding-right:6px}
-@media(max-width:420px){.li{grid-template-columns:10px 106px minmax(0,1fr) auto;gap:8px}.tm{font-size:15px}.act span{font-size:13px}.sum b{font-size:22px}}
+@media(max-width:420px){.li{grid-template-columns:10px 106px minmax(0,1fr) auto;gap:8px}.tm{font-size:15px}.act span{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.act,#toast{transition:none}}
 </style>
 </head>
@@ -166,19 +175,19 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
     <button class="ib" data-a="settings" id="gear"></button>
   </header>
   <section id="now"></section>
-  <section id="visits"></section>
   <h2 id="h-today"></h2>
   <section id="sum"></section>
-  <h2 id="h-log"></h2>
-  <section id="log"></section>
+  <section id="acts"></section>
+  <section id="visits"></section>
   <details class="acc" id="wk"><summary><h2 id="h-week"></h2></summary><section id="tl"></section></details>
+  <details class="acc" id="lg" open><summary><h2 id="h-log"></h2></summary><section id="log"></section></details>
 </main>
 <div class="ov" id="ov"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div id="toast" role="status"></div>
 <script>
 'use strict';
 {
-const VERSION='0.3.0';
+const VERSION='0.3.1';
 
 /* ================= Textos (i18n) =================
    Para traducir la app basta con añadir otro diccionario con las mismas claves.
@@ -228,7 +237,9 @@ const STR={es:{
   version:'Búho v{v}',
   showMore:'Mostrar más',fullLog:'Registro completo',close:'Cerrar',
   secBaby:'Datos del bebé',secCal:'Calendario',secConf:'Configuración',sex:'Sexo',boy:'Niño',girl:'Niña',unset:'Sin indicar',
-  theme:'Apariencia',thAuto:'Automática',thLight:'Clara',thDark:'Oscura',themeHint:'«Automática» sigue el modo claro u oscuro del móvil.',
+  theme:'Modo',thAuto:'Automático',thLight:'Claro',thDark:'Oscuro',themeHint:'«Automático» sigue el modo claro u oscuro del móvil.',
+  secLook:'Apariencia',style:'Estilo',stBuho:'Búho',stNoir:'Noir',stCat:'Catppuccin',styleHint:'Búho: colores cálidos (por defecto). Noir: negros y grises. Catppuccin: tonos pastel.',
+  secExport:'Exportar CSV',expRange:'Periodo',r7:'7 días',r30:'30 días',rAll:'Todo',expShare:'Enviar CSV…',expShareHint:'Abre el menú de compartir del móvil para mandarlo por correo, WhatsApp, Telegram o guardarlo en Drive.',expDownload:'Descargar CSV',expNone:'No hay registros en ese periodo.',expHint:'El CSV se abre con Excel, Numbers o Google Sheets. Útil para llevar al pediatra.',
   calOn:'Mostrar las próximas visitas de Google Calendar',calHelp:'Lee los eventos de tu Google Calendar a través de la misma hoja de sincronización. Hace falta tener la sincronización configurada y el script de Google actualizado (ver README).',
   calId:'Calendario',calIdHint:'Escribe «primary» para tu calendario principal, o el ID de un calendario compartido (Google Calendar → Configuración del calendario → Integrar el calendario).',
   calQ:'Mostrar solo eventos que contengan',calQHint:'Palabras separadas por comas. Vacío = todos los eventos. Ejemplo: pediatra, matrona, vacuna, revisión',
@@ -270,6 +281,8 @@ const I={
   clock:sv('<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4.6l3.4 2-1 1.7L11 12.7V7z"/>'),
   pen:sv('<path d="M4 17.3V20h2.7l8-8-2.7-2.7-8 8zM18.7 8a1 1 0 0 0 0-1.4l-1.3-1.3a1 1 0 0 0-1.4 0l-1.2 1.2 2.7 2.7z"/>'),
   cal:sv('<path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2zm-2 7v10h14V9zm2 3h4v4H7z"/>'),
+  eye:sv('<path d="M12 5C6.5 5 2.7 9.1 1.5 12c1.2 2.9 5 7 10.5 7s9.3-4.1 10.5-7C21.3 9.1 17.5 5 12 5zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>'),
+  dl:sv('<path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3zM4 18h16v2H4z"/>'),
   gear:sv('<path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>')};
 
 const SIDE=s=>({L:T('sideL'),R:T('sideR'),B:T('sideB')}[s]||'');
@@ -301,7 +314,9 @@ function loadLocal(){EV=readLS(K.ev,{})||{};PEND=new Set(readLS(K.pend,[]));SINC
 function persist(){try{localStorage.setItem(K.ev,JSON.stringify(EV));localStorage.setItem(K.pend,JSON.stringify([...PEND]));localStorage.setItem(K.since,JSON.stringify(SINCE));localStorage.setItem(K.loc,JSON.stringify(LOC));return true}
   catch(e){toast(T('tStorage'));return false}}
 function applyCfg(){const c=EV.cfg&&!EV.cfg.del?EV.cfg:{};cfg={name:c.name||'',birth:c.birth||'',sex:c.sex||'',timeFeeds:c.timeFeeds!==false,cal:{...CFG0.cal,...(c.cal||{})}}}
-function applyTheme(){const t=LOC.theme||'auto';if(t==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t)}
+function applyTheme(){const r=document.documentElement,t=LOC.theme||'auto',st=LOC.style||'buho';
+  if(t==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',t);
+  if(st==='buho')r.removeAttribute('data-style');else r.setAttribute('data-style',st)}
 function saveCal(){try{localStorage.setItem(K.cal,JSON.stringify(CAL))}catch(e){}}
 const all=()=>cache||(cache=Object.values(EV).filter(e=>!e.del&&e.type!=='config'&&typeof e.start==='number').sort((a,b)=>b.start-a.start));
 function changed(id){cache=null;PEND.add(id);persist();if(id==='cfg')applyCfg();render();schedule(800)}
@@ -382,13 +397,13 @@ function renderNow(){
   h+=`<div class="tile" style="--c:var(--fd)"><small>${T('lastFeed')}</small>${fd?`<b>${T('now')}</b>`:lf?`<b data-ago="${lf.start}"></b><span>${T('at',{t:hm(lf.start)})}</span>`:'<b>—</b>'}${next?`<span>${T('next',{s:next})}</span>`:''}</div>`;
   h+=`<div class="tile" style="--c:var(--sl)">${sl?`<small>${T('asleep')}</small><b data-ago="${sl.start}"></b><span>${T('since',{t:hm(sl.start)})}</span>`:ls?`<small>${T('awake')}</small><b data-ago="${ls.end}"></b><span>${T('since',{t:hm(ls.end)})}</span>`:`<small>${T('sleep')}</small><b>—</b>`}</div>`;
   h+=`<div class="tile" style="--c:var(${ld?colOf(ld):'--pe'})"><small>${T('lastDiaper')}</small>${ld?`<b data-ago="${ld.start}"></b><span>${ld.pee&&ld.poo?T('peeAndPoo'):ld.poo?T('poo'):T('pee')} · ${hm(ld.start)}</span>`:'<b>—</b>'}</div>`;
-  h+='</div><div class="acts">';
+  $('#now').innerHTML=h+'</div>';h='<div class="acts">';
   h+=`<button class="act big ${sl?'on':''}" style="--c:var(--sl)" data-a="sleep">${sl?I.sun:I.moon}<span>${sl?T('btnWake'):T('btnSleep')}</span></button>`;
   h+=`<button class="act big ${fd?'on':''}" style="--c:var(--fd)" data-a="feedMenu">${I.heart}<span>${T('btnFeed')}${fd?`<i class="sub">${T('inProgress',{s:SIDE(fd.side)})}</i>`:''}</span></button>`;
   h+=`<button class="act big" style="--c:var(--fd)" data-a="bottleMenu">${I.bottle}<span>${T('bottle')}</span></button>`;
   h+=`<button class="act big" style="--c:var(--po)" data-a="diaperMenu"><span class="dbl" style="color:var(--pe)">${I.drop}<i style="color:var(--po);display:flex">${I.poo}</i></span><span>${T('btnDiaper')}</span></button>`;
   h+=`<button class="act full" style="--c:var(--ot)" data-a="notesMenu">${I.pen}<span>${T('btnNotes')}</span></button>`;
-  $('#now').innerHTML=h+'</div>'}
+  $('#acts').innerHTML=h+'</div>'}
 function overlap(e,a,b,now){return Math.max(0,Math.min(e.end??now,b)-Math.max(e.start,a))}
 function renderSum(){
   const ev=all(),now=Date.now(),a=sod(now),b=addDays(a,1),td=ev.filter(e=>e.start>=a&&e.start<b);
@@ -532,7 +547,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 let draft=null,orig=null,isNew=false,confirmDel=false,mode='';
 function openForm(e,neu){$('#ov').classList.remove('center');mode='form';draft={...e};orig=neu?null:e;isNew=neu;confirmDel=false;drawForm();$('#ov').classList.add('open')}
 function openMenu(title,body){mode='menu';$('#sheet').innerHTML=`<h2>${title}</h2>${body}<div class="btns"><button data-s="cancel" style="flex:1">${T('cancel')}</button></div>`;$('#ov').classList.add('open','center')}
-function closeSheet(){$('#ov').classList.remove('open','center');draft=null;mode=''}
+function closeSheet(){if(mode==='settings')applyTheme();$('#ov').classList.remove('open','center');draft=null;mode=''}
 function seg(k,opts,cur){return`<div class="seg">${opts.map(([v,l])=>`<button type="button" data-s="${k}" data-v="${v}" class="${String(cur)===v?'sel':''}">${l}</button>`).join('')}</div>`}
 function drawForm(){const d=draft,tm=timed(d);let h=`<h2>${isNew?T('newRec'):T('editRec')}</h2>`;
   if(isNew)h+=`<div class="f">${T('type')}${seg('type',[['sleep',T('tSleep')],['feed',T('tFeed')],['diaper',T('tDiaper')],['other',T('tOther')]],d.type)}</div>`;
@@ -587,12 +602,12 @@ $('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m
 function openSettings(){mode='settings';$('#ov').classList.remove('center');const c=cfg.cal,th=LOC.theme||'auto';
   const sel=(k,v,cur,l)=>`<button type="button" data-g="${k}" data-v="${v}" class="${cur===v?'sel':''}">${l}</button>`;
   $('#sheet').innerHTML=`<h2>${T('settings')}</h2>
-  <details class="sec"><summary>${I.heart}${T('secBaby')}</summary><div>
+  <details class="sec" name="ajustes"><summary>${I.heart}${T('secBaby')}</summary><div>
     <label class="f">${T('babyName')}<input data-c="name" maxlength="40" value="${esc(cfg.name)}"></label>
     <label class="f">${T('birth')}<input type="date" data-c="birth" value="${esc(cfg.birth)}"></label>
     <div class="f">${T('sex')}<div class="seg" data-grp="sex">${sel('sex','m',cfg.sex,T('boy'))}${sel('sex','f',cfg.sex,T('girl'))}${sel('sex','',cfg.sex,T('unset'))}</div></div>
   </div></details>
-  <details class="sec"><summary>${I.cal}${T('secCal')}</summary><div>
+  <details class="sec" name="ajustes"><summary>${I.cal}${T('secCal')}</summary><div>
     <p class="hint">${T('calHelp')}</p>
     <label class="chk"><input type="checkbox" data-c="calOn" ${c.on?'checked':''}>${T('calOn')}</label>
     <label class="f">${T('calId')}<input data-c="calId" autocomplete="off" spellcheck="false" value="${esc(c.id||'primary')}"></label>
@@ -601,13 +616,17 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <p class="hint">${T('calQHint')}</p>
     <label class="f">${T('calDays')}<input type="number" inputmode="numeric" min="1" max="180" data-c="calDays" value="${c.days||30}"></label>
   </div></details>
-  <details class="sec"><summary>${I.gear}${T('secConf')}</summary><div>
+  <details class="sec" name="ajustes"><summary>${I.eye}${T('secLook')}</summary><div>
+    <div class="f">${T('style')}<div class="seg" data-grp="style">${sel('style','buho',LOC.style||'buho',T('stBuho'))}${sel('style','noir',LOC.style||'buho',T('stNoir'))}${sel('style','catppuccin',LOC.style||'buho',T('stCat'))}</div></div>
+    <p class="hint">${T('styleHint')}</p>
+    <div class="f">${T('theme')}<div class="seg" data-grp="theme">${sel('theme','auto',th,T('thAuto'))}${sel('theme','light',th,T('thLight'))}${sel('theme','dark',th,T('thDark'))}</div></div>
+    <p class="hint">${T('themeHint')}</p>
+  </div></details>
+  <details class="sec" name="ajustes"><summary>${I.gear}${T('secConf')}</summary><div>
     <label class="f">${T('meName')}<input data-c="me" maxlength="24" value="${esc(LOC.me)}"></label>
     <p class="hint">${T('meHint')}</p>
     <label class="chk"><input type="checkbox" data-c="timeFeeds" ${cfg.timeFeeds?'checked':''}>${T('timeFeeds')}</label>
     <p class="hint">${T('timeFeedsHint')}</p>
-    <div class="f">${T('theme')}<div class="seg" data-grp="theme">${sel('theme','auto',th,T('thAuto'))}${sel('theme','light',th,T('thLight'))}${sel('theme','dark',th,T('thDark'))}</div></div>
-    <p class="hint">${T('themeHint')}</p>
     <h3>${T('syncTitle')}</h3>
     <p class="hint">${T('syncHelp')}</p>
     <label class="f">${T('syncUrl')}<input data-c="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(LOC.url)}"></label>
@@ -616,20 +635,27 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <p class="err" id="serr"></p>
     <button class="wide" data-s="test">${T('testSync')}</button>
     ${LOC.url&&LOC.key?`<button class="wide" data-s="share">${T('shareCfg')}</button><button class="wide" data-s="full">${T('fullSync')}</button>`:''}
-    <h3>${T('exportTitle')}</h3><button class="wide" data-s="export">${T('exportCsv')}</button>
+  </div></details>
+  <details class="sec" name="ajustes"><summary>${I.dl}${T('secExport')}</summary><div>
+    <p class="hint">${T('expHint')}</p>
+    <div class="f">${T('expRange')}<div class="seg" data-grp="range">${sel('range','7','30',T('r7'))}${sel('range','30','30',T('r30'))}${sel('range','all','30',T('rAll'))}</div></div>
+    ${canShareFiles()?`<button class="wide" data-s="expShare">${T('expShare')}</button><p class="hint">${T('expShareHint')}</p>`:''}
+    <button class="wide" data-s="expDl">${T('expDownload')}</button>
   </div></details>
   <div class="btns"><button class="pri" data-s="ssave">${T('save')}</button><button data-s="cancel">${T('cancel')}</button></div>
   <p class="ver">${T('version',{v:VERSION})}</p>`;
   $('#ov').classList.add('open');
   const lk=$('[data-c=link]');lk.addEventListener('input',()=>{const o=parseCfg(lk.value);if(o){$('[data-c=url]').value=o.url;$('[data-c=key]').value=o.key;lk.value=''}})}
 $('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||mode!=='settings')return;
-  b.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b))});
+  b.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b));
+  if(b.dataset.g==='style'||b.dataset.g==='theme'){const keep={style:LOC.style,theme:LOC.theme};LOC.style=grp('style')||'buho';LOC.theme=grp('theme')||'auto';applyTheme();LOC.style=keep.style;LOC.theme=keep.theme}});
+$('#sheet').addEventListener('toggle',e=>{const d=e.target;if(d.matches&&d.matches('details.sec')&&d.open)document.querySelectorAll('#sheet details.sec[open]').forEach(x=>{if(x!==d)x.open=false})},true);
 const grp=k=>{const b=document.querySelector(`[data-grp=${k}] .sel`);return b?b.dataset.v:''};
 async function settingsClick(s,b){
   if(s==='ssave'){
     const n={name:$('[data-c=name]').value.trim().slice(0,40),birth:$('[data-c=birth]').value,sex:grp('sex'),timeFeeds:$('[data-c=timeFeeds]').checked,
       cal:{on:$('[data-c=calOn]').checked,id:$('[data-c=calId]').value.trim()||'primary',q:$('[data-c=calQ]').value.trim().slice(0,200),days:Math.min(180,Math.max(1,+$('[data-c=calDays]').value||30))}};
-    LOC.me=$('[data-c=me]').value.trim().slice(0,24);LOC.theme=grp('theme')||'auto';applyTheme();
+    LOC.me=$('[data-c=me]').value.trim().slice(0,24);LOC.theme=grp('theme')||'auto';LOC.style=grp('style')||'buho';applyTheme();
     const calChanged=JSON.stringify(n.cal)!==JSON.stringify(cfg.cal);
     closeSheet();
     const c=EV.cfg,cur={name:cfg.name,birth:cfg.birth,sex:cfg.sex,timeFeeds:cfg.timeFeeds,cal:cfg.cal};
@@ -647,17 +673,24 @@ async function settingsClick(s,b){
     try{if(navigator.share){await navigator.share({title:T('appName'),text:T('shareText'),url:link});return}}catch(e){if(e&&e.name==='AbortError')return}
     try{await navigator.clipboard.writeText(link);toast(T('cfgCopied'))}catch(e){prompt(T('shareCfg'),link)}return}
   if(s==='full'){closeSheet();SINCE=0;await sync(true);return}
+  if(s==='expShare'||s==='expDl'){exportCsv(grp('range')||'30',s==='expShare'?'share':'download');return}
   if(s==='export')exportCsv()}
 
 /* ================= Exportar ================= */
-async function exportCsv(){
+function canShareFiles(){try{return!!(navigator.canShare&&navigator.canShare({files:[new File(['x'],'x.csv',{type:'text/csv'})]}))}catch(e){return false}}
+async function exportCsv(range='all',how='auto'){
+  const from=range==='all'?0:sod(Date.now())-(+range-1)*864e5;
+  const list=all().filter(e=>e.start>=from).reverse();
+  if(!list.length){toast(T('expNone'));return}
   const rows=[T('csvHead')];
-  all().slice().reverse().forEach(e=>{const fin=timed(e)&&e.end!=null&&e.end>e.start;
+  list.forEach(e=>{const fin=timed(e)&&e.end!=null&&e.end>e.start;
     rows.push([new Date(e.start).toLocaleDateString(LANG),hm(e.start),fin?hm(e.end):'',fin?Math.round((e.end-e.start)/6e4):'',TYPE(e.type),desc(e),e.note||'',e.by||''])});
   const csv='﻿'+rows.map(r=>r.map(c=>{c=String(c);return/[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(';')).join('\r\n');
-  const name='buho-'+toIn(Date.now()).slice(0,10)+'.csv';
-  try{const file=new File([csv],name,{type:'text/csv'});if(navigator.canShare&&navigator.canShare({files:[file]})&&/iPhone|iPad|Android/i.test(navigator.userAgent)){await navigator.share({files:[file],title:name});return}}catch(e){if(e&&e.name==='AbortError')return}
-  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);return}catch(e){}
+  const name=(cfg.name?cfg.name.replace(/[^\wáéíóúñü-]+/gi,'_')+'-':'')+'buho-'+toIn(Date.now()).slice(0,10)+'.csv';
+  const file=new File([csv],name,{type:'text/csv'});
+  if(how==='share'||(how==='auto'&&/iPhone|iPad|Android/i.test(navigator.userAgent))){
+    try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name,text:T('appName')+' · '+(cfg.name||T('babyLog'))});return}}catch(e){if(e&&e.name==='AbortError')return}}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);return}catch(e){}
   try{await navigator.clipboard.writeText(csv);toast(T('tCsvCopied'))}catch(e){toast(T('tNoExport'))}}
 
 /* ================= Arranque ================= */
