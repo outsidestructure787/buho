@@ -17,7 +17,7 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 <a href="#deutsch">Deutsch</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.4.0</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.5.0</p>
 
 ---
 
@@ -37,8 +37,12 @@ Búho es una web-app para apuntar con un toque lo que hace el bebé: cuándo se 
 - De un vistazo: cronómetros en marcha, cuánto hace de la última toma, del último sueño y del último pañal, y qué pecho toca.
 - Resumen del día, gráfica plegable de los últimos 7 días, registro plegable con las últimas 14 entradas (y «Mostrar más» para ver el registro completo con filtros), edición y borrado, deshacer y exportación a CSV para el pediatra.
 - Próximas visitas de Google Calendar (pediatra, matrona, vacunas…) en la pantalla principal, y la opción de añadir visitas desde la app.
-- Medicación: apunta cada medicamento con su dosis y cada cuántas horas toca. La pantalla principal muestra la próxima toma de cada uno con su cuenta atrás, y un botón «Dada» que lo apunta en el registro.
-- Ajustes por secciones (se abre una cada vez): datos del bebé, calendario, medicación, apariencia, configuración (incluye borrar todo el registro, con doble confirmación) y exportar CSV.
+- Medicación: apunta cada medicamento con su dosis, cada cuántas horas toca y, si quieres, durante cuántos días (al terminar el tratamiento desaparece solo). La pantalla principal muestra la próxima toma de cada uno con su cuenta atrás, y un botón «Dada» que lo apunta en el registro.
+- Avisos de medicación con Google Calendar: al marcar una toma como dada, se crea un evento con alarma para la siguiente, y el móvil avisa aunque Búho esté cerrado.
+- Gráficas de crecimiento: peso, talla y perímetro de la cabeza.
+- Pantalla encendida mientras hay una toma con cronómetro en marcha, y opción de ocultar «Últimos 7 días», «Crecimiento» o «Registro».
+- Disponible en español, inglés, catalán, francés, portugués, italiano y alemán.
+- Ajustes por secciones (se abre una cada vez): datos del bebé, calendario, medicación, apariencia, pantalla, configuración (idioma, sincronización y borrar todo el registro con doble confirmación) y exportar CSV.
 - Tres estilos: Búho (por defecto), Noir (negros y grises) y [Catppuccin](https://catppuccin.com), cada uno en modo claro, oscuro o automático.
 - Exportar a CSV los últimos 7 días, 30 días o todo, y enviarlo directamente desde el menú de compartir del móvil (correo, WhatsApp, Telegram, Drive…).
 
@@ -101,6 +105,8 @@ El script de la hoja también puede leer tu Google Calendar y mostrar las próxi
    - *Calendario:* deja `primary` para tu calendario principal. Si usáis un calendario compartido para el bebé, pon su ID (Google Calendar → Configuración del calendario → *Integrar el calendario*). Tiene que estar compartido con la cuenta de Google donde está la hoja.
    - *Mostrar solo eventos que contengan:* por ejemplo `pediatra, matrona, vacuna, revisión`, para no ver todo tu calendario personal. Vacío muestra todos los eventos.
 
+**Avisos de medicación:** con el calendario autorizado, en Ajustes → *Medicación* marca *Crear un aviso en Google Calendar para la próxima toma*. Cada vez que pulses «Dada», se crea en el calendario un evento «💊 Nombre del medicamento» a la hora de la siguiente toma, con alarma. Si das la toma antes de tiempo o la deshaces, el aviso anterior se borra. Sin conexión, el aviso queda pendiente y se crea al volver la señal.
+
 Las visitas se guardan en el móvil, así que se ven también sin conexión. Se actualizan cada 10 minutos cuando hay señal, o al pulsar *Actualizar*. Añadir una visita desde la app necesita conexión.
 
 > Quien tenga la dirección y la clave de la hoja puede ver los eventos que deje pasar el filtro y añadir visitas a ese calendario. Compártelas solo con quien deba apuntar.
@@ -135,7 +141,7 @@ Búho ("owl" in Spanish) is a web app to log your baby's day with a single tap: 
 - **Your data stays yours.** No third-party servers: data lives on your phone and, optionally, in your own Google Sheet.
 - **Free and open source.**
 
-> The app interface is currently in **Spanish only**. More languages are coming.
+> The interface is available in English, Spanish, Catalan, French, Portuguese, Italian and German. It follows the phone language, or you can pick one in *Settings → General*.
 
 ### Install
 1. Open **https://outsidestructure787.github.io/buho/** on your phone.
@@ -177,7 +183,7 @@ I'm not a developer. I built Búho with the help of an AI ([Claude](https://clau
 
 **Sincronitzar:** crea un full a [sheets.new](https://sheets.new) → *Extensions → Apps Script* → enganxa [`Code.gs`](apps-script/Code.gs) i crea `Config.gs` amb [la teva clau](apps-script/Config.gs) → *Implementa → Aplicació web* (*Executa com: Jo*, *Accés: Qualsevol usuari*) → copia l'adreça `/exec` i enganxa-la amb la clau a *Ajustes* de l'app. Les passes detallades són a la secció en [castellà](#español).
 
-La interfície, de moment, només està en castellà.
+La interfície està disponible en català i en sis idiomes més.
 
 La fa un futur pare que no és programador, amb ajuda d'una IA, perquè cap de les aplicacions que va provar no li servia. Disculpeu-ne les errades; els suggeriments són benvinguts als [issues](../../issues).
 
@@ -195,7 +201,7 @@ La fa un futur pare que no és programador, amb ajuda d'una IA, perquè cap de l
 
 **Synchroniser :** créez une feuille sur [sheets.new](https://sheets.new) → *Extensions → Apps Script* → collez [`Code.gs`](apps-script/Code.gs) et créez `Config.gs` avec [votre clé](apps-script/Config.gs) → *Déployer → Application web* (*Exécuter en tant que : Moi*, *Accès : Tout le monde*) → copiez l'adresse `/exec` et collez-la avec la clé dans *Ajustes* de l'app. Les étapes détaillées sont dans la section [English](#english).
 
-L'interface n'est disponible qu'en espagnol pour l'instant.
+L'interface est disponible en français et dans six autres langues.
 
 Elle est faite par un futur papa qui n'est pas développeur, avec l'aide d'une IA, parce qu'aucune des applications qu'il a essayées ne lui convenait. Pardon d'avance aux développeurs professionnels ; vos remarques sont les bienvenues dans les [issues](../../issues).
 
@@ -213,7 +219,7 @@ Elle est faite par un futur papa qui n'est pas développeur, avec l'aide d'une I
 
 **Sincronizar:** crie uma folha em [sheets.new](https://sheets.new) → *Extensões → Apps Script* → cole [`Code.gs`](apps-script/Code.gs) e crie `Config.gs` com [a sua chave](apps-script/Config.gs) → *Implementar → Aplicação Web* (*Executar como: Eu*, *Acesso: Qualquer pessoa*) → copie o endereço `/exec` e cole-o com a chave em *Ajustes* na app. Os passos detalhados estão na secção [English](#english).
 
-Por agora, a interface só está em espanhol.
+A interface está disponível em português e em mais seis idiomas.
 
 Foi feita por um futuro pai que não é programador, com a ajuda de uma IA, porque nenhuma das apps que experimentou lhe servia. Desculpem desde já os programadores profissionais; sugestões são bem-vindas nos [issues](../../issues).
 
@@ -231,7 +237,7 @@ Foi feita por um futuro pai que não é programador, com a ajuda de uma IA, porq
 
 **Sincronizzare:** crea un foglio su [sheets.new](https://sheets.new) → *Estensioni → Apps Script* → incolla [`Code.gs`](apps-script/Code.gs) e crea `Config.gs` con [la tua chiave](apps-script/Config.gs) → *Esegui il deployment → App web* (*Esegui come: Io*, *Accesso: Chiunque*) → copia l'indirizzo `/exec` e incollalo con la chiave in *Ajustes* nell'app. I passaggi dettagliati sono nella sezione [English](#english).
 
-Per ora l'interfaccia è solo in spagnolo.
+L'interfaccia è disponibile in italiano e in altre sei lingue.
 
 L'ha fatta un futuro papà che non è programmatore, con l'aiuto di un'IA, perché nessuna delle app che ha provato faceva al caso suo. Chiedo scusa in anticipo agli sviluppatori professionisti; i suggerimenti sono benvenuti negli [issues](../../issues).
 
@@ -249,7 +255,7 @@ L'ha fatta un futuro papà che non è programmatore, con l'aiuto di un'IA, perch
 
 **Synchronisieren:** Tabelle unter [sheets.new](https://sheets.new) anlegen → *Erweiterungen → Apps Script* → [`Code.gs`](apps-script/Code.gs) einfügen und `Config.gs` mit [eigenem Schlüssel](apps-script/Config.gs) anlegen → *Bereitstellen → Web-App* (*Ausführen als: Ich*, *Zugriff: Jeder*) → die `/exec`-Adresse kopieren und mit dem Schlüssel in der App unter *Ajustes* einfügen. Die ausführlichen Schritte stehen im Abschnitt [English](#english).
 
-Die Oberfläche ist vorerst nur auf Spanisch verfügbar.
+Die Oberfläche gibt es auf Deutsch und in sechs weiteren Sprachen.
 
 Gebaut hat sie ein werdender Vater, der kein Entwickler ist, mit Hilfe einer KI, weil keine der getesteten Apps gepasst hat. Entschuldigung vorab an alle Profi-Entwickler; Hinweise sind in den [Issues](../../issues) willkommen.
 

@@ -129,7 +129,13 @@ details.acc>section{margin-top:10px}
 .med .mcd{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink)}.med.late .mcd{color:var(--fd)}
 .med.solo .mi span{font-size:18px}.med.solo .mcd{font-size:22px;display:block}
 .med button{border:0;background:var(--ot);color:var(--on);border-radius:12px;min-height:46px;padding:0 14px;font-weight:800;flex:none}
-.medrow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 74px 44px;gap:6px;align-items:end;margin-bottom:8px}
+.medrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 44px;grid-template-areas:"n n n x" "d e t .";gap:6px;align-items:end;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.medrow .ln{grid-area:n}.medrow .ld{grid-area:d}.medrow .le{grid-area:e}.medrow .lt2{grid-area:t}.medrow .x{grid-area:x}
+.medrow .end{grid-column:1/-1;font-size:12px;color:var(--warn);font-weight:700}
+.chart{background:var(--card);border-radius:16px;padding:12px 14px 8px;margin-bottom:10px}
+.chart b{display:block;font-size:13px;color:var(--mut);font-weight:700}.chart strong{font-size:22px;font-weight:800;color:var(--ot)}.chart strong small{font-size:13px;color:var(--mut);font-weight:700;margin-left:6px}
+.chart svg{display:block;width:100%;height:auto;margin-top:6px;overflow:visible}
+.chart .ax{fill:var(--mut);font-size:10px;font-family:inherit}
 .medrow label{font-size:12px;color:var(--mut);font-weight:700}.medrow input{margin-top:3px}
 .medrow .x{border:1px solid var(--line);background:var(--card);border-radius:12px;min-height:46px;color:var(--fd);font-weight:800}
 .dangerbtn{color:var(--fd)!important;border-color:color-mix(in srgb,var(--fd) 40%,var(--line))!important}
@@ -192,14 +198,16 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
   <section id="meds"></section>
   <section id="visits"></section>
   <details class="acc" id="wk"><summary><h2 id="h-week"></h2></summary><section id="tl"></section></details>
+  <details class="acc" id="gr"><summary><h2 id="h-growth"></h2></summary><section id="growth"></section></details>
   <details class="acc" id="lg" open><summary><h2 id="h-log"></h2></summary><section id="log"></section></details>
 </main>
 <div class="ov" id="ov"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div id="toast" role="status"></div>
+<script src="./i18n.js"></script>
 <script>
 'use strict';
 {
-const VERSION='0.4.0';
+const VERSION='0.5.0';
 
 /* ================= Textos (i18n) =================
    Para traducir la app basta con añadir otro diccionario con las mismas claves.
@@ -260,14 +268,24 @@ const STR={es:{
   vTitle:'Qué',vTitleDef:'Pediatra',vWhen:'Fecha y hora',vDur:'Duración (min)',vLoc:'Lugar',vNote:'Notas',vSaved:'Visita añadida al calendario',
   calOld:'Actualiza el script de Google para usar el calendario (ver README).',calErr:'Calendario: {e}',calOffline:'Necesitas conexión para añadir una visita.',allDay:'Todo el día',updatedAgo:'Actualizado hace {d}',
   secMeds:'Medicación',medsOn:'Mostrar la medicación en la pantalla principal',medsHelp:'Añade cada medicamento con el tiempo entre tomas. En la pantalla principal verás cuándo toca la próxima toma y podrás marcarla como dada.',
+  medDays:'Durante (días)',medEnded:'Tratamiento terminado el {d}',medsCal:'Crear un aviso en Google Calendar para la próxima toma',medsCalHint:'Al pulsar «Dada», se crea un evento con alarma a la hora de la siguiente toma, así el móvil avisa aunque Búho esté cerrado. Necesita la sincronización y el calendario autorizados (ver README).',remErr:'Avisos de medicación: {e}',
   medName:'Medicamento',medDose:'Dosis (opcional)',medEvery:'Cada (h)',medAdd:'Añadir medicamento',medDel:'Quitar',medTitle:'Medicación',medNext:'Próxima toma: {t}',medIn:'en {d}',medLate:'hace {d}',medDue:'Toca ya',
   medNone:'Sin tomas registradas',medGive:'Dada',medGiven:'{x} dado a las {t}',medEveryTxt:'cada {h} h',medLast:'Última: {t}',
   resetTitle:'Borrar el registro',resetHelp:'Borra todas las entradas del registro (sueño, tomas, pañales, anotaciones y medicación). Los ajustes se mantienen.',resetBtn:'Borrar todo el registro…',
   reset1:'¿Borrar todo el registro?',reset1Txt:'Se borrarán {n} entradas.',reset1Sync:'Con la sincronización activa, también se borrarán en los otros móviles y quedarán marcadas como borradas en la hoja de Google.',
   reset2:'¿Seguro? No se puede deshacer',reset2Txt:'Última confirmación. Si tienes dudas, exporta antes el CSV.',resetYes:'Sí, continuar',resetGo:'Borrar definitivamente',resetDone:'Registro borrado',
+  growth:'Crecimiento',growthEmpty:'Apunta el peso, la talla o el perímetro de la cabeza desde «Anotaciones» y aquí verás su evolución.',lastVal:'última medida: {d}',
+  secScreen:'Pantalla',wake:'Mantener la pantalla encendida durante una toma con cronómetro',wakeHint:'Evita que el móvil se bloquee mientras miras el tiempo de la toma. Se apaga sola al terminar la toma.',wakeNo:'Este navegador no permite mantener la pantalla encendida.',
+  showWeek:'Mostrar «Últimos 7 días»',showGrowth:'Mostrar «Crecimiento»',showLog:'Mostrar «Registro»',
+  lang:'Idioma',langAuto:'Automático (idioma del móvil)',
   csvHead:['Fecha','Inicio','Fin','Duración (min)','Tipo','Detalle','Nota','Quién']
 }};
+const LANGS={es:'Español',en:'English',ca:'Català',fr:'Français',pt:'Português',it:'Italiano',de:'Deutsch'};
+if(window.BUHO_I18N)Object.assign(STR,window.BUHO_I18N);
 let LANG='es';
+function pickLang(){const l=(()=>{try{return JSON.parse(localStorage.getItem('buho.local')||'{}').lang}catch(e){return''}})();
+  if(l&&l!=='auto'&&STR[l])return l;for(const x of navigator.languages||[navigator.language||'es']){const k=String(x).slice(0,2).toLowerCase();if(STR[k])return k}return'es'}
+LANG=pickLang();document.documentElement.lang=LANG;
 const T=(k,v)=>{let s=(STR[LANG]&&STR[LANG][k])??STR.es[k]??k;if(v&&typeof s==='string')s=s.replace(/\{(\w+)\}/g,(m,x)=>v[x]??m);return s};
 
 /* ================= Utilidades ================= */
@@ -300,6 +318,7 @@ const I={
   pen:sv('<path d="M4 17.3V20h2.7l8-8-2.7-2.7-8 8zM18.7 8a1 1 0 0 0 0-1.4l-1.3-1.3a1 1 0 0 0-1.4 0l-1.2 1.2 2.7 2.7z"/>'),
   cal:sv('<path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2zm-2 7v10h14V9zm2 3h4v4H7z"/>'),
   pill:sv('<path d="M4.2 13.6 13.6 4.2a5 5 0 0 1 7.1 7.1l-9.4 9.4a5 5 0 0 1-7.1-7.1zm1.4 1.4a3 3 0 0 0 4.2 4.2L13 16 8.9 11.9z"/>'),
+  screen:sv('<path d="M7 1h10a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zm0 4v14h10V5zm4 15v1h2v-1z"/>'),
   eye:sv('<path d="M12 5C6.5 5 2.7 9.1 1.5 12c1.2 2.9 5 7 10.5 7s9.3-4.1 10.5-7C21.3 9.1 17.5 5 12 5zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>'),
   dl:sv('<path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3zM4 18h16v2H4z"/>'),
   gear:sv('<path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>')};
@@ -325,14 +344,14 @@ const colOf=e=>e.type==='sleep'?'--sl':e.type==='feed'?'--fd':e.type==='diaper'?
    "pendiente" hasta que la hoja de Google confirma que lo ha recibido. */
 const K={ev:'buho.events',pend:'buho.pending',since:'buho.since',loc:'buho.local',cal:'buho.cal'};
 let EV={},PEND=new Set(),SINCE=0,LOC={me:'',url:'',key:''};
-const CFG0={name:'',birth:'',sex:'',timeFeeds:true,cal:{on:false,id:'primary',q:'',days:30},medsOn:false,meds:[]};
+const CFG0={name:'',birth:'',sex:'',timeFeeds:true,cal:{on:false,id:'primary',q:'',days:30},medsOn:false,meds:[],medsCal:false};
 let cfg=JSON.parse(JSON.stringify(CFG0)),CAL={at:0,items:[],err:'',name:''};
 let cache=null;
 function readLS(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
 function loadLocal(){EV=readLS(K.ev,{})||{};PEND=new Set(readLS(K.pend,[]));SINCE=readLS(K.since,0)||0;LOC={...LOC,...readLS(K.loc,{})};CAL={...CAL,...readLS(K.cal,{})};applyCfg();applyTheme()}
 function persist(){try{localStorage.setItem(K.ev,JSON.stringify(EV));localStorage.setItem(K.pend,JSON.stringify([...PEND]));localStorage.setItem(K.since,JSON.stringify(SINCE));localStorage.setItem(K.loc,JSON.stringify(LOC));return true}
   catch(e){toast(T('tStorage'));return false}}
-function applyCfg(){const c=EV.cfg&&!EV.cfg.del?EV.cfg:{};cfg={name:c.name||'',birth:c.birth||'',sex:c.sex||'',timeFeeds:c.timeFeeds!==false,cal:{...CFG0.cal,...(c.cal||{})},medsOn:!!c.medsOn,meds:Array.isArray(c.meds)?c.meds:[]}}
+function applyCfg(){const c=EV.cfg&&!EV.cfg.del?EV.cfg:{};cfg={name:c.name||'',birth:c.birth||'',sex:c.sex||'',timeFeeds:c.timeFeeds!==false,cal:{...CFG0.cal,...(c.cal||{})},medsOn:!!c.medsOn,meds:Array.isArray(c.meds)?c.meds:[],medsCal:!!c.medsCal}}
 function applyTheme(){const r=document.documentElement,t=LOC.theme||'auto',st=LOC.style||'buho';
   if(t==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',t);
   if(st==='buho')r.removeAttribute('data-style');else r.setAttribute('data-style',st)}
@@ -367,7 +386,7 @@ async function sync(full){
     const events=ids.map(id=>EV[id]).filter(Boolean).map(e=>{sent[e.id]=e.u;return{...e,_tipo:TYPE(e.type),_txt:e.del?'':desc(e)}});
     ids.forEach(id=>{if(!EV[id])PEND.delete(id)});
     const wantCal=cfg.cal.on&&(full||calForce||Date.now()-(CAL.at||0)>10*6e4);calForce=false;
-    const body={key:LOC.key,since:full?0:SINCE,events,v:VERSION};if(wantCal)body.cal={id:cfg.cal.id||'primary',q:cfg.cal.q||'',days:cfg.cal.days||30};
+    const body={key:LOC.key,since:full?0:SINCE,events,v:VERSION};const remSent=REM.queue.slice(0,20);if(remSent.length){body.rem=remSent;body.remCal=cfg.cal.id||'primary'}if(wantCal)body.cal={id:cfg.cal.id||'primary',q:cfg.cal.q||'',days:cfg.cal.days||30};
     const r=await post(body);
     if(!r||!r.ok)throw new Error(r&&r.error==='bad_key'?'key':'srv:'+((r&&r.error)||'?'));
     ids.forEach(id=>{if(EV[id]&&EV[id].u===sent[id])PEND.delete(id)});
@@ -375,6 +394,7 @@ async function sync(full){
       if(l&&PEND.has(re.id)&&(l.u||0)>(re.u||0))continue;
       if(!l||(re.u||0)>=(l.u||0)){delete re.srv;EV[re.id]=re}}
     if(wantCal)gotCal(r);
+    if(remSent.length)gotRem(remSent,r);
     SINCE=r.now||SINCE;lastErr='';lastOk=Date.now();ok=true;cache=null;applyCfg();persist();render();
     if(PEND.size)again=true;
   }catch(e){const m=e.message||'';lastErr=m==='key'?T('errKey'):m.startsWith('srv:')?T('errSrv',{e:m.slice(4)}):T('errNet')}
@@ -397,7 +417,7 @@ function cfgLink(){return location.origin+location.pathname+'#cfg='+enc({url:LOC
 function parseCfg(text){const m=String(text||'').match(/cfg=([A-Za-z0-9+/=_-]+)/);return m?dec(m[1]):null}
 
 /* ================= Pintar ================= */
-function render(){renderHead();renderNow();renderMeds();renderVisits();renderSum();renderTl();renderLog();tick();setSync()}
+function render(){renderHead();renderNow();renderMeds();renderVisits();renderSum();renderTl();renderGrowth();renderLog();applyShow();tick();setSync();updateWake()}
 function renderHead(){
   $('#nm').textContent=cfg.name||T('appName');document.title=cfg.name?cfg.name+' · '+T('appName'):T('appName');
   const F=cfg.sex==='f';let a=F?T('babyLogF'):T('babyLog');
@@ -474,9 +494,11 @@ function upcoming(){const n=Date.now();return(CAL.items||[]).filter(v=>(v.e||v.s
 function whenTxt(v){const d=new Date(v.s),t0=sod(Date.now()),ds=sod(v.s);
   const day=ds===t0?T('today'):ds===addDays(t0,1)?T('tomorrow'):T('dow')[d.getDay()]+' '+d.getDate()+' '+T('months')[d.getMonth()].slice(0,3);
   return day+(v.all?' · '+T('allDay'):' · '+hm(v.s))}
+function firstDose(m){const l=all();for(let i=l.length-1;i>=0;i--){const e=l[i];if(e.type==='other'&&e.sub==='med'&&e.med===m.id)return e}return null}
+function medEnd(m){if(!(m.days>0))return null;const f=firstDose(m);return f?f.start+m.days*864e5:null}
 function lastDose(m){return all().find(e=>e.type==='other'&&e.sub==='med'&&(e.med===m.id||(!e.med&&String(e.value||'').toLowerCase().startsWith(m.name.toLowerCase()))))}
 function renderMeds(){
-  const list=(cfg.meds||[]).filter(m=>m.name&&m.every>0);
+  const list=(cfg.meds||[]).filter(m=>m.name&&m.every>0&&!(medEnd(m)&&medEnd(m)<=Date.now()));
   if(!cfg.medsOn||!list.length){$('#meds').innerHTML='';return}
   const now=Date.now(),solo=list.length===1;
   const rows=list.map(m=>{const l=lastDose(m),next=l?l.start+m.every*36e5:null,late=next!=null&&next<=now;
@@ -485,6 +507,44 @@ function renderMeds(){
     return{next:next??Infinity,h:`<div class="med ${late?'late':''} ${solo?'solo':''}"><div class="mi"><span>${esc(m.name)}</span>${info}</div><button data-a="med:${esc(m.id)}">${T('medGive')}</button></div>`}});
   rows.sort((a,b)=>a.next-b.next);
   $('#meds').innerHTML=`<div class="meds"><b>${I.pill}${T('medTitle')}</b>${rows.map(r=>r.h).join('')}</div>`}
+/* Avisos de medicación en Google Calendar: cola local que se envía al sincronizar. */
+let REM={queue:[],last:{},err:''};
+function loadRem(){REM={queue:[],last:{},err:'',...readLS('buho.rem',{})}}
+function saveRem(){try{localStorage.setItem('buho.rem',JSON.stringify(REM))}catch(e){}}
+function remAfterDose(m,doseId,at){if(!cfg.medsCal||!cfg.cal||!LOC.url)return;const next=at+m.every*36e5,end=medEnd(m);
+  const prev=REM.last[m.id];if(prev&&prev.eid&&prev.at>Date.now())REM.queue.push({rid:uid(),op:'del',eid:prev.eid,med:m.id});
+  REM.queue=REM.queue.filter(o=>!(o.op==='add'&&o.med===m.id));
+  if(!end||next<end)REM.queue.push({rid:uid(),op:'add',med:m.id,dose:doseId,t:m.name+(m.dose?' · '+m.dose:''),s:next,e:next+15*6e4});
+  REM.queue=REM.queue.slice(-30);saveRem();schedule(800)}
+function remUndo(m,doseId){const had=REM.queue.some(o=>o.op==='add'&&o.dose===doseId);REM.queue=REM.queue.filter(o=>!(o.op==='add'&&o.dose===doseId));
+  const l=REM.last[m.id];if(!had&&l&&l.dose===doseId&&l.eid){REM.queue.push({rid:uid(),op:'del',eid:l.eid,med:m.id});delete REM.last[m.id]}saveRem();schedule(800)}
+function gotRem(sent,r){if(!r.rem){REM.err=T('calOld');saveRem();return}
+  const byRid={};(r.rem||[]).forEach(x=>byRid[x.rid]=x);let err='';
+  REM.queue=REM.queue.filter(o=>{const x=byRid[o.rid];if(!x)return true;if(!x.ok){err=x.error||'?';return true}
+    if(o.op==='add'&&x.eid)REM.last[o.med]={dose:o.dose,eid:x.eid,at:o.s};return false});
+  REM.err=err?T('remErr',{e:err}):'';saveRem()}
+/* Gráficas de crecimiento (SVG sin librerías). */
+function chart(pts,unit){const W=320,H=120,P=26,xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  let x0=Math.min(...xs),x1=Math.max(...xs);if(x1===x0){x0-=864e5;x1+=864e5}
+  let y0=Math.min(...ys),y1=Math.max(...ys);const pad=(y1-y0)*.15||Math.max(.1,y1*.05);y0-=pad;y1+=pad;
+  const X=x=>P+(x-x0)/(x1-x0)*(W-P-8),Y=y=>8+(1-(y-y0)/(y1-y0))*(H-24);
+  const f=v=>String(+v.toFixed(2)).replace('.',','),dl=t=>{const d=new Date(t);return d.getDate()+' '+T('months')[d.getMonth()].slice(0,3)};
+  const line=pts.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join(' ');
+  return`<svg viewBox="0 0 ${W} ${H}" role="img"><line x1="${P}" y1="${H-16}" x2="${W-8}" y2="${H-16}" stroke="var(--line)"/>
+    <text class="ax" x="${P-4}" y="${Y(y1-pad)+3}" text-anchor="end">${f(y1-pad)}</text><text class="ax" x="${P-4}" y="${Y(y0+pad)+3}" text-anchor="end">${f(y0+pad)}</text>
+    <text class="ax" x="${X(xs[0])}" y="${H-3}" text-anchor="start">${dl(xs[0])}</text>${xs.length>1?`<text class="ax" x="${X(xs[xs.length-1])}" y="${H-3}" text-anchor="end">${dl(xs[xs.length-1])}</text>`:''}
+    <polyline points="${line}" fill="none" stroke="var(--ot)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map(p=>`<circle cx="${X(p[0]).toFixed(1)}" cy="${Y(p[1]).toFixed(1)}" r="3.5" fill="var(--ot)"/>`).join('')}</svg>`}
+function renderGrowth(){
+  const sets=[['weight','kg'],['height','cm'],['head','cm']].map(([k,u])=>({k,u,pts:all().filter(e=>e.type==='other'&&e.sub===k&&e.value!==''&&!isNaN(+e.value)).map(e=>[e.start,+e.value]).reverse()})).filter(x=>x.pts.length);
+  $('#growth').innerHTML=sets.length?sets.map(x=>{const l=x.pts[x.pts.length-1];
+    return`<div class="chart"><b>${T(SUBK[x.k][0])}</b><strong>${String(l[1]).replace('.',',')} ${x.u}<small>${T('lastVal',{d:dayLabel(sod(l[0]))})}</small></strong>${chart(x.pts,x.u)}</div>`}).join(''):`<p class="empty">${T('growthEmpty')}</p>`}
+/* Pantalla encendida durante una toma con cronómetro. */
+let wakeLock=null;
+async function updateWake(){const want=LOC.wake&&document.visibilityState==='visible'&&all().some(e=>e.type==='feed'&&e.kind!=='bottle'&&e.end==null);
+  try{if(want&&!wakeLock&&navigator.wakeLock){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null})}
+    else if(!want&&wakeLock){const w=wakeLock;wakeLock=null;await w.release()}}catch(e){wakeLock=null}}
+function applyShow(){$('#wk').hidden=LOC.showWeek===false;$('#gr').hidden=LOC.showGrowth===false;$('#lg').hidden=LOC.showLog===false}
 function renderVisits(){
   if(!cfg.cal.on){$('#visits').innerHTML='';return}
   const up=upcoming().slice(0,2);let inner='';
@@ -567,7 +627,7 @@ function act(a){
   else if(a==='notesMenu')openMenu(T('pickNote'),`<div class="list">${['note','weight','temp','med','height','head','spit','bath','cry'].map(k=>`<button data-m="sub:${k}" style="--c:var(--ot)">${k==='note'?I.pen:I.plus}<span>${T(SUBK[k][0])}</span></button>`).join('')}<button data-m="past" style="--c:var(--mut)">${I.clock}<span>${T('btnPast')}</span></button></div>`);
   else if(a==='bMat'||a==='bForm'){const milk=a==='bMat'?'materna':'formula';const r=add({type:'feed',kind:'bottle',milk,start:now});
     undoable(T('tBottleAt',{x:milk==='formula'?T('formula'):T('breastMilk'),t:hm(now)}),()=>delRef(r),{l:T('qtyBtn'),f:()=>{const e=EV[r.id];if(e&&!e.del)openForm(e,false)}})}
-  else if(a&&a.startsWith('med:')){const m=(cfg.meds||[]).find(x=>x.id===a.slice(4));if(m){const r=add({type:'other',sub:'med',value:m.name+(m.dose?' · '+m.dose:''),med:m.id,start:now});undoable(T('medGiven',{x:m.name,t:hm(now)}),()=>delRef(r))}}
+  else if(a&&a.startsWith('med:')){const m=(cfg.meds||[]).find(x=>x.id===a.slice(4));if(m){const r=add({type:'other',sub:'med',value:m.name+(m.dose?' · '+m.dose:''),med:m.id,start:now});remAfterDose(m,r.id,now);undoable(T('medGiven',{x:m.name,t:hm(now)}),()=>{delRef(r);remUndo(m,r.id)})}}
   else if(a&&a.startsWith('sub:'))openForm({type:'other',sub:a.slice(4),start:now},true);
   else if(a==='past')openForm({type:'feed',kind:'breast',side:'L',start:now-36e5,end:now-36e5+15*6e4},true);
   else if(a==='settings')openSettings();
@@ -640,9 +700,12 @@ $('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m
     if(neu)add(o);else upd(EV[old.id]||old,o,true);toast(T('tSaved'))}});
 
 /* ================= Ajustes ================= */
-function medRow(m){m=m||{id:uid(),name:'',dose:'',every:''};
-  return`<div class="medrow" data-mid="${esc(m.id)}"><label>${T('medName')}<input data-m-k="name" maxlength="40" value="${esc(m.name)}" placeholder="Paracetamol"></label><label>${T('medDose')}<input data-m-k="dose" maxlength="24" value="${esc(m.dose||'')}" placeholder="2,5 ml"></label><label>${T('medEvery')}<input data-m-k="every" type="number" inputmode="decimal" min="0.5" step="0.5" value="${m.every||''}" placeholder="4"></label><button type="button" class="x" data-s="medDel" aria-label="${T('medDel')}">✕</button></div>`}
-function readMeds(){return[...document.querySelectorAll('#medlist .medrow')].map(r=>({id:r.dataset.mid,name:r.querySelector('[data-m-k=name]').value.trim().slice(0,40),dose:r.querySelector('[data-m-k=dose]').value.trim().slice(0,24),every:Math.round((+String(r.querySelector('[data-m-k=every]').value).replace(',','.')||0)*2)/2})).filter(m=>m.name&&m.every>0)}
+function medRow(m){m=m||{id:uid(),name:'',dose:'',every:'',days:''};const end=m.name?medEnd(m):null;
+  return`<div class="medrow" data-mid="${esc(m.id)}"><label class="ln">${T('medName')}<input data-m-k="name" maxlength="40" value="${esc(m.name)}" placeholder="Paracetamol"></label><button type="button" class="x" data-s="medDel" aria-label="${T('medDel')}">✕</button>
+  <label class="ld">${T('medDose')}<input data-m-k="dose" maxlength="24" value="${esc(m.dose||'')}" placeholder="2,5 ml"></label><label class="le">${T('medEvery')}<input data-m-k="every" type="number" inputmode="decimal" min="0.5" step="0.5" value="${m.every||''}" placeholder="4"></label><label class="lt2">${T('medDays')}<input data-m-k="days" type="number" inputmode="numeric" min="1" step="1" value="${m.days||''}" placeholder="—"></label>
+  ${end&&end<=Date.now()?`<span class="end">${T('medEnded',{d:new Date(end).toLocaleDateString(LANG)})}</span>`:''}</div>`}
+function readMeds(){const num=v=>+String(v).replace(',','.')||0;return[...document.querySelectorAll('#medlist .medrow')].map(r=>{const q=k=>r.querySelector('[data-m-k='+k+']').value;
+  return{id:r.dataset.mid,name:q('name').trim().slice(0,40),dose:q('dose').trim().slice(0,24),every:Math.round(num(q('every'))*2)/2,days:Math.max(0,Math.round(num(q('days'))))||0}}).filter(m=>m.name&&m.every>0)}
 function openSettings(){mode='settings';$('#ov').classList.remove('center');const c=cfg.cal,th=LOC.theme||'auto';
   const sel=(k,v,cur,l)=>`<button type="button" data-g="${k}" data-v="${v}" class="${cur===v?'sel':''}">${l}</button>`;
   $('#sheet').innerHTML=`<h2>${T('settings')}</h2>
@@ -665,6 +728,8 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <label class="chk"><input type="checkbox" data-c="medsOn" ${cfg.medsOn?'checked':''}>${T('medsOn')}</label>
     <div id="medlist">${(cfg.meds||[]).map(medRow).join('')}</div>
     <button class="wide" data-s="medAdd">${T('medAdd')}</button>
+    <label class="chk"><input type="checkbox" data-c="medsCal" ${cfg.medsCal?'checked':''}>${T('medsCal')}</label>
+    <p class="hint">${T('medsCalHint')}</p>${REM.err?`<p class="err">${esc(REM.err)}</p>`:''}
   </div></details>
   <details class="sec" name="ajustes"><summary>${I.eye}${T('secLook')}</summary><div>
     <div class="f">${T('style')}<div class="seg" data-grp="style">${sel('style','buho',LOC.style||'buho',T('stBuho'))}${sel('style','noir',LOC.style||'buho',T('stNoir'))}${sel('style','catppuccin',LOC.style||'buho',T('stCat'))}</div></div>
@@ -672,7 +737,15 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <div class="f">${T('theme')}<div class="seg" data-grp="theme">${sel('theme','auto',th,T('thAuto'))}${sel('theme','light',th,T('thLight'))}${sel('theme','dark',th,T('thDark'))}</div></div>
     <p class="hint">${T('themeHint')}</p>
   </div></details>
+  <details class="sec" name="ajustes"><summary>${I.screen}${T('secScreen')}</summary><div>
+    <label class="chk"><input type="checkbox" data-c="wake" ${LOC.wake?'checked':''}>${T('wake')}</label>
+    <p class="hint">${'wakeLock' in navigator?T('wakeHint'):T('wakeNo')}</p>
+    <label class="chk"><input type="checkbox" data-c="showWeek" ${LOC.showWeek!==false?'checked':''}>${T('showWeek')}</label>
+    <label class="chk"><input type="checkbox" data-c="showGrowth" ${LOC.showGrowth!==false?'checked':''}>${T('showGrowth')}</label>
+    <label class="chk"><input type="checkbox" data-c="showLog" ${LOC.showLog!==false?'checked':''}>${T('showLog')}</label>
+  </div></details>
   <details class="sec" name="ajustes"><summary>${I.gear}${T('secConf')}</summary><div>
+    <label class="f">${T('lang')}<select data-c="lang"><option value="auto">${T('langAuto')}</option>${Object.keys(LANGS).map(k=>`<option value="${k}" ${LOC.lang===k?'selected':''}>${LANGS[k]}</option>`).join('')}</select></label>
     <label class="f">${T('meName')}<input data-c="me" maxlength="24" value="${esc(LOC.me)}"></label>
     <p class="hint">${T('meHint')}</p>
     <label class="chk"><input type="checkbox" data-c="timeFeeds" ${cfg.timeFeeds?'checked':''}>${T('timeFeeds')}</label>
@@ -707,11 +780,12 @@ async function settingsClick(s,b){
   if(s==='ssave'){
     const n={name:$('[data-c=name]').value.trim().slice(0,40),birth:$('[data-c=birth]').value,sex:grp('sex'),timeFeeds:$('[data-c=timeFeeds]').checked,
       cal:{on:$('[data-c=calOn]').checked,id:$('[data-c=calId]').value.trim()||'primary',q:$('[data-c=calQ]').value.trim().slice(0,200),days:Math.min(180,Math.max(1,+$('[data-c=calDays]').value||30))},
-      medsOn:$('[data-c=medsOn]').checked,meds:readMeds()};
-    LOC.me=$('[data-c=me]').value.trim().slice(0,24);LOC.theme=grp('theme')||'auto';LOC.style=grp('style')||'buho';applyTheme();
+      medsOn:$('[data-c=medsOn]').checked,meds:readMeds(),medsCal:$('[data-c=medsCal]').checked};
+    LOC.me=$('[data-c=me]').value.trim().slice(0,24);LOC.wake=$('[data-c=wake]').checked;['showWeek','showGrowth','showLog'].forEach(k=>LOC[k]=$('[data-c='+k+']').checked);
+    const newLang=$('[data-c=lang]').value;if(newLang!==(LOC.lang||'auto')){LOC.lang=newLang;setLang()}LOC.theme=grp('theme')||'auto';LOC.style=grp('style')||'buho';applyTheme();
     const calChanged=JSON.stringify(n.cal)!==JSON.stringify(cfg.cal);
     closeSheet();
-    const c=EV.cfg,cur={name:cfg.name,birth:cfg.birth,sex:cfg.sex,timeFeeds:cfg.timeFeeds,cal:cfg.cal,medsOn:cfg.medsOn,meds:cfg.meds};
+    const c=EV.cfg,cur={name:cfg.name,birth:cfg.birth,sex:cfg.sex,timeFeeds:cfg.timeFeeds,cal:cfg.cal,medsOn:cfg.medsOn,meds:cfg.meds,medsCal:cfg.medsCal};
     if(!c||c.del||JSON.stringify(cur)!==JSON.stringify(n)){const now=Date.now();EV.cfg={id:'cfg',type:'config',...n,start:now,u:Math.max(now,(c?.u||0)+1)};if(calChanged){CAL={at:0,items:[],err:'',name:''};saveCal();calForce=true}changed('cfg')}else{persist();render()}
     if(n.cal.on&&(!LOC.url||!LOC.key))setTimeout(()=>toast(T('calNeedSync')),400);else toast(T('tSettings'));return}
   if(s==='test'){
@@ -751,7 +825,9 @@ async function exportCsv(range='all',how='auto'){
 
 /* ================= Arranque ================= */
 $('#gear').innerHTML=I.gear;$('#gear').setAttribute('aria-label',T('settings'));
-$('#h-today').textContent=T('today');$('#h-week').textContent=T('last7');$('#h-log').textContent=T('log');
+function setStatic(){$('#gear').setAttribute('aria-label',T('settings'));$('#h-today').textContent=T('today');$('#h-week').textContent=T('last7');$('#h-growth').textContent=T('growth');$('#h-log').textContent=T('log')}
+function setLang(){persist();LANG=pickLang();document.documentElement.lang=LANG;setStatic()}
+setStatic();loadRem();
 loadLocal();
 function applyHash(){const hc=location.hash.match(/cfg=([^&]+)/);if(!hc)return;
   const o=dec(hc[1]);history.replaceState(null,'',location.pathname+location.search);
@@ -763,7 +839,7 @@ setInterval(tick,1000);
 setInterval(()=>{if(!$('#ov').classList.contains('open'))render()},60000);
 setInterval(()=>{if(document.visibilityState==='visible')sync()},30000);
 addEventListener('online',()=>sync());addEventListener('offline',setSync);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){render();sync()}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){render();sync()}else updateWake()});
 addEventListener('storage',e=>{if(e.key===K.ev){loadLocal();cache=null;render()}});
 sync();
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});

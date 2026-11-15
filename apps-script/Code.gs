@@ -11,12 +11,13 @@
  *  - since: la respuesta incluye todos los registros que han cambiado en la hoja después de ese momento.
  *  - cal {id, q, days}: devuelve las próximas visitas de Google Calendar (opcional).
  *  - addEvent {id, t, s, e, loc, d}: crea una visita en el calendario (opcional).
+ *  - rem [{rid, op:'add'|'del', t, s, e, eid}] + remCal: avisos de medicación con alarma (opcional).
  *
  * Calendario: la primera vez hay que autorizar el acceso. En el editor, elige la función
  * «autorizar» en el desplegable de arriba, pulsa Ejecutar y acepta los permisos.
  */
 
-const BUHO_SCRIPT_VERSION = '0.3.0';
+const BUHO_SCRIPT_VERSION = '0.5.0';
 
 // Columnas legibles (para mirar la hoja) + columnas técnicas (las usa la app; no las edites a mano).
 // Si a una hoja antigua le falta alguna columna, se añade sola en su sitio.
@@ -79,6 +80,7 @@ function doPost(e) {
     const res = { ok: true, now: now, events: events };
     if (req.addEvent) res.added = nuevaVisita_(req.addEvent);
     if (req.cal) res.cal = calendario_(req.cal);
+    if (req.rem) res.rem = avisos_(req.rem, req.remCal);
     return out(res);
   } finally {
     lock.releaseLock();
@@ -202,6 +204,33 @@ function nuevaVisita_(v) {
   } catch (x) {
     return { ok: false, error: permisos_(x) };
   }
+}
+
+/** Avisos de medicación: crea o borra eventos con alarma a la hora de la próxima toma. */
+function avisos_(ops, calId) {
+  let cal;
+  try { cal = cal_(calId); } catch (x) { return ops.map(o => ({ rid: o.rid, ok: false, error: permisos_(x) })); }
+  return (ops || []).slice(0, 20).map(o => {
+    try {
+      if (o.op === 'add') {
+        const s = Number(o.s);
+        if (!s || s < Date.now() - 5 * 60000) return { rid: o.rid, ok: true };      // ya ha pasado: no se crea
+        const ev = cal.createEvent('💊 ' + String(o.t || 'Medicación').slice(0, 100), new Date(s), new Date(Number(o.e) || s + 15 * 60000),
+          { description: 'Aviso de la próxima toma creado por Búho.' });
+        ev.removeAllReminders();
+        ev.addPopupReminder(0);
+        return { rid: o.rid, ok: true, eid: ev.getId() };
+      }
+      if (o.op === 'del') {
+        const ev = o.eid ? cal.getEventById(String(o.eid)) : null;
+        if (ev) ev.deleteEvent();
+        return { rid: o.rid, ok: true };
+      }
+      return { rid: o.rid, ok: true };
+    } catch (x) {
+      return { rid: o.rid, ok: false, error: permisos_(x) };
+    }
+  });
 }
 
 function cal_(id) {

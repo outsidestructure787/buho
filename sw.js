@@ -1,10 +1,11 @@
 /* Búho · service worker
    Guarda la app en el móvil para que abra sin conexión.
    Al publicar una versión nueva, cambia VERSION para que los móviles la descarguen. */
-const VERSION = 'buho-0.4.0';
+const VERSION = 'buho-0.5.0';
 const ASSETS = [
   './',
   './index.html',
+  './i18n.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
