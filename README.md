@@ -17,7 +17,7 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 <a href="#deutsch">Deutsch</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.2.1</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.3.0</p>
 
 ---
 
@@ -35,7 +35,9 @@ Búho es una web-app para apuntar con un toque lo que hace el bebé: cuándo se 
 ### Qué incluye
 - Botones grandes: se duerme/se despierta, lactancia (pecho izquierdo o derecho, con cronómetro opcional), biberón (leche materna o fórmula), pañal (pis, caca o ambas) y anotaciones (notas, peso, temperatura, medicación y otros, y registrar algo que pasó antes).
 - De un vistazo: cronómetros en marcha, cuánto hace de la última toma, del último sueño y del último pañal, y qué pecho toca.
-- Resumen del día, gráfica de los últimos 7 días, registro con filtros, edición y borrado, deshacer y exportación a CSV para el pediatra.
+- Resumen del día, las últimas 14 entradas del registro (con «Mostrar más» para ver el registro completo con filtros), gráfica plegable de los últimos 7 días, edición y borrado, deshacer y exportación a CSV para el pediatra.
+- Próximas visitas de Google Calendar (pediatra, matrona, vacunas…) en la pantalla principal, y la opción de añadir visitas desde la app.
+- Ajustes por secciones: datos del bebé, calendario y configuración (quién usa el móvil, cronómetro de tomas, apariencia clara u oscura, sincronización y exportación).
 
 ### Instalarla en el móvil
 1. Abre **https://outsidestructure787.github.io/buho/** en el móvil.
@@ -85,6 +87,20 @@ Cuando una versión nueva de Búho cambie el script (se indica en la [lista de c
 La dirección `/exec` no cambia, así que no hay que tocar nada en los móviles. Si falta alguna columna nueva en la hoja, el script la añade solo la próxima vez que sincronice un móvil.
 
 > **Si montaste la sincronización con la versión 0.1.x** (un solo archivo con la clave dentro): antes de pegar el nuevo `Code.gs`, apunta tu clave y el nombre de la pestaña (`CLAVE` y `HOJA`). Después crea `Config.gs` como en el paso 3 de arriba, con esos mismos valores, y sigue con los pasos de esta sección.
+
+### Ver las próximas visitas de Google Calendar
+El script de la hoja también puede leer tu Google Calendar y mostrar las próximas visitas en la app. Funciona sin servicios nuevos, con la misma sincronización.
+
+1. **Actualiza el script** si lo instalaste antes de la versión 0.3.0 (sección [Actualizar el script de Google](#actualizar-el-script-de-google)), pero **no implementes todavía**.
+2. **Autoriza el calendario.** En el editor de Apps Script, abre `Code.gs`. En la barra de arriba hay un desplegable con el nombre de una función: elige **autorizar** y pulsa **Ejecutar**. Google pedirá permiso para ver y gestionar tus calendarios. Acepta, igual que la primera vez (*Configuración avanzada → Ir a…*). Abajo verás «Calendario autorizado».
+3. **Implementa la versión nueva:** *Implementar → Gestionar implementaciones* → lápiz → *Versión nueva* → *Implementar*.
+4. **En Búho:** ⚙️ Ajustes → *Calendario* → marca *Mostrar las próximas visitas* y guarda.
+   - *Calendario:* deja `primary` para tu calendario principal. Si usáis un calendario compartido para el bebé, pon su ID (Google Calendar → Configuración del calendario → *Integrar el calendario*). Tiene que estar compartido con la cuenta de Google donde está la hoja.
+   - *Mostrar solo eventos que contengan:* por ejemplo `pediatra, matrona, vacuna, revisión`, para no ver todo tu calendario personal. Vacío muestra todos los eventos.
+
+Las visitas se guardan en el móvil, así que se ven también sin conexión. Se actualizan cada 10 minutos cuando hay señal, o al pulsar *Actualizar*. Añadir una visita desde la app necesita conexión.
+
+> Quien tenga la dirección y la clave de la hoja puede ver los eventos que deje pasar el filtro y añadir visitas a ese calendario. Compártelas solo con quien deba apuntar.
 
 ### Preguntas frecuentes
 - **¿Qué pasa si no hay cobertura?** Apuntas igual. Los registros quedan pendientes (lo indica la cabecera) y se envían solos cuando vuelve la señal.

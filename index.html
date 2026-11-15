@@ -17,7 +17,9 @@
 <style>
 /* Búho · registro del bebé pensado para usarse medio dormido a las 3 de la mañana.
    Sin dependencias externas: todo funciona sin conexión. */
-:root{color-scheme:light dark;
+:root{color-scheme:light dark;}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+:root{
 --bg:light-dark(#fbf6f0,#16141b);--card:light-dark(#fff,#221f29);--ink:light-dark(#2a2233,#efe9f3);--mut:light-dark(#7a7084,#a79fb0);--line:light-dark(#ece4da,#34303c);--on:light-dark(#fff,#16141b);
 --sl:light-dark(#6c63d9,#a29cf2);--fd:light-dark(#d4583f,#f08a74);--pe:light-dark(#b88a06,#f0c445);--po:light-dark(#8a5a33,#c99466);--ot:light-dark(#1f8a88,#4cc0bd);--warn:light-dark(#b8560f,#f0a050)}
 *{box-sizing:border-box;min-width:0}
@@ -49,7 +51,7 @@ h2{font-size:20px;margin:26px 0 10px;font-weight:800}
 .act span{color:var(--ink);font-weight:700;font-size:14px;line-height:1.15;text-align:center}
 .act.big{grid-column:span 2;flex-direction:row;gap:10px;min-height:96px}
 .act.full{grid-column:span 4;flex-direction:row;gap:10px;min-height:64px}
-.act .sub{display:block;font-size:12px;font-weight:700;opacity:.8}
+.act .sub{display:block;font-size:12px;font-weight:700;opacity:.85;font-style:normal}
 .menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:4px 0 14px}
 .menu button{border:1px solid var(--line);background:var(--bg);border-radius:18px;min-height:96px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--c,var(--ink));font-weight:800}
 .menu button span{color:var(--ink);font-size:15px;line-height:1.2;text-align:center}
@@ -95,6 +97,34 @@ h3{font-size:15px;margin:18px 0 2px;font-weight:800}h3 small{color:var(--mut);fo
 .ds .dur{font-weight:800;color:var(--c);white-space:nowrap}.ds .dur.run{color:var(--mut);font-weight:700}
 .du .pd{margin-left:6px;color:var(--warn)}
 .empty{color:var(--mut);background:var(--card);border-radius:14px;padding:18px;text-align:center}
+details.acc{margin-top:26px}
+details.acc>summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:12px;min-height:44px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary h2{margin:0;flex:1}
+details.acc>summary::after{content:"";width:10px;height:10px;border-right:2.5px solid var(--mut);border-bottom:2.5px solid var(--mut);transform:rotate(45deg);margin:0 8px 4px 0;transition:transform .2s}
+details.acc[open]>summary::after{transform:rotate(-135deg);margin-bottom:-4px}
+details.acc>section{margin-top:10px}
+.sec{border:1px solid var(--line);border-radius:16px;margin:10px 0;background:var(--bg)}
+.sec>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:54px;font-weight:800;font-size:17px;cursor:pointer}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2.5px solid var(--mut);border-bottom:2.5px solid var(--mut);transform:rotate(45deg);transition:transform .2s}
+.sec[open]>summary::after{transform:rotate(-135deg)}
+.sec>summary svg{color:var(--sl);width:22px;height:22px}
+.sec>div{padding:2px 14px 14px}
+.sec input,.sec select,.sec textarea{background:var(--card)}
+.sec .seg button{background:var(--card)}
+.visit{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:0;border-left:4px solid var(--ot);border-radius:16px;padding:12px 14px;margin-top:12px}
+.visit svg{color:var(--ot);margin-top:2px}
+.visit b{display:block;font-size:13px;color:var(--mut);font-weight:700}
+.visit span{display:block;font-weight:800;line-height:1.3}
+.visit small{display:block;color:var(--mut);font-size:13px;line-height:1.3}
+.visit .vi+.vi{margin-top:8px}
+.vlist{margin:4px 0 12px}
+.vrow{padding:10px 2px;border-bottom:1px solid var(--line)}
+.vrow b{display:block}.vrow small{display:block;color:var(--mut);font-size:14px}
+.ov.center{align-items:center;padding:16px}
+.ov.center .sheet{border-radius:24px;max-height:86vh;padding:6px 20px 20px;box-shadow:0 20px 50px -20px rgba(20,12,28,.6)}
+a.wide{display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink)}
 .more{display:block;width:100%;margin-top:12px;border:1px dashed var(--line);background:none;border-radius:14px;min-height:46px;font-weight:700;color:var(--mut)}
 .ov{position:fixed;inset:0;background:rgba(20,12,28,.5);display:none;align-items:flex-end;justify-content:center;z-index:10}
 .ov.open{display:flex}
@@ -136,26 +166,26 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
     <button class="ib" data-a="settings" id="gear"></button>
   </header>
   <section id="now"></section>
+  <section id="visits"></section>
   <h2 id="h-today"></h2>
   <section id="sum"></section>
-  <h2 id="h-week"></h2>
-  <section id="tl"></section>
   <h2 id="h-log"></h2>
   <section id="log"></section>
+  <details class="acc" id="wk"><summary><h2 id="h-week"></h2></summary><section id="tl"></section></details>
 </main>
 <div class="ov" id="ov"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 <div id="toast" role="status"></div>
 <script>
 'use strict';
 {
-const VERSION='0.2.1';
+const VERSION='0.3.0';
 
 /* ================= Textos (i18n) =================
    Para traducir la app basta con añadir otro diccionario con las mismas claves.
    {x} se sustituye por el valor correspondiente. */
 const STR={es:{
-  appName:'Búho',babyLog:'Registro del bebé',bornToday:'Nacido hoy',day:'día',days:'días',weeks:'semanas',
-  today:'Hoy',yesterday:'Ayer',last7:'Últimos 7 días',log:'Registro',
+  appName:'Búho',babyLog:'Registro del bebé',babyLogF:'Registro de la bebé',bornToday:'Nacido hoy',bornTodayF:'Nacida hoy',day:'día',days:'días',weeks:'semanas',
+  today:'Hoy',yesterday:'Ayer',tomorrow:'Mañana',last7:'Últimos 7 días',log:'Registro',
   months:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
   dow:['dom','lun','mar','mié','jue','vie','sáb'],dayOf:'{d} de {m}',
   min:'min',h:'h',
@@ -196,6 +226,16 @@ const STR={es:{
   sNone:'Solo en este móvil',sOff:'Sin conexión',sPend:'{n} sin enviar',sSyncing:'Sincronizando…',sOk:'Sincronizado',sErr:'Error al sincronizar',
   errKey:'La clave no coincide con la de la hoja.',errNet:'No se pudo conectar. Revisa la dirección y la cobertura.',errSrv:'La hoja devolvió un error: {e}',
   version:'Búho v{v}',
+  showMore:'Mostrar más',fullLog:'Registro completo',close:'Cerrar',
+  secBaby:'Datos del bebé',secCal:'Calendario',secConf:'Configuración',sex:'Sexo',boy:'Niño',girl:'Niña',unset:'Sin indicar',
+  theme:'Apariencia',thAuto:'Automática',thLight:'Clara',thDark:'Oscura',themeHint:'«Automática» sigue el modo claro u oscuro del móvil.',
+  calOn:'Mostrar las próximas visitas de Google Calendar',calHelp:'Lee los eventos de tu Google Calendar a través de la misma hoja de sincronización. Hace falta tener la sincronización configurada y el script de Google actualizado (ver README).',
+  calId:'Calendario',calIdHint:'Escribe «primary» para tu calendario principal, o el ID de un calendario compartido (Google Calendar → Configuración del calendario → Integrar el calendario).',
+  calQ:'Mostrar solo eventos que contengan',calQHint:'Palabras separadas por comas. Vacío = todos los eventos. Ejemplo: pediatra, matrona, vacuna, revisión',
+  calDays:'Días por delante',calNeedSync:'Primero configura la sincronización con Google Sheets (en Configuración).',
+  visitsTitle:'Próximas visitas',noVisits:'No hay visitas en los próximos {n} días',addVisit:'Añadir visita',openGCal:'Abrir Google Calendar',refresh:'Actualizar',
+  vTitle:'Qué',vTitleDef:'Pediatra',vWhen:'Fecha y hora',vDur:'Duración (min)',vLoc:'Lugar',vNote:'Notas',vSaved:'Visita añadida al calendario',
+  calOld:'Actualiza el script de Google para usar el calendario (ver README).',calErr:'Calendario: {e}',calOffline:'Necesitas conexión para añadir una visita.',allDay:'Todo el día',updatedAgo:'Actualizado hace {d}',
   csvHead:['Fecha','Inicio','Fin','Duración (min)','Tipo','Detalle','Nota','Quién']
 }};
 let LANG='es';
@@ -229,6 +269,7 @@ const I={
   plus:sv('<path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/>'),
   clock:sv('<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4.6l3.4 2-1 1.7L11 12.7V7z"/>'),
   pen:sv('<path d="M4 17.3V20h2.7l8-8-2.7-2.7-8 8zM18.7 8a1 1 0 0 0 0-1.4l-1.3-1.3a1 1 0 0 0-1.4 0l-1.2 1.2 2.7 2.7z"/>'),
+  cal:sv('<path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2zm-2 7v10h14V9zm2 3h4v4H7z"/>'),
   gear:sv('<path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>')};
 
 const SIDE=s=>({L:T('sideL'),R:T('sideR'),B:T('sideB')}[s]||'');
@@ -250,15 +291,18 @@ const colOf=e=>e.type==='sleep'?'--sl':e.type==='feed'?'--fd':e.type==='diaper'?
 /* ================= Datos locales =================
    Todo se guarda primero en el móvil (localStorage). Cada cambio queda
    "pendiente" hasta que la hoja de Google confirma que lo ha recibido. */
-const K={ev:'buho.events',pend:'buho.pending',since:'buho.since',loc:'buho.local'};
+const K={ev:'buho.events',pend:'buho.pending',since:'buho.since',loc:'buho.local',cal:'buho.cal'};
 let EV={},PEND=new Set(),SINCE=0,LOC={me:'',url:'',key:''};
-let cfg={name:'',birth:'',timeFeeds:true};
+const CFG0={name:'',birth:'',sex:'',timeFeeds:true,cal:{on:false,id:'primary',q:'',days:30}};
+let cfg=JSON.parse(JSON.stringify(CFG0)),CAL={at:0,items:[],err:'',name:''};
 let cache=null;
 function readLS(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
-function loadLocal(){EV=readLS(K.ev,{})||{};PEND=new Set(readLS(K.pend,[]));SINCE=readLS(K.since,0)||0;LOC={...LOC,...readLS(K.loc,{})};applyCfg()}
+function loadLocal(){EV=readLS(K.ev,{})||{};PEND=new Set(readLS(K.pend,[]));SINCE=readLS(K.since,0)||0;LOC={...LOC,...readLS(K.loc,{})};CAL={...CAL,...readLS(K.cal,{})};applyCfg();applyTheme()}
 function persist(){try{localStorage.setItem(K.ev,JSON.stringify(EV));localStorage.setItem(K.pend,JSON.stringify([...PEND]));localStorage.setItem(K.since,JSON.stringify(SINCE));localStorage.setItem(K.loc,JSON.stringify(LOC));return true}
   catch(e){toast(T('tStorage'));return false}}
-function applyCfg(){const c=EV.cfg;cfg={name:'',birth:'',timeFeeds:true,...(c&&!c.del?{name:c.name||'',birth:c.birth||'',timeFeeds:c.timeFeeds!==false}:{})}}
+function applyCfg(){const c=EV.cfg&&!EV.cfg.del?EV.cfg:{};cfg={name:c.name||'',birth:c.birth||'',sex:c.sex||'',timeFeeds:c.timeFeeds!==false,cal:{...CFG0.cal,...(c.cal||{})}}}
+function applyTheme(){const t=LOC.theme||'auto';if(t==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t)}
+function saveCal(){try{localStorage.setItem(K.cal,JSON.stringify(CAL))}catch(e){}}
 const all=()=>cache||(cache=Object.values(EV).filter(e=>!e.del&&e.type!=='config'&&typeof e.start==='number').sort((a,b)=>b.start-a.start));
 function changed(id){cache=null;PEND.add(id);persist();if(id==='cfg')applyCfg();render();schedule(800)}
 function clean(o){const r={};for(const k in o){if(o[k]===undefined||k.startsWith('_'))continue;r[k]=o[k]}return r}
@@ -270,7 +314,8 @@ function restore(snap){EV[snap.id]={...snap,u:Math.max(Date.now(),(EV[snap.id]?.
 /* ================= Sincronización con Google Sheets =================
    Protocolo (ver apps-script/Code.gs): POST {key, since, events[]} →
    {ok, now, events[]}. Gana la versión con la marca "u" más reciente. */
-let syncing=false,again=false,lastErr='',lastOk=0,timer=null;
+let syncing=false,again=false,lastErr='',lastOk=0,timer=null,calForce=false;
+function gotCal(r){if(!r.cal){CAL.err=T('calOld');CAL.at=Date.now()}else if(r.cal.ok){CAL={at:Date.now(),items:r.cal.items||[],err:'',name:r.cal.name||''}}else{CAL.err=T('calErr',{e:r.cal.error||'?'});CAL.at=Date.now()}saveCal()}
 function schedule(ms){clearTimeout(timer);timer=setTimeout(()=>sync(),ms)}
 async function post(body){
   const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),25000);
@@ -287,12 +332,15 @@ async function sync(full){
     const ids=[...PEND].slice(0,400),sent={};
     const events=ids.map(id=>EV[id]).filter(Boolean).map(e=>{sent[e.id]=e.u;return{...e,_tipo:TYPE(e.type),_txt:e.del?'':desc(e)}});
     ids.forEach(id=>{if(!EV[id])PEND.delete(id)});
-    const r=await post({key:LOC.key,since:full?0:SINCE,events,v:VERSION});
+    const wantCal=cfg.cal.on&&(full||calForce||Date.now()-(CAL.at||0)>10*6e4);calForce=false;
+    const body={key:LOC.key,since:full?0:SINCE,events,v:VERSION};if(wantCal)body.cal={id:cfg.cal.id||'primary',q:cfg.cal.q||'',days:cfg.cal.days||30};
+    const r=await post(body);
     if(!r||!r.ok)throw new Error(r&&r.error==='bad_key'?'key':'srv:'+((r&&r.error)||'?'));
     ids.forEach(id=>{if(EV[id]&&EV[id].u===sent[id])PEND.delete(id)});
     for(const re of r.events||[]){if(!re||!re.id)continue;const l=EV[re.id];
       if(l&&PEND.has(re.id)&&(l.u||0)>(re.u||0))continue;
       if(!l||(re.u||0)>=(l.u||0)){delete re.srv;EV[re.id]=re}}
+    if(wantCal)gotCal(r);
     SINCE=r.now||SINCE;lastErr='';lastOk=Date.now();ok=true;cache=null;applyCfg();persist();render();
     if(PEND.size)again=true;
   }catch(e){const m=e.message||'';lastErr=m==='key'?T('errKey'):m.startsWith('srv:')?T('errSrv',{e:m.slice(4)}):T('errNet')}
@@ -315,12 +363,12 @@ function cfgLink(){return location.origin+location.pathname+'#cfg='+enc({url:LOC
 function parseCfg(text){const m=String(text||'').match(/cfg=([A-Za-z0-9+/=_-]+)/);return m?dec(m[1]):null}
 
 /* ================= Pintar ================= */
-function render(){renderHead();renderNow();renderSum();renderTl();renderLog();tick();setSync()}
+function render(){renderHead();renderNow();renderVisits();renderSum();renderTl();renderLog();tick();setSync()}
 function renderHead(){
   $('#nm').textContent=cfg.name||T('appName');document.title=cfg.name?cfg.name+' · '+T('appName'):T('appName');
-  let a=T('babyLog');
+  const F=cfg.sex==='f';let a=F?T('babyLogF'):T('babyLog');
   if(cfg.birth){const[y,m,d]=cfg.birth.split('-').map(Number);const days=Math.round((sod(Date.now())-new Date(y,m-1,d).getTime())/864e5);
-    if(days>=0)a=days<1?T('bornToday'):days<60?days+' '+(days===1?T('day'):T('days')):Math.floor(days/7)+' '+T('weeks')}
+    if(days>=0)a=days<1?(F?T('bornTodayF'):T('bornToday')):days<60?days+' '+(days===1?T('day'):T('days')):Math.floor(days/7)+' '+T('weeks')}
   $('#age').textContent=a}
 function renderNow(){
   const ev=all();
@@ -363,23 +411,71 @@ function renderTl(){
   h+=`<div class="leg"><span class="s" style="--c:var(--sl)">${T('asleepLeg')}</span><span style="--c:var(--fd)">${T('feedLeg')}</span><span style="--c:var(--pe)">${T('pee').toLowerCase()}</span><span style="--c:var(--po)">${T('poo').toLowerCase()}</span></div>`;
   $('#tl').innerHTML=h}
 const who=by=>by&&by===LOC.me?T('you'):by;
-let filter='all',showN=150;
-function renderLog(){
-  const every=all(),ev=every.filter(e=>filter==='all'||e.type===filter);
-  const multi=new Set(every.map(e=>e.by||'')).size>1;
-  let h='<div class="chips">'+[['all','fAll'],['sleep','fSleep'],['feed','fFeed'],['diaper','fDiaper'],['other','fOther']].map(([k,l])=>`<button data-f="${k}" class="${filter===k?'sel':''}">${T(l)}</button>`).join('')+'</div>';
-  let cur=null;const M=T('months');
-  ev.slice(0,showN).forEach(e=>{const d=sod(e.start);
+let filter='all',logN=100;
+function logRows(list,multi){let h='',cur=null;const M=T('months');
+  list.forEach(e=>{const d=sod(e.start);
     if(d!==cur){cur=d;h+=`<h3>${dayLabel(d)}<small>${T('dayOf',{d:new Date(d).getDate(),m:M[new Date(d).getMonth()]})}</small></h3>`}
     const fin=e.end!=null&&e.end>e.start,run=timed(e)&&e.end==null;
     const t=hm(e.start)+(timed(e)?(run?T('toNow'):fin?' – '+hm(e.end):''):'');
     const du=run?`<b class="dur run" data-ago="${e.start}"></b>`:fin&&timed(e)?`<b class="dur">${dur(e.end-e.start,false,true)}</b>`:'';
     const pend=LOC.url&&PEND.has(e.id)?`<span class="pd" title="${T('pendingMark')}">●</span>`:'';
     h+=`<button class="li" data-id="${esc(e.id)}" style="--c:var(${colOf(e)})"><i class="cd"></i><span class="tm">${t}</span><span class="ds">${esc(desc(e))}${du?` · ${du}`:''}${e.note?`<small>${esc(e.note)}</small>`:''}</span><span class="du">${multi&&e.by?`<em>${esc(who(e.by))}</em>`:''}${pend}</span></button>`});
-  if(!ev.length)h+=`<p class="empty">${every.length?T('emptyType'):T('emptyAll')}</p>`;
-  if(ev.length>showN)h+=`<button class="more" data-a="moreRows">${T('moreRows')}</button>`;
-  if(every.length)h+=`<button class="more" data-a="export">${T('exportBtn')}</button>`;
+  return h}
+const isMulti=list=>new Set(list.map(e=>e.by||'')).size>1;
+function renderLog(){
+  const every=all();let h='';
+  if(!every.length)h=`<p class="empty">${T('emptyAll')}</p>`;
+  else{h=logRows(every.slice(0,14),isMulti(every));if(every.length>14)h+=`<button class="more" data-a="logAll">${T('showMore')}</button>`}
   $('#log').innerHTML=h}
+function openLog(){mode='log';$('#ov').classList.add('open','center');drawLog()}
+function drawLog(){
+  const every=all(),ev=every.filter(e=>filter==='all'||e.type===filter);
+  let h=`<h2>${T('fullLog')}</h2><div class="chips">`+[['all','fAll'],['sleep','fSleep'],['feed','fFeed'],['diaper','fDiaper'],['other','fOther']].map(([k,l])=>`<button data-f="${k}" class="${filter===k?'sel':''}">${T(l)}</button>`).join('')+'</div>';
+  h+=ev.length?logRows(ev.slice(0,logN),isMulti(every)):`<p class="empty">${T('emptyType')}</p>`;
+  if(ev.length>logN)h+=`<button class="more" data-s="more">${T('moreRows')}</button>`;
+  if(every.length)h+=`<button class="more" data-s="export">${T('exportBtn')}</button>`;
+  h+=`<div class="btns"><button data-s="cancel" style="flex:1">${T('close')}</button></div>`;
+  $('#sheet').innerHTML=h;tick()}
+function upcoming(){const n=Date.now();return(CAL.items||[]).filter(v=>(v.e||v.s)>n).sort((a,b)=>a.s-b.s)}
+function whenTxt(v){const d=new Date(v.s),t0=sod(Date.now()),ds=sod(v.s);
+  const day=ds===t0?T('today'):ds===addDays(t0,1)?T('tomorrow'):T('dow')[d.getDay()]+' '+d.getDate()+' '+T('months')[d.getMonth()].slice(0,3);
+  return day+(v.all?' · '+T('allDay'):' · '+hm(v.s))}
+function renderVisits(){
+  if(!cfg.cal.on){$('#visits').innerHTML='';return}
+  const up=upcoming().slice(0,2);let inner='';
+  if(up.length)inner=up.map(v=>`<div class="vi"><span>${esc(v.t||'—')}</span><small>${esc(whenTxt(v))}${v.loc?' · '+esc(v.loc):''}</small></div>`).join('');
+  else inner=`<small>${CAL.err?esc(CAL.err):T('noVisits',{n:cfg.cal.days})}</small>`;
+  $('#visits').innerHTML=`<button class="visit" data-a="visits">${I.cal}<div><b>${T('visitsTitle')}</b>${inner}</div></button>`}
+function openVisits(){mode='visits';$('#ov').classList.add('open','center');drawVisits()}
+function drawVisits(){const up=upcoming();
+  let h=`<h2>${T('visitsTitle')}</h2>`;
+  if(CAL.err)h+=`<p class="err">${esc(CAL.err)}</p>`;
+  h+=up.length?`<div class="vlist">${up.map(v=>`<div class="vrow"><b>${esc(v.t||'—')}</b><small>${esc(whenTxt(v))}${v.loc?' · '+esc(v.loc):''}</small>${v.d?`<small>${esc(v.d)}</small>`:''}</div>`).join('')}</div>`:`<p class="hint">${T('noVisits',{n:cfg.cal.days})}</p>`;
+  if(CAL.at)h+=`<p class="hint">${T('updatedAgo',{d:dur(Date.now()-CAL.at,false,true)})}</p>`;
+  h+=`<button class="wide" data-s="addVisit">${T('addVisit')}</button><button class="wide" data-s="calRefresh">${T('refresh')}</button><a class="wide" href="https://calendar.google.com/" target="_blank" rel="noopener">${T('openGCal')}</a>`;
+  h+=`<div class="btns"><button data-s="cancel" style="flex:1">${T('close')}</button></div>`;
+  $('#sheet').innerHTML=h}
+function openVisitForm(){mode='visit';$('#ov').classList.add('open','center');
+  const t=new Date();t.setDate(t.getDate()+1);t.setHours(10,0,0,0);
+  $('#sheet').innerHTML=`<h2>${T('addVisit')}</h2>
+  <label class="f">${T('vTitle')}<input data-v="t" maxlength="80" value="${T('vTitleDef')}"></label>
+  <div class="two"><label class="f">${T('vWhen')}<input type="datetime-local" data-v="s" value="${toIn(t.getTime())}"></label><label class="f">${T('vDur')}<input type="number" inputmode="numeric" min="5" step="5" data-v="dur" value="30"></label></div>
+  <label class="f">${T('vLoc')}<input data-v="loc" maxlength="120"></label>
+  <label class="f">${T('vNote')}<textarea rows="2" maxlength="300" data-v="d"></textarea></label>
+  <p class="err" id="verr"></p><div class="btns"><button class="pri" data-s="vsave">${T('save')}</button><button data-s="cancel">${T('cancel')}</button></div>`}
+async function saveVisit(btn){
+  const g=k=>$('[data-v='+k+']').value.trim(),err=$('#verr');
+  const s=fromIn(g('s')),dm=Math.max(5,+g('dur')||30),t=g('t');
+  if(!t||!s){err.textContent=T('eTime');return}
+  if(!LOC.url||!LOC.key){err.textContent=T('calNeedSync');return}
+  if(!navigator.onLine){err.textContent=T('calOffline');return}
+  btn.disabled=true;err.className='ok';err.textContent=T('testing');
+  try{const r=await post({key:LOC.key,since:SINCE,events:[],v:VERSION,addEvent:{id:cfg.cal.id||'primary',t,s,e:s+dm*6e4,loc:g('loc'),d:g('d')},cal:{id:cfg.cal.id||'primary',q:cfg.cal.q||'',days:cfg.cal.days||30}});
+    if(!r||!r.ok)throw new Error(r&&r.error==='bad_key'?T('errKey'):(r&&r.error)||'?');
+    if(r.added&&!r.added.ok)throw new Error(r.added.error||'?');
+    if(!r.added)throw new Error(T('calOld'));
+    gotCal(r);closeSheet();render();toast(T('vSaved'))}
+  catch(e){btn.disabled=false;err.className='err';err.textContent=e.message==='net'?T('errNet'):e.message}}
 function tick(){const n=Date.now();
   document.querySelectorAll('[data-run]').forEach(el=>el.textContent=clock(n-+el.dataset.run));
   document.querySelectorAll('[data-ago]').forEach(el=>el.textContent=dur(n-+el.dataset.ago,true))}
@@ -417,26 +513,26 @@ function act(a){
   else if(a==='notesMenu')openMenu(T('pickNote'),`<div class="list">${['note','weight','temp','med','height','head','spit','bath','cry'].map(k=>`<button data-m="sub:${k}" style="--c:var(--ot)">${k==='note'?I.pen:I.plus}<span>${T(SUBK[k][0])}</span></button>`).join('')}<button data-m="past" style="--c:var(--mut)">${I.clock}<span>${T('btnPast')}</span></button></div>`);
   else if(a==='bMat'||a==='bForm'){const milk=a==='bMat'?'materna':'formula';const r=add({type:'feed',kind:'bottle',milk,start:now});
     undoable(T('tBottleAt',{x:milk==='formula'?T('formula'):T('breastMilk'),t:hm(now)}),()=>delRef(r),{l:T('qtyBtn'),f:()=>{const e=EV[r.id];if(e&&!e.del)openForm(e,false)}})}
-  else if(a.startsWith('sub:'))openForm({type:'other',sub:a.slice(4),start:now},true);
+  else if(a&&a.startsWith('sub:'))openForm({type:'other',sub:a.slice(4),start:now},true);
   else if(a==='past')openForm({type:'feed',kind:'breast',side:'L',start:now-36e5,end:now-36e5+15*6e4},true);
   else if(a==='settings')openSettings();
   else if(a==='export')exportCsv();
   else if(a==='syncnow'){if(!LOC.url||!LOC.key)openSettings();else sync()}
-  else if(a==='moreRows'){showN+=150;renderLog()}}
+  else if(a==='logAll'){filter='all';logN=100;openLog()}
+  else if(a==='visits')openVisits();}
 document.addEventListener('click',e=>{
-  if(e.target.closest('#sheet,#toast'))return;
+  if(!e.target.isConnected||e.target.closest('#sheet,#toast'))return;
   if(e.target===$('#ov')){closeSheet();return}
   const b=e.target.closest('[data-a],[data-id],[data-f]');if(!b)return;
   if(b.dataset.id){const x=EV[b.dataset.id];if(x&&!x.del)openForm(x,false);return}
-  if(b.dataset.f){filter=b.dataset.f;showN=150;renderLog();return}
   act(b.dataset.a)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 
 /* ================= Formulario ================= */
 let draft=null,orig=null,isNew=false,confirmDel=false,mode='';
-function openForm(e,neu){mode='form';draft={...e};orig=neu?null:e;isNew=neu;confirmDel=false;drawForm();$('#ov').classList.add('open')}
-function openMenu(title,body){mode='menu';$('#sheet').innerHTML=`<h2>${title}</h2>${body}<div class="btns"><button data-s="cancel" style="flex:1">${T('cancel')}</button></div>`;$('#ov').classList.add('open')}
-function closeSheet(){$('#ov').classList.remove('open');draft=null;mode=''}
+function openForm(e,neu){$('#ov').classList.remove('center');mode='form';draft={...e};orig=neu?null:e;isNew=neu;confirmDel=false;drawForm();$('#ov').classList.add('open')}
+function openMenu(title,body){mode='menu';$('#sheet').innerHTML=`<h2>${title}</h2>${body}<div class="btns"><button data-s="cancel" style="flex:1">${T('cancel')}</button></div>`;$('#ov').classList.add('open','center')}
+function closeSheet(){$('#ov').classList.remove('open','center');draft=null;mode=''}
 function seg(k,opts,cur){return`<div class="seg">${opts.map(([v,l])=>`<button type="button" data-s="${k}" data-v="${v}" class="${String(cur)===v?'sel':''}">${l}</button>`).join('')}</div>`}
 function drawForm(){const d=draft,tm=timed(d);let h=`<h2>${isNew?T('newRec'):T('editRec')}</h2>`;
   if(isNew)h+=`<div class="f">${T('type')}${seg('type',[['sleep',T('tSleep')],['feed',T('tFeed')],['diaper',T('tDiaper')],['other',T('tOther')]],d.type)}</div>`;
@@ -467,6 +563,12 @@ $('#sheet').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k||!draf
   if(k==='start'||k==='end')v=fromIn(v);else if(k==='ml')v=v===''?null:+v;else if(k==='value'&&draft.sub!=='med')v=v===''?null:+v;
   draft[k]=v;if(k==='sub'){draft.value=null;drawForm()}});
 $('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m]');if(m&&mode==='menu'){closeSheet();act(m.dataset.m);return}
+  if(mode==='log'){const li=e.target.closest('[data-id]');if(li){const x=EV[li.dataset.id];if(x&&!x.del)openForm(x,false);return}
+    const f=e.target.closest('[data-f]');if(f){filter=f.dataset.f;logN=100;drawLog();return}
+    const lb=e.target.closest('[data-s]');if(lb&&lb.dataset.s==='more'){logN+=100;drawLog();return}if(lb&&lb.dataset.s==='export'){exportCsv();return}}
+  if(mode==='visits'){const vb=e.target.closest('[data-s]');if(vb&&vb.dataset.s==='addVisit'){openVisitForm();return}
+    if(vb&&vb.dataset.s==='calRefresh'){calForce=true;vb.disabled=true;await sync();drawVisits();return}}
+  if(mode==='visit'){const vb=e.target.closest('[data-s]');if(vb&&vb.dataset.s==='vsave'){saveVisit(vb);return}}
   const b=e.target.closest('[data-s]');if(!b)return;const s=b.dataset.s;
   if(s==='cancel')return closeSheet();
   if(mode==='settings')return settingsClick(s,b);
@@ -482,34 +584,57 @@ $('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m
     if(neu)add(o);else upd(EV[old.id]||old,o,true);toast(T('tSaved'))}});
 
 /* ================= Ajustes ================= */
-function openSettings(){mode='settings';
+function openSettings(){mode='settings';$('#ov').classList.remove('center');const c=cfg.cal,th=LOC.theme||'auto';
+  const sel=(k,v,cur,l)=>`<button type="button" data-g="${k}" data-v="${v}" class="${cur===v?'sel':''}">${l}</button>`;
   $('#sheet').innerHTML=`<h2>${T('settings')}</h2>
-  <label class="f">${T('babyName')}<input data-c="name" maxlength="40" value="${esc(cfg.name)}"></label>
-  <label class="f">${T('birth')}<input type="date" data-c="birth" value="${esc(cfg.birth)}"></label>
-  <label class="chk"><input type="checkbox" data-c="timeFeeds" ${cfg.timeFeeds?'checked':''}>${T('timeFeeds')}</label>
-  <p class="hint">${T('timeFeedsHint')}</p>
-  <label class="f">${T('meName')}<input data-c="me" maxlength="24" value="${esc(LOC.me)}"></label>
-  <p class="hint">${T('meHint')}</p>
+  <details class="sec"><summary>${I.heart}${T('secBaby')}</summary><div>
+    <label class="f">${T('babyName')}<input data-c="name" maxlength="40" value="${esc(cfg.name)}"></label>
+    <label class="f">${T('birth')}<input type="date" data-c="birth" value="${esc(cfg.birth)}"></label>
+    <div class="f">${T('sex')}<div class="seg" data-grp="sex">${sel('sex','m',cfg.sex,T('boy'))}${sel('sex','f',cfg.sex,T('girl'))}${sel('sex','',cfg.sex,T('unset'))}</div></div>
+  </div></details>
+  <details class="sec"><summary>${I.cal}${T('secCal')}</summary><div>
+    <p class="hint">${T('calHelp')}</p>
+    <label class="chk"><input type="checkbox" data-c="calOn" ${c.on?'checked':''}>${T('calOn')}</label>
+    <label class="f">${T('calId')}<input data-c="calId" autocomplete="off" spellcheck="false" value="${esc(c.id||'primary')}"></label>
+    <p class="hint">${T('calIdHint')}</p>
+    <label class="f">${T('calQ')}<input data-c="calQ" autocomplete="off" value="${esc(c.q||'')}"></label>
+    <p class="hint">${T('calQHint')}</p>
+    <label class="f">${T('calDays')}<input type="number" inputmode="numeric" min="1" max="180" data-c="calDays" value="${c.days||30}"></label>
+  </div></details>
+  <details class="sec"><summary>${I.gear}${T('secConf')}</summary><div>
+    <label class="f">${T('meName')}<input data-c="me" maxlength="24" value="${esc(LOC.me)}"></label>
+    <p class="hint">${T('meHint')}</p>
+    <label class="chk"><input type="checkbox" data-c="timeFeeds" ${cfg.timeFeeds?'checked':''}>${T('timeFeeds')}</label>
+    <p class="hint">${T('timeFeedsHint')}</p>
+    <div class="f">${T('theme')}<div class="seg" data-grp="theme">${sel('theme','auto',th,T('thAuto'))}${sel('theme','light',th,T('thLight'))}${sel('theme','dark',th,T('thDark'))}</div></div>
+    <p class="hint">${T('themeHint')}</p>
+    <h3>${T('syncTitle')}</h3>
+    <p class="hint">${T('syncHelp')}</p>
+    <label class="f">${T('syncUrl')}<input data-c="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(LOC.url)}"></label>
+    <label class="f">${T('syncKey')}<input data-c="key" autocomplete="off" spellcheck="false" value="${esc(LOC.key)}"></label>
+    <label class="f">${T('pasteLink')}<input data-c="link" autocomplete="off" spellcheck="false" placeholder="https://…#cfg=…"></label>
+    <p class="err" id="serr"></p>
+    <button class="wide" data-s="test">${T('testSync')}</button>
+    ${LOC.url&&LOC.key?`<button class="wide" data-s="share">${T('shareCfg')}</button><button class="wide" data-s="full">${T('fullSync')}</button>`:''}
+    <h3>${T('exportTitle')}</h3><button class="wide" data-s="export">${T('exportCsv')}</button>
+  </div></details>
   <div class="btns"><button class="pri" data-s="ssave">${T('save')}</button><button data-s="cancel">${T('cancel')}</button></div>
-  <h2>${T('syncTitle')}</h2>
-  <p class="hint">${T('syncHelp')}</p>
-  <label class="f">${T('syncUrl')}<input data-c="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(LOC.url)}"></label>
-  <label class="f">${T('syncKey')}<input data-c="key" autocomplete="off" spellcheck="false" value="${esc(LOC.key)}"></label>
-  <label class="f">${T('pasteLink')}<input data-c="link" autocomplete="off" spellcheck="false" placeholder="https://…#cfg=…"></label>
-  <p class="err" id="serr"></p>
-  <button class="wide" data-s="test">${T('testSync')}</button>
-  ${LOC.url&&LOC.key?`<button class="wide" data-s="share">${T('shareCfg')}</button><button class="wide" data-s="full">${T('fullSync')}</button>`:''}
-  <h2>${T('exportTitle')}</h2><button class="wide" data-s="export">${T('exportCsv')}</button>
   <p class="ver">${T('version',{v:VERSION})}</p>`;
   $('#ov').classList.add('open');
   const lk=$('[data-c=link]');lk.addEventListener('input',()=>{const o=parseCfg(lk.value);if(o){$('[data-c=url]').value=o.url;$('[data-c=key]').value=o.key;lk.value=''}})}
+$('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||mode!=='settings')return;
+  b.parentElement.querySelectorAll('button').forEach(x=>x.classList.toggle('sel',x===b))});
+const grp=k=>{const b=document.querySelector(`[data-grp=${k}] .sel`);return b?b.dataset.v:''};
 async function settingsClick(s,b){
   if(s==='ssave'){
-    const n={name:$('[data-c=name]').value.trim().slice(0,40),birth:$('[data-c=birth]').value,timeFeeds:$('[data-c=timeFeeds]').checked};
-    LOC.me=$('[data-c=me]').value.trim().slice(0,24);
+    const n={name:$('[data-c=name]').value.trim().slice(0,40),birth:$('[data-c=birth]').value,sex:grp('sex'),timeFeeds:$('[data-c=timeFeeds]').checked,
+      cal:{on:$('[data-c=calOn]').checked,id:$('[data-c=calId]').value.trim()||'primary',q:$('[data-c=calQ]').value.trim().slice(0,200),days:Math.min(180,Math.max(1,+$('[data-c=calDays]').value||30))}};
+    LOC.me=$('[data-c=me]').value.trim().slice(0,24);LOC.theme=grp('theme')||'auto';applyTheme();
+    const calChanged=JSON.stringify(n.cal)!==JSON.stringify(cfg.cal);
     closeSheet();
-    const c=EV.cfg;if(!c||c.del||c.name!==n.name||c.birth!==n.birth||(c.timeFeeds!==false)!==n.timeFeeds){const now=Date.now();EV.cfg={id:'cfg',type:'config',...n,start:now,u:Math.max(now,(c?.u||0)+1)};changed('cfg')}else{persist();render()}
-    toast(T('tSettings'));return}
+    const c=EV.cfg,cur={name:cfg.name,birth:cfg.birth,sex:cfg.sex,timeFeeds:cfg.timeFeeds,cal:cfg.cal};
+    if(!c||c.del||JSON.stringify(cur)!==JSON.stringify(n)){const now=Date.now();EV.cfg={id:'cfg',type:'config',...n,start:now,u:Math.max(now,(c?.u||0)+1)};if(calChanged){CAL={at:0,items:[],err:'',name:''};saveCal();calForce=true}changed('cfg')}else{persist();render()}
+    if(n.cal.on&&(!LOC.url||!LOC.key))setTimeout(()=>toast(T('calNeedSync')),400);else toast(T('tSettings'));return}
   if(s==='test'){
     const url=$('[data-c=url]').value.trim(),key=$('[data-c=key]').value.trim(),err=$('#serr');
     const changedSrc=url!==LOC.url||key!==LOC.key;

@@ -6,12 +6,17 @@
  *  - Code.gs (este archivo): la lógica. Para actualizar Búho, se sustituye entero.
  * Pasos detallados en el README del proyecto.
  *
- * Protocolo: POST (texto JSON) {key, since, events[]} → {ok, now, events[]}
+ * Protocolo: POST (texto JSON) {key, since, events[], cal?, addEvent?} → {ok, now, events[], cal?, added?}
  *  - events: registros nuevos o modificados en el móvil. Gana el que tenga la marca "u" más reciente.
  *  - since: la respuesta incluye todos los registros que han cambiado en la hoja después de ese momento.
+ *  - cal {id, q, days}: devuelve las próximas visitas de Google Calendar (opcional).
+ *  - addEvent {id, t, s, e, loc, d}: crea una visita en el calendario (opcional).
+ *
+ * Calendario: la primera vez hay que autorizar el acceso. En el editor, elige la función
+ * «autorizar» en el desplegable de arriba, pulsa Ejecutar y acepta los permisos.
  */
 
-const BUHO_SCRIPT_VERSION = '0.2.1';
+const BUHO_SCRIPT_VERSION = '0.3.0';
 
 // Columnas legibles (para mirar la hoja) + columnas técnicas (las usa la app; no las edites a mano).
 // Si a una hoja antigua le falta alguna columna, se añade sola en su sitio.
@@ -71,7 +76,10 @@ function doPost(e) {
         try { events.push(JSON.parse(r[C.datos])); } catch (x) {}
       }
     });
-    return out({ ok: true, now: now, events: events });
+    const res = { ok: true, now: now, events: events };
+    if (req.addEvent) res.added = nuevaVisita_(req.addEvent);
+    if (req.cal) res.cal = calendario_(req.cal);
+    return out(res);
   } finally {
     lock.releaseLock();
   }
@@ -153,6 +161,64 @@ function rellenarDuracion_(sh, C) {
   const datos = sh.getRange(2, C.datos + 1, n, 1).getValues();
   const vals = datos.map(r => { try { return [duracion_(JSON.parse(r[0]))]; } catch (x) { return ['']; } });
   sh.getRange(2, C['duración'] + 1, n, 1).setValues(vals);
+}
+
+/** Próximas visitas del calendario. q: palabras separadas por comas para filtrar (vacío = todo). */
+function calendario_(c) {
+  try {
+    const cal = cal_(c.id);
+    if (!cal) return { ok: false, error: 'No encuentro el calendario «' + (c.id || 'primary') + '»' };
+    const now = new Date();
+    const days = Math.min(Math.max(Number(c.days) || 30, 1), 180);
+    let evs = cal.getEvents(now, new Date(now.getTime() + days * 86400000));
+    const q = String(c.q || '').toLowerCase().split(',').map(w => w.trim()).filter(Boolean);
+    if (q.length) evs = evs.filter(e => {
+      const t = (e.getTitle() + ' ' + e.getDescription() + ' ' + e.getLocation()).toLowerCase();
+      return q.some(w => t.indexOf(w) >= 0);
+    });
+    return {
+      ok: true,
+      name: cal.getName(),
+      items: evs.slice(0, 50).map(e => ({
+        t: e.getTitle(), s: e.getStartTime().getTime(), e: e.getEndTime().getTime(),
+        all: e.isAllDayEvent(), loc: e.getLocation() || '', d: String(e.getDescription() || '').slice(0, 300)
+      }))
+    };
+  } catch (x) {
+    return { ok: false, error: permisos_(x) };
+  }
+}
+
+/** Crea una visita en el calendario. */
+function nuevaVisita_(v) {
+  try {
+    const cal = cal_(v.id);
+    if (!cal) return { ok: false, error: 'No encuentro el calendario' };
+    const s = Number(v.s), e = Number(v.e) || (s + 30 * 60000);
+    if (!v.t || !s) return { ok: false, error: 'Faltan datos de la visita' };
+    cal.createEvent(String(v.t).slice(0, 120), new Date(s), new Date(e),
+      { location: String(v.loc || '').slice(0, 200), description: String(v.d || '').slice(0, 1000) });
+    return { ok: true };
+  } catch (x) {
+    return { ok: false, error: permisos_(x) };
+  }
+}
+
+function cal_(id) {
+  return (!id || id === 'primary') ? CalendarApp.getDefaultCalendar() : CalendarApp.getCalendarById(String(id));
+}
+
+function permisos_(x) {
+  const m = String((x && x.message) || x);
+  return /autoriz|authoriz|permission|permiso/i.test(m)
+    ? 'Falta autorizar el calendario: en el editor de Apps Script ejecuta la función «autorizar».'
+    : m.slice(0, 200);
+}
+
+/** Ejecuta esta función una vez desde el editor para dar permiso de acceso al calendario. */
+function autorizar() {
+  const cal = CalendarApp.getDefaultCalendar();
+  Logger.log('Calendario autorizado: ' + cal.getName() + ' · Hoja: ' + SpreadsheetApp.getActiveSpreadsheet().getName());
 }
 
 function out(o) {
