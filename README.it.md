@@ -21,7 +21,7 @@ Diario del bebè: sonno, poppate e pannolini<br>
 <b>Italiano</b>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versione 0.5.1</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versione 0.5.2</p>
 
 ---
 

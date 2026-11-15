@@ -21,7 +21,7 @@ Catatan bayi: tidur, menyusui, dan popok<br>
 <a href="README.it.md">Italiano</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versi 0.5.1</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versi 0.5.2</p>
 
 ---
 

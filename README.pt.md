@@ -21,7 +21,7 @@ Registro do bebê: sono, mamadas e fraldas<br>
 <a href="README.it.md">Italiano</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versão 0.5.1</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versão 0.5.2</p>
 
 ---
 
