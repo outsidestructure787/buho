@@ -17,7 +17,7 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 <a href="#deutsch">Deutsch</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.5.0</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.5.1</p>
 
 ---
 
@@ -115,7 +115,7 @@ Las visitas se guardan en el móvil, así que se ven también sin conexión. Se 
 - **¿Qué pasa si no hay cobertura?** Apuntas igual. Los registros quedan pendientes (lo indica la cabecera) y se envían solos cuando vuelve la señal.
 - **¿Y si dos personas apuntan a la vez sin conexión?** No pasa nada: al reconectar se juntan los registros de los dos. Si los dos editan el mismo registro, se queda la última edición.
 - **¿Es seguro?** La hoja es privada y está en tu cuenta de Google. El script solo acepta peticiones con tu clave. Comparte el enlace de configuración solo con quien tenga que apuntar.
-- **¿Cómo me llegan las actualizaciones?** Cuando hay una versión nueva, la app muestra el aviso *Hay una versión nueva · Actualizar*.
+- **¿Cómo me llegan las actualizaciones?** Solas: al abrir la app con conexión, si hay una versión nueva se descarga y la app se recarga (no se pierde nada). Puedes forzarlo en Ajustes, con «Buscar actualizaciones» junto al número de versión.
 - **¿Dónde se guardan los datos?** En el móvil (almacenamiento del navegador) y, si la configuras, en tu hoja de Google. Si borras los datos del navegador sin tener la hoja configurada, se pierden. Exporta el CSV de vez en cuando.
 
 ### Usar tu propia copia

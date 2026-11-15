@@ -1,7 +1,7 @@
 /* Búho · service worker
    Guarda la app en el móvil para que abra sin conexión.
    Al publicar una versión nueva, cambia VERSION para que los móviles la descarguen. */
-const VERSION = 'buho-0.5.0';
+const VERSION = 'buho-0.5.1';
 const ASSETS = [
   './',
   './index.html',
@@ -15,7 +15,13 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)));
+  // cache: 'reload' evita copiar archivos antiguos de la caché del navegador.
+  // skipWaiting: la versión nueva se activa sin esperar a que se cierren todas las ventanas.
+  e.waitUntil(
+    caches.open(VERSION)
+      .then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', e => {

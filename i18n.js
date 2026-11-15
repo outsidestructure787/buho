@@ -4,6 +4,7 @@
 window.BUHO_I18N = {
 
 en: {
+  upCheck:"Check for updates",upLatest:"You already have the latest version (v{v})",upNone:"Automatic updates are not available in this browser",upDone:"Búho has been updated to version {v}",
   babyLog:'Baby log',babyLogF:'Baby log',bornToday:'Born today',bornTodayF:'Born today',day:'day',days:'days',weeks:'weeks',
   today:'Today',yesterday:'Yesterday',tomorrow:'Tomorrow',last7:'Last 7 days',log:'Log',
   months:['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -70,6 +71,7 @@ en: {
 },
 
 ca: {
+  upCheck:"Cercar actualitzacions",upLatest:"Ja tens l'última versió (v{v})",upNone:"Les actualitzacions automàtiques no estan disponibles en aquest navegador",upDone:"Búho s'ha actualitzat a la versió {v}",
   babyLog:'Registre del nadó',babyLogF:'Registre de la nadona',bornToday:'Nascut avui',bornTodayF:'Nascuda avui',day:'dia',days:'dies',weeks:'setmanes',
   today:'Avui',yesterday:'Ahir',tomorrow:'Demà',last7:'Últims 7 dies',log:'Registre',
   months:['gener','febrer','març','abril','maig','juny','juliol','agost','setembre','octubre','novembre','desembre'],
@@ -136,6 +138,7 @@ ca: {
 },
 
 fr: {
+  upCheck:"Rechercher des mises à jour",upLatest:"Vous avez déjà la dernière version (v{v})",upNone:"Les mises à jour automatiques ne sont pas disponibles dans ce navigateur",upDone:"Búho a été mis à jour en version {v}",
   babyLog:'Journal de bébé',babyLogF:'Journal de bébé',bornToday:"Né aujourd'hui",bornTodayF:"Née aujourd'hui",day:'jour',days:'jours',weeks:'semaines',
   today:"Aujourd'hui",yesterday:'Hier',tomorrow:'Demain',last7:'7 derniers jours',log:'Journal',
   months:['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],
@@ -202,6 +205,7 @@ fr: {
 },
 
 pt: {
+  upCheck:"Procurar atualizações",upLatest:"Já tem a versão mais recente (v{v})",upNone:"As atualizações automáticas não estão disponíveis neste navegador",upDone:"O Búho foi atualizado para a versão {v}",
   babyLog:'Registo do bebé',babyLogF:'Registo da bebé',bornToday:'Nasceu hoje',bornTodayF:'Nasceu hoje',day:'dia',days:'dias',weeks:'semanas',
   today:'Hoje',yesterday:'Ontem',tomorrow:'Amanhã',last7:'Últimos 7 dias',log:'Registo',
   months:['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
@@ -268,6 +272,7 @@ pt: {
 },
 
 it: {
+  upCheck:"Cerca aggiornamenti",upLatest:"Hai già l'ultima versione (v{v})",upNone:"Gli aggiornamenti automatici non sono disponibili in questo browser",upDone:"Búho è stato aggiornato alla versione {v}",
   babyLog:'Diario del bebè',babyLogF:'Diario della bebè',bornToday:'Nato oggi',bornTodayF:'Nata oggi',day:'giorno',days:'giorni',weeks:'settimane',
   today:'Oggi',yesterday:'Ieri',tomorrow:'Domani',last7:'Ultimi 7 giorni',log:'Diario',
   months:['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'],
@@ -334,6 +339,7 @@ it: {
 },
 
 de: {
+  upCheck:"Nach Updates suchen",upLatest:"Du hast schon die neueste Version (v{v})",upNone:"Automatische Updates sind in diesem Browser nicht verfügbar",upDone:"Búho wurde auf Version {v} aktualisiert",
   babyLog:'Baby-Tagebuch',babyLogF:'Baby-Tagebuch',bornToday:'Heute geboren',bornTodayF:'Heute geboren',day:'Tag',days:'Tage',weeks:'Wochen',
   today:'Heute',yesterday:'Gestern',tomorrow:'Morgen',last7:'Letzte 7 Tage',log:'Tagebuch',
   months:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],

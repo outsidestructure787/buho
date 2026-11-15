@@ -176,6 +176,7 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
 .box{background:var(--bg);border-radius:14px;padding:12px 14px;margin:6px 0 16px;font-size:14px}
 .box p{margin:4px 0 0;color:var(--mut)}
 .ver{color:var(--mut);font-size:13px;text-align:center;margin:18px 0 0}
+.lnk{background:none;border:0;padding:0;color:var(--acc);text-decoration:underline;font:inherit;cursor:pointer}
 #toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translate(-50%,160%);background:var(--ink);color:var(--bg);border-radius:16px;padding:8px 8px 8px 16px;display:flex;align-items:center;gap:6px;max-width:calc(100% - 24px);width:max-content;transition:transform .25s;z-index:20;font-weight:700;font-size:15px}
 #toast.show{transform:translate(-50%,0)}
 #toast button{background:color-mix(in srgb,var(--bg) 18%,transparent);border:0;color:inherit;border-radius:10px;min-height:42px;padding:0 12px;font-weight:800;flex:none}
@@ -207,7 +208,7 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
 <script>
 'use strict';
 {
-const VERSION='0.5.0';
+const VERSION='0.5.1';
 
 /* ================= Textos (i18n) =================
    Para traducir la app basta con añadir otro diccionario con las mismas claves.
@@ -278,6 +279,7 @@ const STR={es:{
   secScreen:'Pantalla',wake:'Mantener la pantalla encendida durante una toma con cronómetro',wakeHint:'Evita que el móvil se bloquee mientras miras el tiempo de la toma. Se apaga sola al terminar la toma.',wakeNo:'Este navegador no permite mantener la pantalla encendida.',
   showWeek:'Mostrar «Últimos 7 días»',showGrowth:'Mostrar «Crecimiento»',showLog:'Mostrar «Registro»',
   lang:'Idioma',langAuto:'Automático (idioma del móvil)',
+  upCheck:'Buscar actualizaciones',upLatest:'Ya tienes la última versión (v{v})',upNone:'Las actualizaciones automáticas no están disponibles en este navegador',upDone:'Búho se ha actualizado a la versión {v}',
   csvHead:['Fecha','Inicio','Fin','Duración (min)','Tipo','Detalle','Nota','Quién']
 }};
 const LANGS={es:'Español',en:'English',ca:'Català',fr:'Français',pt:'Português',it:'Italiano',de:'Deutsch'};
@@ -647,7 +649,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 let draft=null,orig=null,isNew=false,confirmDel=false,mode='';
 function openForm(e,neu){$('#ov').classList.remove('center');mode='form';draft={...e};orig=neu?null:e;isNew=neu;confirmDel=false;drawForm();$('#ov').classList.add('open')}
 function openMenu(title,body){mode='menu';$('#sheet').innerHTML=`<h2>${title}</h2>${body}<div class="btns"><button data-s="cancel" style="flex:1">${T('cancel')}</button></div>`;$('#ov').classList.add('open','center')}
-function closeSheet(){if(mode==='settings')applyTheme();$('#ov').classList.remove('open','center');draft=null;mode=''}
+function closeSheet(){if(mode==='settings')applyTheme();$('#ov').classList.remove('open','center');draft=null;mode='';if(pendingReload)setTimeout(()=>location.reload(),300)}
 function seg(k,opts,cur){return`<div class="seg">${opts.map(([v,l])=>`<button type="button" data-s="${k}" data-v="${v}" class="${String(cur)===v?'sel':''}">${l}</button>`).join('')}</div>`}
 function drawForm(){const d=draft,tm=timed(d);let h=`<h2>${isNew?T('newRec'):T('editRec')}</h2>`;
   if(isNew)h+=`<div class="f">${T('type')}${seg('type',[['sleep',T('tSleep')],['feed',T('tFeed')],['diaper',T('tDiaper')],['other',T('tOther')]],d.type)}</div>`;
@@ -768,7 +770,7 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <button class="wide" data-s="expDl">${T('expDownload')}</button>
   </div></details>
   <div class="btns"><button class="pri" data-s="ssave">${T('save')}</button><button data-s="cancel">${T('cancel')}</button></div>
-  <p class="ver">${T('version',{v:VERSION})}</p>`;
+  <p class="ver">${T('version',{v:VERSION})} · <button type="button" class="lnk" data-s="upcheck">${T('upCheck')}</button></p>`;
   $('#ov').classList.add('open');
   const lk=$('[data-c=link]');lk.addEventListener('input',()=>{const o=parseCfg(lk.value);if(o){$('[data-c=url]').value=o.url;$('[data-c=key]').value=o.key;lk.value=''}})}
 $('#sheet').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b||mode!=='settings')return;
@@ -800,6 +802,7 @@ async function settingsClick(s,b){
     try{if(navigator.share){await navigator.share({title:T('appName'),text:T('shareText'),url:link});return}}catch(e){if(e&&e.name==='AbortError')return}
     try{await navigator.clipboard.writeText(link);toast(T('cfgCopied'))}catch(e){prompt(T('shareCfg'),link)}return}
   if(s==='full'){closeSheet();SINCE=0;await sync(true);return}
+  if(s==='upcheck'){checkUpdate(true);return}
   if(s==='medAdd'){$('#medlist').insertAdjacentHTML('beforeend',medRow());$('#medlist .medrow:last-child input').focus();return}
   if(s==='medDel'){b.closest('.medrow').remove();return}
   if(s==='reset'){openReset(1);return}
@@ -844,16 +847,24 @@ addEventListener('storage',e=>{if(e.key===K.ev){loadLocal();cache=null;render()}
 sync();
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 
-/* Service worker: guarda la app en el móvil para abrirla sin conexión. */
+/* Service worker: guarda la app en el móvil para abrirla sin conexión.
+   Cuando hay una versión nueva se instala sola y la app se recarga (los datos están en el móvil, no se pierde nada).
+   Si hay una ventana abierta (un formulario a medias), espera a que se cierre. */
+let swReg=null,pendingReload=false;
+function reloadNow(){if($('#ov').classList.contains('open')){pendingReload=true;return}location.reload()}
+function checkUpdate(manual){if(!swReg){if(manual)toast(T('upNone'));return}
+  swReg.update().then(()=>{if(manual&&!swReg.installing&&!swReg.waiting)toast(T('upLatest',{v:VERSION}))}).catch(()=>{if(manual)toast(T('errNet'))})}
 if('serviceWorker' in navigator&&location.protocol!=='file:'){
   let reloading=false;
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload()});
-  navigator.serviceWorker.register('./sw.js').then(reg=>{
-    const offer=w=>toast(T('tNewVersion'),[{l:T('update'),f:()=>w.postMessage('skip')}]);
-    if(reg.waiting&&navigator.serviceWorker.controller)offer(reg.waiting);
-    reg.addEventListener('updatefound',()=>{const w=reg.installing;if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)offer(w)})});
-    setInterval(()=>reg.update().catch(()=>{}),3600000);
-  }).catch(()=>{})}
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;reloadNow()});
+  navigator.serviceWorker.register('./sw.js').then(reg=>{swReg=reg;
+    if(reg.waiting)reg.waiting.postMessage('skip');
+    reg.addEventListener('updatefound',()=>{const w=reg.installing;if(!w)return;w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)w.postMessage('skip')})});
+    setInterval(()=>checkUpdate(),3600000);
+  }).catch(()=>{});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
+}
+try{const lv=localStorage.getItem('buho.ver');if(lv&&lv!==VERSION)setTimeout(()=>toast(T('upDone',{v:VERSION})),600);localStorage.setItem('buho.ver',VERSION)}catch(e){}
 }
 </script>
 </body>
