@@ -286,7 +286,7 @@ const LANGS={es:'Español',en:'English',ca:'Català',fr:'Français',pt:'Portugu�
 if(window.BUHO_I18N)Object.assign(STR,window.BUHO_I18N);
 let LANG='es';
 function pickLang(){const l=(()=>{try{return JSON.parse(localStorage.getItem('buho.local')||'{}').lang}catch(e){return''}})();
-  if(l&&l!=='auto'&&STR[l])return l;for(const x of navigator.languages||[navigator.language||'es']){const k=String(x).slice(0,2).toLowerCase();if(STR[k])return k}return'es'}
+  if(l&&l!=='auto'&&STR[l])return l;for(const x of navigator.languages||[navigator.language||'es']){const k=String(x).slice(0,2).toLowerCase();if(STR[k])return k}return'en'}
 LANG=pickLang();document.documentElement.lang=LANG;
 const T=(k,v)=>{let s=(STR[LANG]&&STR[LANG][k])??STR.es[k]??k;if(v&&typeof s==='string')s=s.replace(/\{(\w+)\}/g,(m,x)=>v[x]??m);return s};
 
