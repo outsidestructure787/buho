@@ -122,6 +122,17 @@ details.acc>section{margin-top:10px}
 .sec>div{padding:2px 14px 14px}
 .sec input,.sec select,.sec textarea{background:var(--card)}
 .sec .seg button{background:var(--card)}
+.meds{background:var(--card);border-radius:16px;border-left:4px solid var(--ot);padding:12px 14px;margin-top:12px}
+.meds>b{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut);font-weight:700;margin-bottom:4px}.meds>b svg{width:20px;height:20px;color:var(--ot)}
+.med{display:flex;align-items:center;gap:10px;padding:8px 0}.med+.med{border-top:1px solid var(--line)}
+.med .mi{flex:1}.med .mi span{display:block;font-weight:800;line-height:1.25}.med .mi small{display:block;color:var(--mut);font-size:13px;line-height:1.3}
+.med .mcd{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink)}.med.late .mcd{color:var(--fd)}
+.med.solo .mi span{font-size:18px}.med.solo .mcd{font-size:22px;display:block}
+.med button{border:0;background:var(--ot);color:var(--on);border-radius:12px;min-height:46px;padding:0 14px;font-weight:800;flex:none}
+.medrow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 74px 44px;gap:6px;align-items:end;margin-bottom:8px}
+.medrow label{font-size:12px;color:var(--mut);font-weight:700}.medrow input{margin-top:3px}
+.medrow .x{border:1px solid var(--line);background:var(--card);border-radius:12px;min-height:46px;color:var(--fd);font-weight:800}
+.dangerbtn{color:var(--fd)!important;border-color:color-mix(in srgb,var(--fd) 40%,var(--line))!important}
 .visit{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:0;border-left:4px solid var(--ot);border-radius:16px;padding:12px 14px;margin-top:12px}
 .visit svg{color:var(--ot);margin-top:2px}
 .visit b{display:block;font-size:13px;color:var(--mut);font-weight:700}
@@ -178,6 +189,7 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
   <h2 id="h-today"></h2>
   <section id="sum"></section>
   <section id="acts"></section>
+  <section id="meds"></section>
   <section id="visits"></section>
   <details class="acc" id="wk"><summary><h2 id="h-week"></h2></summary><section id="tl"></section></details>
   <details class="acc" id="lg" open><summary><h2 id="h-log"></h2></summary><section id="log"></section></details>
@@ -187,7 +199,7 @@ input,select,textarea{display:block;width:100%;margin-top:5px;font:inherit;font-
 <script>
 'use strict';
 {
-const VERSION='0.3.1';
+const VERSION='0.4.0';
 
 /* ================= Textos (i18n) =================
    Para traducir la app basta con añadir otro diccionario con las mismas claves.
@@ -247,6 +259,12 @@ const STR={es:{
   visitsTitle:'Próximas visitas',noVisits:'No hay visitas en los próximos {n} días',addVisit:'Añadir visita',openGCal:'Abrir Google Calendar',refresh:'Actualizar',
   vTitle:'Qué',vTitleDef:'Pediatra',vWhen:'Fecha y hora',vDur:'Duración (min)',vLoc:'Lugar',vNote:'Notas',vSaved:'Visita añadida al calendario',
   calOld:'Actualiza el script de Google para usar el calendario (ver README).',calErr:'Calendario: {e}',calOffline:'Necesitas conexión para añadir una visita.',allDay:'Todo el día',updatedAgo:'Actualizado hace {d}',
+  secMeds:'Medicación',medsOn:'Mostrar la medicación en la pantalla principal',medsHelp:'Añade cada medicamento con el tiempo entre tomas. En la pantalla principal verás cuándo toca la próxima toma y podrás marcarla como dada.',
+  medName:'Medicamento',medDose:'Dosis (opcional)',medEvery:'Cada (h)',medAdd:'Añadir medicamento',medDel:'Quitar',medTitle:'Medicación',medNext:'Próxima toma: {t}',medIn:'en {d}',medLate:'hace {d}',medDue:'Toca ya',
+  medNone:'Sin tomas registradas',medGive:'Dada',medGiven:'{x} dado a las {t}',medEveryTxt:'cada {h} h',medLast:'Última: {t}',
+  resetTitle:'Borrar el registro',resetHelp:'Borra todas las entradas del registro (sueño, tomas, pañales, anotaciones y medicación). Los ajustes se mantienen.',resetBtn:'Borrar todo el registro…',
+  reset1:'¿Borrar todo el registro?',reset1Txt:'Se borrarán {n} entradas.',reset1Sync:'Con la sincronización activa, también se borrarán en los otros móviles y quedarán marcadas como borradas en la hoja de Google.',
+  reset2:'¿Seguro? No se puede deshacer',reset2Txt:'Última confirmación. Si tienes dudas, exporta antes el CSV.',resetYes:'Sí, continuar',resetGo:'Borrar definitivamente',resetDone:'Registro borrado',
   csvHead:['Fecha','Inicio','Fin','Duración (min)','Tipo','Detalle','Nota','Quién']
 }};
 let LANG='es';
@@ -281,6 +299,7 @@ const I={
   clock:sv('<path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v4.6l3.4 2-1 1.7L11 12.7V7z"/>'),
   pen:sv('<path d="M4 17.3V20h2.7l8-8-2.7-2.7-8 8zM18.7 8a1 1 0 0 0 0-1.4l-1.3-1.3a1 1 0 0 0-1.4 0l-1.2 1.2 2.7 2.7z"/>'),
   cal:sv('<path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2zm-2 7v10h14V9zm2 3h4v4H7z"/>'),
+  pill:sv('<path d="M4.2 13.6 13.6 4.2a5 5 0 0 1 7.1 7.1l-9.4 9.4a5 5 0 0 1-7.1-7.1zm1.4 1.4a3 3 0 0 0 4.2 4.2L13 16 8.9 11.9z"/>'),
   eye:sv('<path d="M12 5C6.5 5 2.7 9.1 1.5 12c1.2 2.9 5 7 10.5 7s9.3-4.1 10.5-7C21.3 9.1 17.5 5 12 5zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>'),
   dl:sv('<path d="M11 3h2v9.2l3.3-3.3 1.4 1.4L12 16l-5.7-5.7 1.4-1.4 3.3 3.3zM4 18h16v2H4z"/>'),
   gear:sv('<path d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.5 7.5 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.4zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>')};
@@ -306,14 +325,14 @@ const colOf=e=>e.type==='sleep'?'--sl':e.type==='feed'?'--fd':e.type==='diaper'?
    "pendiente" hasta que la hoja de Google confirma que lo ha recibido. */
 const K={ev:'buho.events',pend:'buho.pending',since:'buho.since',loc:'buho.local',cal:'buho.cal'};
 let EV={},PEND=new Set(),SINCE=0,LOC={me:'',url:'',key:''};
-const CFG0={name:'',birth:'',sex:'',timeFeeds:true,cal:{on:false,id:'primary',q:'',days:30}};
+const CFG0={name:'',birth:'',sex:'',timeFeeds:true,cal:{on:false,id:'primary',q:'',days:30},medsOn:false,meds:[]};
 let cfg=JSON.parse(JSON.stringify(CFG0)),CAL={at:0,items:[],err:'',name:''};
 let cache=null;
 function readLS(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
 function loadLocal(){EV=readLS(K.ev,{})||{};PEND=new Set(readLS(K.pend,[]));SINCE=readLS(K.since,0)||0;LOC={...LOC,...readLS(K.loc,{})};CAL={...CAL,...readLS(K.cal,{})};applyCfg();applyTheme()}
 function persist(){try{localStorage.setItem(K.ev,JSON.stringify(EV));localStorage.setItem(K.pend,JSON.stringify([...PEND]));localStorage.setItem(K.since,JSON.stringify(SINCE));localStorage.setItem(K.loc,JSON.stringify(LOC));return true}
   catch(e){toast(T('tStorage'));return false}}
-function applyCfg(){const c=EV.cfg&&!EV.cfg.del?EV.cfg:{};cfg={name:c.name||'',birth:c.birth||'',sex:c.sex||'',timeFeeds:c.timeFeeds!==false,cal:{...CFG0.cal,...(c.cal||{})}}}
+function applyCfg(){const c=EV.cfg&&!EV.cfg.del?EV.cfg:{};cfg={name:c.name||'',birth:c.birth||'',sex:c.sex||'',timeFeeds:c.timeFeeds!==false,cal:{...CFG0.cal,...(c.cal||{})},medsOn:!!c.medsOn,meds:Array.isArray(c.meds)?c.meds:[]}}
 function applyTheme(){const r=document.documentElement,t=LOC.theme||'auto',st=LOC.style||'buho';
   if(t==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',t);
   if(st==='buho')r.removeAttribute('data-style');else r.setAttribute('data-style',st)}
@@ -378,7 +397,7 @@ function cfgLink(){return location.origin+location.pathname+'#cfg='+enc({url:LOC
 function parseCfg(text){const m=String(text||'').match(/cfg=([A-Za-z0-9+/=_-]+)/);return m?dec(m[1]):null}
 
 /* ================= Pintar ================= */
-function render(){renderHead();renderNow();renderVisits();renderSum();renderTl();renderLog();tick();setSync()}
+function render(){renderHead();renderNow();renderMeds();renderVisits();renderSum();renderTl();renderLog();tick();setSync()}
 function renderHead(){
   $('#nm').textContent=cfg.name||T('appName');document.title=cfg.name?cfg.name+' · '+T('appName'):T('appName');
   const F=cfg.sex==='f';let a=F?T('babyLogF'):T('babyLog');
@@ -455,12 +474,31 @@ function upcoming(){const n=Date.now();return(CAL.items||[]).filter(v=>(v.e||v.s
 function whenTxt(v){const d=new Date(v.s),t0=sod(Date.now()),ds=sod(v.s);
   const day=ds===t0?T('today'):ds===addDays(t0,1)?T('tomorrow'):T('dow')[d.getDay()]+' '+d.getDate()+' '+T('months')[d.getMonth()].slice(0,3);
   return day+(v.all?' · '+T('allDay'):' · '+hm(v.s))}
+function lastDose(m){return all().find(e=>e.type==='other'&&e.sub==='med'&&(e.med===m.id||(!e.med&&String(e.value||'').toLowerCase().startsWith(m.name.toLowerCase()))))}
+function renderMeds(){
+  const list=(cfg.meds||[]).filter(m=>m.name&&m.every>0);
+  if(!cfg.medsOn||!list.length){$('#meds').innerHTML='';return}
+  const now=Date.now(),solo=list.length===1;
+  const rows=list.map(m=>{const l=lastDose(m),next=l?l.start+m.every*36e5:null,late=next!=null&&next<=now;
+    const info=next==null?`<small>${T('medNone')} · ${T('medEveryTxt',{h:String(m.every).replace('.',',')})}</small>`
+      :`<small>${T('medNext',{t:(sod(next)!==sod(now)?dayLabel(sod(next))+' ':'')+hm(next)})}${m.dose?' · '+esc(m.dose):''}</small><span class="mcd" data-cd="${next}"></span>`;
+    return{next:next??Infinity,h:`<div class="med ${late?'late':''} ${solo?'solo':''}"><div class="mi"><span>${esc(m.name)}</span>${info}</div><button data-a="med:${esc(m.id)}">${T('medGive')}</button></div>`}});
+  rows.sort((a,b)=>a.next-b.next);
+  $('#meds').innerHTML=`<div class="meds"><b>${I.pill}${T('medTitle')}</b>${rows.map(r=>r.h).join('')}</div>`}
 function renderVisits(){
   if(!cfg.cal.on){$('#visits').innerHTML='';return}
   const up=upcoming().slice(0,2);let inner='';
   if(up.length)inner=up.map(v=>`<div class="vi"><span>${esc(v.t||'—')}</span><small>${esc(whenTxt(v))}${v.loc?' · '+esc(v.loc):''}</small></div>`).join('');
   else inner=`<small>${CAL.err?esc(CAL.err):T('noVisits',{n:cfg.cal.days})}</small>`;
   $('#visits').innerHTML=`<button class="visit" data-a="visits">${I.cal}<div><b>${T('visitsTitle')}</b>${inner}</div></button>`}
+function openReset(step){mode='confirm';const n=all().length;
+  $('#sheet').innerHTML=step===1
+    ?`<h2>${T('reset1')}</h2><p>${T('reset1Txt',{n})}</p>${LOC.url?`<p class="hint">${T('reset1Sync')}</p>`:''}<div class="btns"><button class="pri dangerbtn" style="background:var(--card)" data-s="c1">${T('resetYes')}</button><button data-s="cancel">${T('cancel')}</button></div>`
+    :`<h2>${T('reset2')}</h2><p>${T('reset2Txt')}</p><div class="btns"><button class="pri" style="background:var(--fd);border-color:var(--fd)" data-s="c2">${T('resetGo')}</button><button data-s="cancel">${T('cancel')}</button></div>`;
+  $('#ov').classList.add('open','center')}
+function resetLog(){const now=Date.now();
+  Object.values(EV).forEach(e=>{if(e.id==='cfg'||e.del)return;EV[e.id]={id:e.id,type:e.type,start:e.start,del:true,u:Math.max(now,(e.u||0)+1),by:LOC.me||''};PEND.add(e.id)});
+  cache=null;persist();render();schedule(300);toast(T('resetDone'))}
 function openVisits(){mode='visits';$('#ov').classList.add('open','center');drawVisits()}
 function drawVisits(){const up=upcoming();
   let h=`<h2>${T('visitsTitle')}</h2>`;
@@ -493,7 +531,8 @@ async function saveVisit(btn){
   catch(e){btn.disabled=false;err.className='err';err.textContent=e.message==='net'?T('errNet'):e.message}}
 function tick(){const n=Date.now();
   document.querySelectorAll('[data-run]').forEach(el=>el.textContent=clock(n-+el.dataset.run));
-  document.querySelectorAll('[data-ago]').forEach(el=>el.textContent=dur(n-+el.dataset.ago,true))}
+  document.querySelectorAll('[data-ago]').forEach(el=>el.textContent=dur(n-+el.dataset.ago,true));
+  document.querySelectorAll('[data-cd]').forEach(el=>{const d=+el.dataset.cd-n;el.textContent=d>0?T('medIn',{d:dur(d,true,true)}):(d>-6e4?T('medDue'):T('medDue')+' · '+T('medLate',{d:dur(-d,true)}));el.closest('.med')?.classList.toggle('late',d<=0)})}
 
 /* ================= Avisos ================= */
 let toastT=null,toastBtns=[];
@@ -528,6 +567,7 @@ function act(a){
   else if(a==='notesMenu')openMenu(T('pickNote'),`<div class="list">${['note','weight','temp','med','height','head','spit','bath','cry'].map(k=>`<button data-m="sub:${k}" style="--c:var(--ot)">${k==='note'?I.pen:I.plus}<span>${T(SUBK[k][0])}</span></button>`).join('')}<button data-m="past" style="--c:var(--mut)">${I.clock}<span>${T('btnPast')}</span></button></div>`);
   else if(a==='bMat'||a==='bForm'){const milk=a==='bMat'?'materna':'formula';const r=add({type:'feed',kind:'bottle',milk,start:now});
     undoable(T('tBottleAt',{x:milk==='formula'?T('formula'):T('breastMilk'),t:hm(now)}),()=>delRef(r),{l:T('qtyBtn'),f:()=>{const e=EV[r.id];if(e&&!e.del)openForm(e,false)}})}
+  else if(a&&a.startsWith('med:')){const m=(cfg.meds||[]).find(x=>x.id===a.slice(4));if(m){const r=add({type:'other',sub:'med',value:m.name+(m.dose?' · '+m.dose:''),med:m.id,start:now});undoable(T('medGiven',{x:m.name,t:hm(now)}),()=>delRef(r))}}
   else if(a&&a.startsWith('sub:'))openForm({type:'other',sub:a.slice(4),start:now},true);
   else if(a==='past')openForm({type:'feed',kind:'breast',side:'L',start:now-36e5,end:now-36e5+15*6e4},true);
   else if(a==='settings')openSettings();
@@ -584,6 +624,7 @@ $('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m
   if(mode==='visits'){const vb=e.target.closest('[data-s]');if(vb&&vb.dataset.s==='addVisit'){openVisitForm();return}
     if(vb&&vb.dataset.s==='calRefresh'){calForce=true;vb.disabled=true;await sync();drawVisits();return}}
   if(mode==='visit'){const vb=e.target.closest('[data-s]');if(vb&&vb.dataset.s==='vsave'){saveVisit(vb);return}}
+  if(mode==='confirm'){const cb=e.target.closest('[data-s]');if(cb&&cb.dataset.s==='c1'){openReset(2);return}if(cb&&cb.dataset.s==='c2'){closeSheet();resetLog();return}}
   const b=e.target.closest('[data-s]');if(!b)return;const s=b.dataset.s;
   if(s==='cancel')return closeSheet();
   if(mode==='settings')return settingsClick(s,b);
@@ -599,6 +640,9 @@ $('#sheet').addEventListener('click',async e=>{const m=e.target.closest('[data-m
     if(neu)add(o);else upd(EV[old.id]||old,o,true);toast(T('tSaved'))}});
 
 /* ================= Ajustes ================= */
+function medRow(m){m=m||{id:uid(),name:'',dose:'',every:''};
+  return`<div class="medrow" data-mid="${esc(m.id)}"><label>${T('medName')}<input data-m-k="name" maxlength="40" value="${esc(m.name)}" placeholder="Paracetamol"></label><label>${T('medDose')}<input data-m-k="dose" maxlength="24" value="${esc(m.dose||'')}" placeholder="2,5 ml"></label><label>${T('medEvery')}<input data-m-k="every" type="number" inputmode="decimal" min="0.5" step="0.5" value="${m.every||''}" placeholder="4"></label><button type="button" class="x" data-s="medDel" aria-label="${T('medDel')}">✕</button></div>`}
+function readMeds(){return[...document.querySelectorAll('#medlist .medrow')].map(r=>({id:r.dataset.mid,name:r.querySelector('[data-m-k=name]').value.trim().slice(0,40),dose:r.querySelector('[data-m-k=dose]').value.trim().slice(0,24),every:Math.round((+String(r.querySelector('[data-m-k=every]').value).replace(',','.')||0)*2)/2})).filter(m=>m.name&&m.every>0)}
 function openSettings(){mode='settings';$('#ov').classList.remove('center');const c=cfg.cal,th=LOC.theme||'auto';
   const sel=(k,v,cur,l)=>`<button type="button" data-g="${k}" data-v="${v}" class="${cur===v?'sel':''}">${l}</button>`;
   $('#sheet').innerHTML=`<h2>${T('settings')}</h2>
@@ -615,6 +659,12 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <label class="f">${T('calQ')}<input data-c="calQ" autocomplete="off" value="${esc(c.q||'')}"></label>
     <p class="hint">${T('calQHint')}</p>
     <label class="f">${T('calDays')}<input type="number" inputmode="numeric" min="1" max="180" data-c="calDays" value="${c.days||30}"></label>
+  </div></details>
+  <details class="sec" name="ajustes"><summary>${I.pill}${T('secMeds')}</summary><div>
+    <p class="hint">${T('medsHelp')}</p>
+    <label class="chk"><input type="checkbox" data-c="medsOn" ${cfg.medsOn?'checked':''}>${T('medsOn')}</label>
+    <div id="medlist">${(cfg.meds||[]).map(medRow).join('')}</div>
+    <button class="wide" data-s="medAdd">${T('medAdd')}</button>
   </div></details>
   <details class="sec" name="ajustes"><summary>${I.eye}${T('secLook')}</summary><div>
     <div class="f">${T('style')}<div class="seg" data-grp="style">${sel('style','buho',LOC.style||'buho',T('stBuho'))}${sel('style','noir',LOC.style||'buho',T('stNoir'))}${sel('style','catppuccin',LOC.style||'buho',T('stCat'))}</div></div>
@@ -635,6 +685,8 @@ function openSettings(){mode='settings';$('#ov').classList.remove('center');cons
     <p class="err" id="serr"></p>
     <button class="wide" data-s="test">${T('testSync')}</button>
     ${LOC.url&&LOC.key?`<button class="wide" data-s="share">${T('shareCfg')}</button><button class="wide" data-s="full">${T('fullSync')}</button>`:''}
+    <h3>${T('resetTitle')}</h3><p class="hint">${T('resetHelp')}</p>
+    <button class="wide dangerbtn" data-s="reset">${T('resetBtn')}</button>
   </div></details>
   <details class="sec" name="ajustes"><summary>${I.dl}${T('secExport')}</summary><div>
     <p class="hint">${T('expHint')}</p>
@@ -654,11 +706,12 @@ const grp=k=>{const b=document.querySelector(`[data-grp=${k}] .sel`);return b?b.
 async function settingsClick(s,b){
   if(s==='ssave'){
     const n={name:$('[data-c=name]').value.trim().slice(0,40),birth:$('[data-c=birth]').value,sex:grp('sex'),timeFeeds:$('[data-c=timeFeeds]').checked,
-      cal:{on:$('[data-c=calOn]').checked,id:$('[data-c=calId]').value.trim()||'primary',q:$('[data-c=calQ]').value.trim().slice(0,200),days:Math.min(180,Math.max(1,+$('[data-c=calDays]').value||30))}};
+      cal:{on:$('[data-c=calOn]').checked,id:$('[data-c=calId]').value.trim()||'primary',q:$('[data-c=calQ]').value.trim().slice(0,200),days:Math.min(180,Math.max(1,+$('[data-c=calDays]').value||30))},
+      medsOn:$('[data-c=medsOn]').checked,meds:readMeds()};
     LOC.me=$('[data-c=me]').value.trim().slice(0,24);LOC.theme=grp('theme')||'auto';LOC.style=grp('style')||'buho';applyTheme();
     const calChanged=JSON.stringify(n.cal)!==JSON.stringify(cfg.cal);
     closeSheet();
-    const c=EV.cfg,cur={name:cfg.name,birth:cfg.birth,sex:cfg.sex,timeFeeds:cfg.timeFeeds,cal:cfg.cal};
+    const c=EV.cfg,cur={name:cfg.name,birth:cfg.birth,sex:cfg.sex,timeFeeds:cfg.timeFeeds,cal:cfg.cal,medsOn:cfg.medsOn,meds:cfg.meds};
     if(!c||c.del||JSON.stringify(cur)!==JSON.stringify(n)){const now=Date.now();EV.cfg={id:'cfg',type:'config',...n,start:now,u:Math.max(now,(c?.u||0)+1)};if(calChanged){CAL={at:0,items:[],err:'',name:''};saveCal();calForce=true}changed('cfg')}else{persist();render()}
     if(n.cal.on&&(!LOC.url||!LOC.key))setTimeout(()=>toast(T('calNeedSync')),400);else toast(T('tSettings'));return}
   if(s==='test'){
@@ -673,6 +726,9 @@ async function settingsClick(s,b){
     try{if(navigator.share){await navigator.share({title:T('appName'),text:T('shareText'),url:link});return}}catch(e){if(e&&e.name==='AbortError')return}
     try{await navigator.clipboard.writeText(link);toast(T('cfgCopied'))}catch(e){prompt(T('shareCfg'),link)}return}
   if(s==='full'){closeSheet();SINCE=0;await sync(true);return}
+  if(s==='medAdd'){$('#medlist').insertAdjacentHTML('beforeend',medRow());$('#medlist .medrow:last-child input').focus();return}
+  if(s==='medDel'){b.closest('.medrow').remove();return}
+  if(s==='reset'){openReset(1);return}
   if(s==='expShare'||s==='expDl'){exportCsv(grp('range')||'30',s==='expShare'?'share':'download');return}
   if(s==='export')exportCsv()}
 

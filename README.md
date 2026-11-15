@@ -17,7 +17,7 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 <a href="#deutsch">Deutsch</a>
 </p>
 
-<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.3.1</p>
+<p align="center"><b>▶ App: <a href="https://outsidestructure787.github.io/buho/">outsidestructure787.github.io/buho</a></b> · versión 0.4.0</p>
 
 ---
 
@@ -37,7 +37,8 @@ Búho es una web-app para apuntar con un toque lo que hace el bebé: cuándo se 
 - De un vistazo: cronómetros en marcha, cuánto hace de la última toma, del último sueño y del último pañal, y qué pecho toca.
 - Resumen del día, gráfica plegable de los últimos 7 días, registro plegable con las últimas 14 entradas (y «Mostrar más» para ver el registro completo con filtros), edición y borrado, deshacer y exportación a CSV para el pediatra.
 - Próximas visitas de Google Calendar (pediatra, matrona, vacunas…) en la pantalla principal, y la opción de añadir visitas desde la app.
-- Ajustes por secciones (se abre una cada vez): datos del bebé, calendario, apariencia, configuración y exportar CSV.
+- Medicación: apunta cada medicamento con su dosis y cada cuántas horas toca. La pantalla principal muestra la próxima toma de cada uno con su cuenta atrás, y un botón «Dada» que lo apunta en el registro.
+- Ajustes por secciones (se abre una cada vez): datos del bebé, calendario, medicación, apariencia, configuración (incluye borrar todo el registro, con doble confirmación) y exportar CSV.
 - Tres estilos: Búho (por defecto), Noir (negros y grises) y [Catppuccin](https://catppuccin.com), cada uno en modo claro, oscuro o automático.
 - Exportar a CSV los últimos 7 días, 30 días o todo, y enviarlo directamente desde el menú de compartir del móvil (correo, WhatsApp, Telegram, Drive…).
 
