@@ -23,146 +23,221 @@ Registro del bebé: sueño, tomas y pañales · Baby log: sleep, feeds and diape
 
 ## Español
 
-### Qué es
-Búho es una web-app para apuntar con un toque lo que hace el bebé: cuándo se duerme y se despierta, las tomas (pecho, biberón o sacaleches), los pañales y otras cosas como el peso, la temperatura o las medicinas. Está pensada para usarla medio dormido a las 3 de la mañana: botones grandes, modo oscuro y todo a una mano.
+### Qué es Búho
+Búho es una app para apuntar lo que hace el bebé con un solo toque: cuándo se duerme y cuándo se despierta, las tomas (pecho, biberón o sacaleches), los pañales y cosas como el peso, la temperatura o las medicinas. Está pensada para usarla medio dormido a las 3 de la mañana, con botones grandes, modo oscuro y una sola mano.
 
-- **Funciona sin conexión.** Se instala en la pantalla de inicio del móvil y abre aunque no haya cobertura. Lo que apuntas se guarda en el móvil al momento.
-- **Varios móviles.** Si la conectas a una hoja de Google, los móviles se sincronizan solos cuando hay señal.
-- **Android, iPhone y ordenador.** No hay que pasar por ninguna tienda de apps.
-- **Tus datos son tuyos.** No hay servidores de terceros: los datos están en tu móvil y, si quieres, en tu propia hoja de Google.
-- **Gratis y de código abierto.**
+Funciona sin cobertura: lo que apuntas se guarda en el móvil al momento. Si queréis usarla dos personas, cada una desde su móvil, se puede conectar a una hoja de Google para que los dos móviles se pongan al día solos cuando haya señal. Sirve para Android, iPhone y ordenador, no hay que pasar por ninguna tienda de aplicaciones y es gratis.
 
-### Qué incluye
-- Botones grandes: se duerme/se despierta, lactancia (pecho izquierdo o derecho, con cronómetro opcional), biberón (leche materna o fórmula), pañal (pis, caca o ambas) y anotaciones (notas, peso, temperatura, medicación y otros, y registrar algo que pasó antes).
-- De un vistazo: cronómetros en marcha, cuánto hace de la última toma, del último sueño y del último pañal, y qué pecho toca.
-- Resumen del día, gráfica plegable de los últimos 7 días, registro plegable con las últimas 14 entradas (y «Mostrar más» para ver el registro completo con filtros), edición y borrado, deshacer y exportación a CSV para el pediatra.
-- Próximas visitas de Google Calendar (pediatra, matrona, vacunas…) en la pantalla principal, y la opción de añadir visitas desde la app.
-- Medicación: apunta cada medicamento con su dosis, cada cuántas horas toca y, si quieres, durante cuántos días (al terminar el tratamiento desaparece solo). La pantalla principal muestra la próxima toma de cada uno con su cuenta atrás, y un botón «Dada» que lo apunta en el registro.
-- Avisos de medicación con Google Calendar: al marcar una toma como dada, se crea un evento con alarma para la siguiente, y el móvil avisa aunque Búho esté cerrado.
-- Gráficas de crecimiento: peso, talla y perímetro de la cabeza.
-- Pantalla encendida mientras hay una toma con cronómetro en marcha, y opción de ocultar «Últimos 7 días», «Crecimiento» o «Registro».
-- Disponible en español, inglés, catalán, francés, portugués, italiano y alemán.
-- Ajustes por secciones (se abre una cada vez): datos del bebé, calendario, medicación, apariencia, pantalla, configuración (idioma, sincronización y borrar todo el registro con doble confirmación) y exportar CSV.
-- Tres estilos: Búho (por defecto), Noir (negros y grises) y [Catppuccin](https://catppuccin.com), cada uno en modo claro, oscuro o automático.
-- Exportar a CSV los últimos 7 días, 30 días o todo, y enviarlo directamente desde el menú de compartir del móvil (correo, WhatsApp, Telegram, Drive…).
+Los datos son tuyos. Búho no tiene servidores propios: lo que apuntas está en tu móvil y, si activas la sincronización, en una hoja de cálculo de tu cuenta de Google.
 
-### Instalarla en el móvil
-1. Abre **https://outsidestructure787.github.io/buho/** en el móvil.
-2. **Android (Chrome):** menú ⋮ → *Instalar app* (o *Añadir a pantalla de inicio*).
-   **iPhone (Safari):** botón Compartir → *Añadir a pantalla de inicio*.
-3. Ábrela desde el icono. Sin hacer nada más, ya funciona y guarda los datos solo en ese móvil.
+### Qué necesitas
+- **Para usarla en un solo móvil:** solo el móvil. Son dos minutos (paso 1).
+- **Para usarla en dos o más móviles:** una cuenta de Google (la de Gmail sirve) y un ordenador durante unos 15 minutos, una sola vez (paso 2). Desde el móvil también se puede, pero el editor de Google es incómodo en pantalla pequeña.
+- **Para ver las visitas del pediatra y recibir avisos de medicación:** lo mismo que en el paso 2 y un calendario de Google. Son 5 minutos más (paso 3).
 
-### Sincronizar varios móviles con Google Sheets (gratis)
-Solo hay que hacerlo una vez, desde un ordenador. Se tarda unos 10 minutos.
+No hace falta saber programar. Hay que copiar y pegar un texto y pulsar unos cuantos botones, y aquí se explica cada uno.
 
-1. **Crea la hoja.** Entra en [sheets.new](https://sheets.new) con tu cuenta de Google y ponle un nombre, por ejemplo *Búho*.
-2. **Pega el script.**
-   1. **Copia el código.** Abre [el script en formato texto](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs). Verás una página con solo código. Selecciónalo todo (`Ctrl + A`, o `Cmd + A` en Mac) y cópialo (`Ctrl + C` / `Cmd + C`).
-      También puedes abrir [`apps-script/Code.gs`](apps-script/Code.gs) aquí en GitHub y pulsar el botón *Copy raw file*, el de los dos cuadraditos arriba a la derecha del código.
-   2. **Abre el editor de scripts.** Vuelve a tu hoja de Google. En el menú de arriba, pulsa *Extensiones* (está entre *Herramientas* y *Ayuda*) y después *Apps Script*. Se abre una pestaña nueva con un editor.
-   3. **Borra lo que trae.** El editor abre un archivo llamado `Código.gs` con unas líneas de ejemplo (`function myFunction() { }`). Haz clic dentro del código, selecciónalo todo (`Ctrl + A` / `Cmd + A`) y bórralo. El archivo tiene que quedar completamente vacío.
-   4. **Pega el código** que copiaste (`Ctrl + V` / `Cmd + V`). La primera línea debe empezar por `/**` y la última ser una llave `}`.
-   5. **Ponle nombre (opcional).** Arriba a la izquierda pone *Proyecto sin título*. Haz clic y escribe, por ejemplo, *Búho sincronización*. Así lo reconocerás después.
-   6. **Guarda** con el icono del disquete o con `Ctrl + S` / `Cmd + S`.
+### Paso 1. Instalar la app en el móvil
+1. Abre esta dirección en el móvil: **https://outsidestructure787.github.io/buho/**
+   - En Android, usa Chrome.
+   - En iPhone, usa Safari.
+2. Añádela a la pantalla de inicio:
+   - **Android (Chrome):** toca los tres puntos de arriba a la derecha (⋮) y elige *Instalar aplicación* o *Añadir a pantalla de inicio*. Confirma.
+   - **iPhone (Safari):** toca el botón de compartir (el cuadrado con una flecha hacia arriba, abajo en el centro), baja un poco y elige *Añadir a pantalla de inicio*. Pulsa *Añadir*.
+3. Cierra el navegador y abre Búho desde su icono, el ojo verde. A partir de ahora ábrela siempre desde ahí: así funciona como una app normal, a pantalla completa y sin cobertura.
+4. Toca el engranaje de arriba a la derecha (Ajustes) y rellena *Datos del bebé*: nombre, fecha de nacimiento y sexo. En *Configuración*, escribe quién usa ese móvil (por ejemplo, «Mamá» o «Papá»). Pulsa *Guardar*.
 
-   > Si en el menú *Extensiones* no aparece *Apps Script*, es probable que estés usando una cuenta de empresa o de centro educativo con esa opción bloqueada. Usa una cuenta personal de Gmail.
-3. **Crea el archivo de configuración con tu clave.** La clave va en un archivo aparte, así no se pierde cuando actualices el script.
-   1. En la columna de la izquierda del editor, junto a *Archivos*, pulsa el **+** y elige *Secuencia de comandos*. Escribe `Config` como nombre y pulsa Intro. El editor le añade `.gs` solo.
-   2. Borra lo que traiga y pega el contenido de [`apps-script/Config.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Config.gs), que son solo unas líneas.
-   3. En la línea `const CLAVE = 'CAMBIA-ESTA-CLAVE';`, sustituye solo el texto `CAMBIA-ESTA-CLAVE` por una clave larga inventada por ti. Por ejemplo, cuatro palabras al azar como `jirafa-lunes-tostada-nube`. Deja las comillas y el punto y coma tal cual.
-   4. Si quieres que los registros vayan a una pestaña con otro nombre, cámbialo en `const HOJA = 'eventos';`. La pestaña se crea sola.
-   5. Guarda (`Ctrl + S` / `Cmd + S`). Tienes que ver dos archivos: `Código.gs` y `Config.gs`.
-4. **Publícalo.** *Implementar → Nueva implementación* → engranaje → *Aplicación web*.
-   - *Ejecutar como:* **Yo**
-   - *Quién tiene acceso:* **Cualquier usuario**
-   - Pulsa *Implementar* y autoriza el acceso con tu cuenta. Google avisará de que la app no está verificada: es normal, porque el script es tuyo. Pulsa *Configuración avanzada → Ir a…*
-5. **Copia la dirección** que termina en `/exec`.
-6. **En Búho:** ⚙️ Ajustes → *Sincronización con Google Sheets* → pega la dirección y la clave → *Guardar y probar conexión*.
-7. **Para el otro móvil:** en Ajustes, pulsa *Compartir configuración con otro móvil* y envía el enlace a la otra persona.
-   - En **Android**, basta con abrir el enlace.
-   - En **iPhone**, primero hay que instalar la app (paso anterior). Después se pega el enlace en Ajustes, en el campo *…o pega aquí un enlace de configuración*. En iPhone, la app instalada y Safari no comparten datos.
+Ya puedes usarla. Si solo la va a usar una persona, no necesitas nada más.
 
-Cada registro es una fila de la pestaña `eventos`, con fecha, hora de inicio y fin, duración (en sueños y tomas de pecho), tipo y detalle legibles. Las columnas grises las usa la app: no las edites a mano.
+### Paso 2 (opcional). Compartir el registro entre varios móviles
+Búho guarda los datos en una hoja de cálculo de Google que creas tú. Los móviles mandan ahí lo que apuntan y se traen lo que han apuntado los demás. Para que la hoja y la app se entiendan hay que pegar en la hoja un pequeño programa (un «script») que está en este repositorio. Se hace una vez.
+
+#### 2.1. Crea la hoja
+En el ordenador, entra en [sheets.new](https://sheets.new) con tu cuenta de Google. Se abre una hoja en blanco. Arriba a la izquierda pone *Hoja de cálculo sin título*: haz clic y llámala, por ejemplo, *Búho*.
+
+No hace falta escribir nada en ella. La pestaña donde se guardan los registros se crea sola la primera vez que sincronices.
+
+#### 2.2. Pega el script
+1. Abre [el script en formato texto](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs) en otra pestaña. Verás una página llena de código. Selecciónalo todo con `Ctrl + A` (en Mac, `Cmd + A`) y cópialo con `Ctrl + C` (`Cmd + C`).
+2. Vuelve a la hoja. En el menú de arriba, pulsa *Extensiones* y luego *Apps Script*. Se abre una pestaña nueva con el editor de scripts de Google.
+3. El editor trae un archivo llamado `Código.gs` con unas líneas de ejemplo (`function myFunction() { }`). Haz clic dentro, selecciónalo todo (`Ctrl + A`) y bórralo, hasta que quede vacío.
+4. Pega el código que copiaste (`Ctrl + V`). La primera línea empieza por `/**` y la última es una llave: `}`.
+5. Arriba a la izquierda pone *Proyecto sin título*. Si quieres, cámbialo por *Búho*.
+6. Guarda con el icono del disquete o con `Ctrl + S`.
+
+Si en el menú *Extensiones* no aparece *Apps Script*, seguramente estás con una cuenta de trabajo o de un colegio que lo tiene bloqueado. Usa una cuenta personal de Gmail.
+
+#### 2.3. Crea tu clave
+La clave es una contraseña que solo conocerán vuestros móviles. Sin ella, nadie más puede leer ni escribir en la hoja. Va en un archivo aparte para que no se pierda cuando actualices el script.
+
+1. En la columna izquierda del editor, junto a *Archivos*, pulsa el **+** y elige *Secuencia de comandos*. Escribe `Config` y pulsa Intro.
+2. Borra lo que traiga el archivo nuevo y pega el contenido de [`Config.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Config.gs), que son pocas líneas.
+3. Busca la línea `const CLAVE = 'CAMBIA-ESTA-CLAVE';` y cambia solo el texto `CAMBIA-ESTA-CLAVE` por una clave inventada y larga. Lo más fácil es juntar cuatro palabras al azar: `jirafa-lunes-tostada-nube`. No borres las comillas ni el punto y coma.
+4. Guarda (`Ctrl + S`). En la columna izquierda tienen que verse dos archivos: `Código.gs` y `Config.gs`.
+
+Apunta la clave en algún sitio: la necesitarás en el móvil.
+
+#### 2.4. Publica el script
+Publicarlo le da una dirección de internet a la que el móvil puede enviar los datos.
+
+1. Arriba a la derecha, pulsa el botón azul *Implementar* y elige *Nueva implementación*.
+2. Al lado de *Seleccionar tipo* hay una rueda dentada. Púlsala y elige *Aplicación web*.
+3. Rellena así:
+   - *Descripción:* lo que quieras, por ejemplo «Búho».
+   - *Ejecutar como:* **Yo** (aparece tu correo).
+   - *Quién tiene acceso:* **Cualquier usuario**. Es necesario para que los móviles puedan conectar sin iniciar sesión en Google. La clave del paso anterior es lo que impide que entre otra persona.
+4. Pulsa *Implementar*. Google te pedirá permisos:
+   1. Pulsa *Autorizar acceso* y elige tu cuenta.
+   2. Saldrá una pantalla que dice que Google no ha verificado la aplicación. Es normal: el script lo has pegado tú y no ha pasado por la revisión de Google. Pulsa *Configuración avanzada* y después *Ir a Búho (no seguro)*.
+   3. Revisa los permisos (ver y editar tus hojas de cálculo y tus calendarios) y pulsa *Permitir*. El script funciona con tu cuenta y solo hace lo que pide Búho: guardar registros en esta hoja y, si lo activas, leer y crear eventos en el calendario.
+5. Aparece la *URL de la aplicación web*, una dirección larga que empieza por `https://script.google.com/macros/s/` y termina en `/exec`. Pulsa *Copiar* y guárdala. Después pulsa *Hecho*.
+
+Para llevar la dirección y la clave al móvil, lo más cómodo es enviártelas por correo o por un chat contigo mismo.
+
+#### 2.5. Conecta el primer móvil
+1. En Búho, toca el engranaje y abre *Configuración*.
+2. En *Sincronización con Google Sheets*, pega la dirección en el primer campo y escribe la clave en *Clave de acceso*.
+3. Pulsa *Guardar y probar conexión*. Si todo va bien, sale «Conexión correcta» y arriba, junto al título, pone «Sincronizado».
+
+Vuelve a la hoja de Google en el ordenador: habrá una pestaña nueva con lo que tuvieras apuntado.
+
+#### 2.6. Conecta los demás móviles
+En el móvil que ya funciona, ve a *Ajustes → Configuración* y pulsa *Compartir configuración con otro móvil*. Envía el enlace a la otra persona por WhatsApp, Telegram o correo. El enlace lleva la dirección y la clave, así que compártelo solo con quien vaya a apuntar.
+
+- **Si el otro móvil es Android:** que instale Búho (paso 1) y luego abra el enlace. La app se conecta sola.
+- **Si el otro móvil es iPhone:** que instale Búho (paso 1), copie el enlace y lo pegue en *Ajustes → Configuración*, en el campo *…o pega aquí un enlace de configuración*. Después, *Guardar y probar conexión*. En iPhone hay que hacerlo así porque la app instalada no comparte datos con Safari.
+
+Que cada persona escriba su nombre en *¿Quién usa este móvil?*. Así, en el registro se ve quién apuntó cada cosa.
+
+#### Cómo se ve la hoja
+Cada registro es una fila de la pestaña `eventos`: fecha, hora de inicio y fin, duración (en sueños y tomas de pecho), tipo, detalle, nota y quién lo apuntó. Puedes filtrarla, ordenarla o hacer gráficas como con cualquier hoja. Las columnas grises del final las usa la app: no las cambies a mano. Si borras algo desde la app, la fila no desaparece; queda marcada como borrada en la columna *borrado*.
+
+### Paso 3 (opcional). Visitas del calendario y avisos de medicación
+Con la sincronización funcionando, Búho puede enseñarte las próximas visitas (pediatra, matrona, vacunas) de un calendario de Google, apuntar visitas nuevas y crear avisos con alarma para la siguiente toma de un medicamento.
+
+1. **Elige el calendario.** Puede ser tu calendario principal o uno compartido solo para el bebé, que es lo más práctico si sois dos. Para crear uno: en [Google Calendar](https://calendar.google.com), en la columna izquierda, junto a *Otros calendarios*, pulsa **+** → *Crear calendario*. Compártelo con la otra persona si queréis verlo los dos.
+2. **Copia su ID** (no hace falta si usas el principal). En Google Calendar, pasa el ratón por encima del calendario, pulsa los tres puntos → *Configuración y uso compartido* y baja hasta *Integrar el calendario*. El *ID de calendario* es un texto largo que termina en `@group.calendar.google.com`.
+3. **Actívalo en Búho:** *Ajustes → Calendario*.
+   - Marca *Mostrar las próximas visitas de Google Calendar*.
+   - En *Calendario*, deja `primary` si es tu calendario principal, o pega el ID.
+   - *Mostrar solo eventos que contengan* sirve para no ver todo tu calendario personal. Por ejemplo: `pediatra, matrona, vacuna, revisión`. Si lo dejas vacío, se ven todos los eventos.
+   - Pulsa *Guardar*. En la pantalla principal aparece la tarjeta *Próximas visitas*. Al tocarla puedes ver la lista completa o añadir una visita.
+4. **Avisos de medicación:** en *Ajustes → Medicación*, añade el medicamento (nombre, dosis, cada cuántas horas y, si quieres, durante cuántos días), activa *Mostrar la medicación en la pantalla principal* y marca *Crear un aviso en Google Calendar para la próxima toma*. Cada vez que pulses *Dada*, se crea en el calendario un evento «💊 nombre del medicamento» a la hora de la siguiente toma, con alarma. Para que suene, el calendario tiene que tener las notificaciones activadas en la app de Google Calendar del móvil.
+
+El calendario lo lee el script con la cuenta de Google donde está la hoja. Si usas un calendario de otra persona, tiene que estar compartido con esa cuenta. Si montaste la sincronización antes de la versión 0.3.0, primero actualiza el script (ver más abajo) y después, en el editor, elige la función `autorizar` en el desplegable de arriba, pulsa *Ejecutar* y acepta los permisos del calendario. Por último, publica la versión nueva.
+
+### Si algo no funciona
+- **Pone «La clave no coincide con la de la hoja».** La clave escrita en el móvil no es exactamente la de `Config.gs`. Se distinguen mayúsculas y minúsculas, y un espacio de más también cuenta.
+- **Pone «No se pudo conectar».** No hay cobertura, o la dirección está mal copiada. Tiene que terminar en `/exec`.
+- **Pone «Actualiza el script de Google para usar el calendario».** La app pide el calendario, pero el script publicado es una versión antigua. Sigue los pasos de *Actualizar el script de Google*.
+- **Pone «Falta autorizar el calendario».** En el editor del script, elige `autorizar` en el desplegable de funciones, pulsa *Ejecutar* y acepta. Después publica una versión nueva.
+- **Pone «No encuentro el calendario».** El ID está mal copiado, o el calendario no está compartido con la cuenta donde está la hoja.
+- **La app no se actualiza.** Ábrela con conexión y espera unos segundos: se recarga sola. Si no, ciérrala del todo (quítala de las apps recientes) y vuelve a abrirla. También puedes ir a *Ajustes* y tocar *Buscar actualizaciones*, abajo del todo, junto al número de versión.
+- **En el iPhone, el enlace de configuración se abre en Safari y no en la app.** Es normal. Copia el enlace y pégalo en *Ajustes → Configuración* dentro de la app instalada.
 
 ### Actualizar el script de Google
-Cuando una versión nueva de Búho cambie el script (se indica en la [lista de cambios](../../commits/main)):
+La app se actualiza sola, pero el script de la hoja no. Solo hace falta cuando una versión nueva lo diga en la [lista de cambios](../../commits/main) o cuando la app te avise.
 
 1. En la hoja: *Extensiones → Apps Script*.
-2. Abre `Código.gs`, borra todo su contenido y pega el nuevo [`Code.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs). Guarda. No toques `Config.gs`.
-3. *Implementar → Gestionar implementaciones* → icono del lápiz → en *Versión*, elige **Nueva versión** → *Implementar*.
+2. Abre `Código.gs`, borra todo su contenido y pega el nuevo [`Code.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs). Guarda. No toques `Config.gs`: ahí está tu clave.
+3. *Implementar → Gestionar implementaciones*. Pulsa el lápiz, en *Versión* elige *Versión nueva* y pulsa *Implementar*.
 
-La dirección `/exec` no cambia, así que no hay que tocar nada en los móviles. Si falta alguna columna nueva en la hoja, el script la añade solo la próxima vez que sincronice un móvil.
+La dirección `/exec` sigue siendo la misma, así que en los móviles no hay que cambiar nada. Si la versión nueva añade columnas a la hoja, aparecen solas en la siguiente sincronización.
 
-> **Si montaste la sincronización con la versión 0.1.x** (un solo archivo con la clave dentro): antes de pegar el nuevo `Code.gs`, apunta tu clave y el nombre de la pestaña (`CLAVE` y `HOJA`). Después crea `Config.gs` como en el paso 3 de arriba, con esos mismos valores, y sigue con los pasos de esta sección.
-
-### Ver las próximas visitas de Google Calendar
-El script de la hoja también puede leer tu Google Calendar y mostrar las próximas visitas en la app. Funciona sin servicios nuevos, con la misma sincronización.
-
-1. **Actualiza el script** si lo instalaste antes de la versión 0.3.0 (sección [Actualizar el script de Google](#actualizar-el-script-de-google)), pero **no implementes todavía**.
-2. **Autoriza el calendario.** En el editor de Apps Script, abre `Code.gs`. En la barra de arriba hay un desplegable con el nombre de una función: elige **autorizar** y pulsa **Ejecutar**. Google pedirá permiso para ver y gestionar tus calendarios. Acepta, igual que la primera vez (*Configuración avanzada → Ir a…*). Abajo verás «Calendario autorizado».
-3. **Implementa la versión nueva:** *Implementar → Gestionar implementaciones* → lápiz → *Versión nueva* → *Implementar*.
-4. **En Búho:** ⚙️ Ajustes → *Calendario* → marca *Mostrar las próximas visitas* y guarda.
-   - *Calendario:* deja `primary` para tu calendario principal. Si usáis un calendario compartido para el bebé, pon su ID (Google Calendar → Configuración del calendario → *Integrar el calendario*). Tiene que estar compartido con la cuenta de Google donde está la hoja.
-   - *Mostrar solo eventos que contengan:* por ejemplo `pediatra, matrona, vacuna, revisión`, para no ver todo tu calendario personal. Vacío muestra todos los eventos.
-
-**Avisos de medicación:** con el calendario autorizado, en Ajustes → *Medicación* marca *Crear un aviso en Google Calendar para la próxima toma*. Cada vez que pulses «Dada», se crea en el calendario un evento «💊 Nombre del medicamento» a la hora de la siguiente toma, con alarma. Si das la toma antes de tiempo o la deshaces, el aviso anterior se borra. Sin conexión, el aviso queda pendiente y se crea al volver la señal.
-
-Las visitas se guardan en el móvil, así que se ven también sin conexión. Se actualizan cada 10 minutos cuando hay señal, o al pulsar *Actualizar*. Añadir una visita desde la app necesita conexión.
-
-> Quien tenga la dirección y la clave de la hoja puede ver los eventos que deje pasar el filtro y añadir visitas a ese calendario. Compártelas solo con quien deba apuntar.
+Si montaste la sincronización con la versión 0.1.x (un solo archivo con la clave dentro), antes de pegar el código nuevo apunta lo que pone en `CLAVE` y en `HOJA`. Después crea `Config.gs` como en el paso 2.3 con esos mismos valores.
 
 ### Preguntas frecuentes
-- **¿Qué pasa si no hay cobertura?** Apuntas igual. Los registros quedan pendientes (lo indica la cabecera) y se envían solos cuando vuelve la señal.
-- **¿Y si dos personas apuntan a la vez sin conexión?** No pasa nada: al reconectar se juntan los registros de los dos. Si los dos editan el mismo registro, se queda la última edición.
-- **¿Es seguro?** La hoja es privada y está en tu cuenta de Google. El script solo acepta peticiones con tu clave. Comparte el enlace de configuración solo con quien tenga que apuntar.
-- **¿Cómo me llegan las actualizaciones?** Solas: al abrir la app con conexión, si hay una versión nueva se descarga y la app se recarga (no se pierde nada). Puedes forzarlo en Ajustes, con «Buscar actualizaciones» junto al número de versión.
-- **¿Dónde se guardan los datos?** En el móvil (almacenamiento del navegador) y, si la configuras, en tu hoja de Google. Si borras los datos del navegador sin tener la hoja configurada, se pierden. Exporta el CSV de vez en cuando.
+**¿Qué pasa si no hay cobertura?** Apuntas igual. Arriba se ve cuántos registros faltan por enviar, y se envían solos cuando vuelve la señal.
+
+**¿Y si dos personas apuntan a la vez sin conexión?** Al volver la señal se juntan los registros de las dos. Si las dos editan el mismo registro, se queda la última edición.
+
+**¿Es seguro?** La hoja es privada y está en tu cuenta de Google. El script solo responde si recibe la clave correcta. Quien tenga el enlace de configuración (o la dirección y la clave) puede leer y escribir en el registro, y ver los eventos del calendario que deje pasar el filtro, así que compártelo solo con quien deba apuntar.
+
+**¿Dónde se guardan los datos?** En el móvil y, si activas la sincronización, en tu hoja de Google. Si usas Búho sin sincronizar y borras los datos del navegador o cambias de móvil, se pierden. En ese caso, exporta el CSV de vez en cuando desde *Ajustes → Exportar CSV*.
+
+**¿Cuesta algo?** No. GitHub Pages, Google Sheets, Apps Script y Google Calendar son gratuitos para este uso.
+
+### Qué incluye
+- Botones grandes para dormir/despertar, lactancia (pecho izquierdo o derecho, con cronómetro opcional), biberón (materna o fórmula), pañal (pis, caca o ambas) y anotaciones (nota, peso, temperatura, medicación y más, o algo que pasó antes).
+- De un vistazo: cronómetros en marcha, cuánto hace de la última toma, del último sueño y del último pañal, y qué pecho toca.
+- Resumen del día, gráfica de los últimos 7 días, gráficas de peso, talla y perímetro de la cabeza, y el registro con las últimas 14 entradas. Con *Mostrar más* se abre el registro completo con filtros.
+- Medicación con cuenta atrás hasta la próxima toma, duración del tratamiento y avisos en Google Calendar.
+- Próximas visitas de Google Calendar y la opción de añadir visitas desde la app.
+- Exportación a CSV (7 días, 30 días o todo), que se puede enviar desde el menú de compartir del móvil.
+- Tres estilos: Búho (por defecto), Noir (negros y grises) y [Catppuccin](https://catppuccin.com), en modo claro, oscuro o automático.
+- Pantalla encendida mientras hay una toma con cronómetro, y la opción de ocultar secciones.
+- En español, inglés, catalán, francés, portugués, italiano y alemán.
 
 ### Usar tu propia copia
-Haz un *fork* de este repositorio y activa *Settings → Pages → Deploy from a branch → main / (root)*. Son archivos estáticos, sin compilación ni dependencias: `index.html`, `sw.js`, `manifest.webmanifest` e `icons/`.
+Si prefieres tener tu propia versión de la app, haz un *fork* de este repositorio y activa *Settings → Pages → Deploy from a branch → main / (root)*. Son archivos estáticos, sin compilación ni dependencias: `index.html`, `i18n.js`, `sw.js`, `manifest.webmanifest` e `icons/`. Para añadir un idioma, copia un bloque de `i18n.js`.
 
 ### Sobre el proyecto
 Voy a ser padre en breve y buscaba una app para apuntar las tomas, los sueños y los pañales que se ajustara a lo que necesitamos en casa: que funcione sin cobertura, que la podamos usar los dos desde móviles distintos y que los datos sean nuestros. Probé varias y ninguna me servía, así que decidí hacerme una a medida.
 
 No soy programador. Búho lo he hecho con ayuda de una IA ([Claude](https://claude.ai)), así que pido disculpas de antemano a los desarrolladores profesionales por meterme en su terreno. Si veis algo mal hecho o que se puede mejorar, abrid un [issue](../../issues). Os lo agradeceré, y seguro que aprendo algo.
 
-**Próximamente:** más idiomas en la app, gráfica de peso y recordatorios de toma.
-
 ---
 
 ## English
 
-### What it is
-Búho ("owl" in Spanish) is a web app to log your baby's day with a single tap: sleep and wake times, feeds (breast, bottle or pump), diapers and other things such as weight, temperature or medicines. It is designed to be used half-asleep at 3 a.m.: big buttons, dark mode and one-handed use.
+### What Búho is
+Búho ("owl" in Spanish) is an app to log your baby's day with a single tap: sleep and wake times, feeds (breast, bottle or pump), diapers and things such as weight, temperature or medicines. It is built to be used half-asleep at 3 a.m., with big buttons, dark mode and one hand.
 
-- **Works offline.** Install it on your phone's home screen and it opens without signal. Every entry is saved on the phone instantly.
-- **Multiple phones.** Connect it to a Google Sheet and phones sync automatically whenever there is coverage.
-- **Android, iPhone and desktop.** No app store needed.
-- **Your data stays yours.** No third-party servers: data lives on your phone and, optionally, in your own Google Sheet.
-- **Free and open source.**
+It works without coverage: every entry is saved on the phone straight away. If two people want to use it from their own phones, you can connect it to a Google Sheet and both phones catch up by themselves whenever there is signal. It runs on Android, iPhone and desktop, needs no app store and is free.
 
-> The interface is available in English, Spanish, Catalan, French, Portuguese, Italian and German. It follows the phone language, or you can pick one in *Settings → General*.
+Your data stays yours. Búho has no servers of its own: entries live on your phone and, if you turn on sync, in a spreadsheet in your own Google account.
 
-### Install
-1. Open **https://outsidestructure787.github.io/buho/** on your phone.
-2. **Android (Chrome):** menu ⋮ → *Install app*. **iPhone (Safari):** Share → *Add to Home Screen*.
-3. Open it from the icon. It works right away and keeps data on that phone only.
+The interface is available in English, Spanish, Catalan, French, Portuguese, Italian and German. It follows the phone language, or you can pick one in *Settings → General*.
 
-### Sync phones with Google Sheets (free)
-1. Create a sheet at [sheets.new](https://sheets.new).
-2. Copy the code: open [the raw script](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs), select all (`Ctrl/Cmd + A`) and copy. Back in the sheet, open *Extensions → Apps Script*. A new tab opens with a file called `Code.gs` containing a sample `myFunction`. Select everything in it, delete it, and paste the copied code. The first line should start with `/**` and the last one should be `}`. If *Apps Script* is missing from the menu, you are probably on a work or school account that blocks it: use a personal Gmail account.
-3. Add a second file: click **+** next to *Files* → *Script*, name it `Config`, and paste [`apps-script/Config.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Config.gs). Replace `CAMBIA-ESTA-CLAVE` with a long secret key of your own and save. Keeping the key in its own file means it survives script updates.
-4. *Deploy → New deployment → Web app*. *Execute as:* **Me**; *Who has access:* **Anyone**. Authorize it. Google warns that the app is unverified: it is your own script, so choose *Advanced → Go to…*
-5. Copy the URL ending in `/exec`.
-6. In Búho: ⚙️ *Ajustes → Sincronización con Google Sheets*. Paste the URL and the key, then tap *Guardar y probar conexión*.
-7. Tap *Compartir configuración con otro móvil* to send a setup link to the other person. On iPhone, install the app first and paste the link into the settings field, because the installed app does not share storage with Safari.
+### What you need
+- **One phone only:** just the phone. Two minutes (step 1).
+- **Two or more phones:** a Google account (Gmail is fine) and a computer for about 15 minutes, once (step 2).
+- **Appointments and medication reminders:** the same as step 2 plus a Google Calendar. Five more minutes (step 3).
 
-Entries without coverage are queued and sent automatically when the connection comes back. If two people edit the same entry, the latest edit wins.
+No coding needed: you copy and paste some text and press a few buttons.
 
-**Updating the script:** replace the contents of `Code.gs` with the new version (leave `Config.gs` alone), save, then *Deploy → Manage deployments* → pencil icon → *Version: New version* → *Deploy*. The `/exec` URL stays the same.
+### Step 1. Install the app
+1. Open **https://outsidestructure787.github.io/buho/** on your phone, in Chrome (Android) or Safari (iPhone).
+2. Add it to the home screen:
+   - **Android:** tap the three dots (⋮) at the top right and choose *Install app* or *Add to Home screen*.
+   - **iPhone:** tap the share button (the square with an arrow), scroll down a little, choose *Add to Home Screen* and tap *Add*.
+3. Open Búho from its icon, the green eye. From now on, always open it from there.
+4. Tap the gear (Settings), fill in *Baby details* and, under *General*, who uses this phone. Tap *Save*.
+
+That's it for a single phone.
+
+### Step 2 (optional). Share the log between phones
+Búho stores the data in a Google Sheet you create. To connect the sheet and the app, you paste a small script from this repository into the sheet. You only do this once.
+
+1. **Create the sheet:** go to [sheets.new](https://sheets.new) on a computer and give it a name, such as *Búho*.
+2. **Paste the script:** open [the raw script](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs), select all (`Ctrl/Cmd + A`) and copy. In the sheet, open *Extensions → Apps Script*. Delete the sample code in `Code.gs`, paste, and save (`Ctrl/Cmd + S`). If *Apps Script* is missing, you are probably on a work or school account that blocks it: use a personal Gmail account.
+3. **Create your key:** click **+** next to *Files* → *Script*, name it `Config`, delete its contents and paste [`Config.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Config.gs). Replace `CAMBIA-ESTA-CLAVE` with a long made-up key, for example four random words like `giraffe-monday-toast-cloud`. Keep the quotes. Save, and write the key down.
+4. **Publish it:** *Deploy → New deployment*, click the gear next to *Select type* and choose *Web app*. *Execute as:* **Me**. *Who has access:* **Anyone** (the key is what keeps others out). Click *Deploy* and authorise it. Google warns that the app is not verified because it is your own script: click *Advanced → Go to Búho (unsafe)* and then *Allow*.
+5. **Copy the web app URL**, the one that ends in `/exec`.
+6. **Connect the first phone:** in Búho, *Settings → General → Sync with Google Sheets*. Paste the URL and the key, then tap *Save and test connection*. You should see "Connection OK".
+7. **Connect the other phones:** tap *Share setup with another phone* and send the link. On Android, install Búho and open the link. On iPhone, install Búho first, then paste the link into *…or paste a setup link here* in Settings, because the installed app does not share storage with Safari.
+
+Each entry becomes a row in the `eventos` tab, with readable date, times, duration, type, details and who logged it. Don't edit the grey columns at the end: the app uses them.
+
+### Step 3 (optional). Calendar appointments and medication reminders
+1. Pick a calendar: your main one, or a shared calendar just for the baby (Google Calendar → **+** next to *Other calendars* → *Create new calendar*).
+2. For a shared calendar, copy its ID: calendar settings → *Integrate calendar* → *Calendar ID* (it ends in `@group.calendar.google.com`).
+3. In Búho, *Settings → Calendar*: tick *Show upcoming appointments*, enter `primary` or the ID, optionally filter by words such as `paediatrician, midwife, vaccine`, and save. An *Upcoming appointments* card appears on the main screen.
+4. For reminders: in *Settings → Medication*, add the medicine and tick *Create a Google Calendar reminder for the next dose*. Each time you tap *Given*, an event with an alarm is created for the next dose.
+
+The calendar must belong to, or be shared with, the Google account that owns the sheet. If you set up sync before version 0.3.0, update the script first, then run the `autorizar` function once from the editor (pick it in the function menu and press *Run*), accept the calendar permissions and publish a new version.
+
+### Troubleshooting
+- **"The key does not match the sheet":** the key on the phone is not exactly the one in `Config.gs` (case and spaces count).
+- **"Could not connect":** no coverage, or the URL is wrong. It must end in `/exec`.
+- **"Update the Google script to use the calendar":** the published script is an old version. See *Updating the script* below.
+- **The app does not update:** open it with a connection and wait a few seconds. If nothing happens, close it completely and reopen it, or use *Check for updates* at the bottom of Settings.
+
+### Updating the script
+The app updates itself; the script in the sheet does not. When a new version asks for it: replace the contents of `Code.gs` with the new [`Code.gs`](https://raw.githubusercontent.com/outsidestructure787/buho/main/apps-script/Code.gs) (leave `Config.gs` alone), save, then *Deploy → Manage deployments* → pencil icon → *Version: New version* → *Deploy*. The `/exec` URL stays the same.
 
 ### Self-host
-Fork this repository and enable *Settings → Pages → Deploy from a branch → main / (root)*. Plain static files: no build step, no dependencies.
+Fork this repository and enable *Settings → Pages → Deploy from a branch → main / (root)*. Plain static files: no build step, no dependencies. To add a language, copy a block in `i18n.js`.
 
 ### About
 I'm about to become a dad and I was looking for a baby log that fit what we need at home: it has to work without mobile coverage, we both need to use it from different phones, and the data has to stay ours. None of the apps I tried did that, so I decided to build my own.
